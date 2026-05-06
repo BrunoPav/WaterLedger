@@ -1,0 +1,175 @@
+<!DOCTYPE html>
+
+<html class="light" lang="en"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>Login | Water Ledger</title>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600&amp;family=Manrope:wght@600;700;800&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<script id="tailwind-config">
+      tailwind.config = {
+        darkMode: "class",
+        theme: {
+          extend: {
+            "colors": {
+                    "surface-container-low": "#f2f4f6",
+                    "on-primary-container": "#76849f",
+                    "error": "#ba1a1a",
+                    "primary-fixed-dim": "#b9c7e4",
+                    "on-surface": "#191c1e",
+                    "surface-dim": "#d8dadc",
+                    "on-background": "#191c1e",
+                    "background": "#f7f9fb",
+                    "primary": "#000000",
+                    "on-secondary-fixed": "#001f24",
+                    "inverse-primary": "#b9c7e4",
+                    "tertiary": "#000000",
+                    "outline-variant": "#c5c6cd",
+                    "on-secondary-container": "#00616d",
+                    "secondary-fixed": "#9cf0ff",
+                    "on-primary-fixed-variant": "#39475f",
+                    "surface-container-lowest": "#ffffff",
+                    "on-error-container": "#93000a",
+                    "on-tertiary": "#ffffff",
+                    "surface-tint": "#515f78",
+                    "on-tertiary-fixed": "#002204",
+                    "on-error": "#ffffff",
+                    "primary-container": "#0d1c32",
+                    "surface": "#f7f9fb",
+                    "secondary-container": "#00e3fd",
+                    "error-container": "#ffdad6",
+                    "tertiary-fixed": "#a3f69c",
+                    "secondary": "#006875",
+                    "surface-container-high": "#e6e8ea",
+                    "inverse-surface": "#2d3133",
+                    "on-secondary": "#ffffff",
+                    "on-secondary-fixed-variant": "#004f58",
+                    "surface-bright": "#f7f9fb",
+                    "on-tertiary-fixed-variant": "#005312",
+                    "inverse-on-surface": "#eff1f3",
+                    "tertiary-container": "#002204",
+                    "on-primary-fixed": "#0d1c32",
+                    "secondary-fixed-dim": "#00daf3",
+                    "primary-fixed": "#d6e3ff",
+                    "on-surface-variant": "#44474d",
+                    "tertiary-fixed-dim": "#88d982",
+                    "surface-container": "#eceef0",
+                    "on-tertiary-container": "#469446",
+                    "outline": "#75777e",
+                    "on-primary": "#ffffff",
+                    "surface-container-highest": "#e0e3e5",
+                    "surface-variant": "#e0e3e5"
+            },
+            "borderRadius": {
+                    "DEFAULT": "0.25rem",
+                    "lg": "0.5rem",
+                    "xl": "0.75rem",
+                    "full": "9999px"
+            },
+            "spacing": {
+                    "stack-lg": "32px",
+                    "unit": "4px",
+                    "stack-sm": "8px",
+                    "stack-md": "16px",
+                    "gutter": "16px",
+                    "container-padding": "20px"
+            },
+            "fontFamily": {
+                    "display-lg": ["Manrope"],
+                    "label-sm": ["Inter"],
+                    "body-md": ["Inter"],
+                    "headline-md": ["Manrope"],
+                    "body-lg": ["Inter"]
+            },
+            "fontSize": {
+                    "display-lg": ["40px", {"lineHeight": "48px", "letterSpacing": "-0.02em", "fontWeight": "700"}],
+                    "label-sm": ["13px", {"lineHeight": "16px", "letterSpacing": "0.05em", "fontWeight": "600"}],
+                    "body-md": ["16px", {"lineHeight": "24px", "fontWeight": "400"}],
+                    "headline-md": ["24px", {"lineHeight": "32px", "letterSpacing": "-0.01em", "fontWeight": "600"}],
+                    "body-lg": ["18px", {"lineHeight": "28px", "fontWeight": "400"}]
+            }
+          },
+        },
+      }
+    </script>
+<style>
+        .glass-card {
+            background: rgba(255, 255, 255, 0.7);
+            backdrop-filter: blur(20px);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+        }
+        .material-symbols-outlined {
+            font-variation-settings: 'FILL' 0, 'wght' 300, 'GRAD' 0, 'opsz' 24;
+        }
+    </style>
+<style>
+    body {
+      min-height: max(884px, 100dvh);
+    }
+  </style>
+  </head>
+<body class="bg-surface font-body-md text-on-surface min-h-screen flex flex-col">
+<main class="flex-grow flex items-center justify-center px-gutter py-stack-lg relative overflow-hidden">
+<!-- Background decorative elements -->
+<div class="absolute top-[-10%] left-[-10%] w-[40%] h-[40%] rounded-full bg-secondary-fixed/10 blur-[120px]"></div>
+<div class="absolute bottom-[-10%] right-[-10%] w-[40%] h-[40%] rounded-full bg-tertiary-fixed/10 blur-[120px]"></div>
+<div class="w-full max-w-[440px] z-10 flex flex-col gap-stack-lg">
+<!-- Branding Section -->
+<div class="text-center flex flex-col items-center gap-unit">
+<div class="w-12 h-12 bg-primary rounded-xl flex items-center justify-center mb-stack-sm shadow-sm active:scale-95 transition-all">
+<span class="material-symbols-outlined text-white text-[28px]" data-icon="water_drop">water_drop</span>
+</div>
+<h1 class="font-display-lg text-display-lg text-primary tracking-tight">Water Ledger</h1>
+<p class="font-body-md text-on-surface-variant max-w-[280px]">Secure environmental asset management and institutional water trading.</p>
+</div>
+<!-- Login Card -->
+<div class="glass-card bg-surface-container-lowest rounded-xl p-stack-lg shadow-[0_4px_24px_rgba(0,0,0,0.04)] border border-outline-variant/30">
+<form class="flex flex-col gap-stack-md">
+<div class="flex flex-col gap-unit">
+<label class="font-label-sm text-label-sm text-on-surface-variant ml-unit uppercase tracking-widest opacity-70" for="email">Email Address</label>
+<div class="relative">
+<input class="w-full bg-surface-container-low border-b-2 border-transparent focus:border-secondary-container focus:ring-0 rounded-lg px-stack-md py-3 text-on-surface placeholder:text-outline transition-all" id="email" name="email" placeholder="name@institution.com" type="email"/>
+</div>
+</div>
+<div class="flex flex-col gap-unit">
+<div class="flex justify-between items-center px-unit">
+<label class="font-label-sm text-label-sm text-on-surface-variant uppercase tracking-widest opacity-70" for="password">Password</label>
+<a class="font-label-sm text-label-sm text-secondary hover:text-secondary-container transition-colors" href="#">Forgot password?</a>
+</div>
+<div class="relative">
+<input class="w-full bg-surface-container-low border-b-2 border-transparent focus:border-secondary-container focus:ring-0 rounded-lg px-stack-md py-3 text-on-surface placeholder:text-outline transition-all" id="password" name="password" placeholder="••••••••" type="password"/>
+</div>
+</div>
+<button class="w-full bg-primary text-on-primary font-headline-md text-body-lg py-3.5 rounded-xl mt-stack-sm active:scale-[0.98] transition-all shadow-sm hover:opacity-90" type="submit">
+                        Login
+                    </button>
+</form>
+<div class="mt-stack-lg pt-stack-md border-t border-outline-variant/20 flex flex-col gap-stack-md">
+<div class="relative flex items-center justify-center">
+<span class="absolute bg-surface-container-lowest px-4 font-label-sm text-on-surface-variant text-[11px] uppercase tracking-tighter">Institutional Access Only</span>
+<div class="w-full h-[1px] bg-outline-variant/20"></div>
+</div>
+<div class="flex items-center justify-center gap-stack-sm">
+<span class="font-body-md text-on-surface-variant">New to the platform?</span>
+<a class="font-label-sm text-label-sm text-secondary hover:text-secondary-container font-bold transition-colors" href="#">Register</a>
+</div>
+</div>
+</div>
+<!-- Global Trust Indicator -->
+<div class="flex justify-center items-center gap-stack-md opacity-40 grayscale hover:grayscale-0 transition-all duration-500">
+<img alt="ESG Certified" class="h-6 w-auto" data-alt="A clean, minimalist monochrome logo of a global environmental certification board. The design is sleek and institutional, featuring a stylized globe icon and bold sans-serif lettering. The overall aesthetic is professional and high-trust, perfectly aligned with a sustainable finance platform's visual identity. The lighting is flat and even, characteristic of corporate branding assets." src="https://lh3.googleusercontent.com/aida-public/AB6AXuAF_Ve4Pwk3K5L-hxFxdk8OoYGB0_-hw3xDnq1329qKPhCs1yBAAl9bS3-z6GewhwqZTaoACF3L5RRcjxNm3kl1Ao1mUNIkFgPP4kNiEC7jJG6PO-Qc46JyJ9c2C-OjzkyN_CUnDO8GodPbtM_GSd-k7RVviC4oXx_HSoDZxI1XXqpAXubvBtcUS9I4lPKhv2bwNYcilKy5kkRkZv3sUghbF7d0TCBqQdLSwgx7MHRIzaVcg_SmJ0invf8PErGeNxMPJSP9laLjGNY"/>
+<div class="w-[1px] h-4 bg-outline-variant"></div>
+<img alt="UN Water" class="h-6 w-auto" data-alt="A sophisticated corporate logo for an international water governance organization. The graphic consists of a symbolic water droplet integrated into a global grid map, rendered in a crisp, high-resolution vector style. The color palette is restricted to professional grays and blacks on a transparent background, conveying authority and visionary scale." src="https://lh3.googleusercontent.com/aida-public/AB6AXuD30B42xtbVHqbqML4KX4Xqx_4eHg-xpXBXw7ziedp5CSqzdiyR3-fzOWlzNU2zJ2djNxcbq6Gp6U-Y1bh0Kpbl9CZeX7nU87EKYuAt3a6gQuRXW6mZI3J7zWhT1o5e_i3uw4eyfq4ueKpNMZ6rC5K3G3ns0SnNRWodnP2soOu0MUCdaVvYM7cQof1DhUvSa-UMZMBp86IcJ65FhXqbpP0xeapiRN88cgKYPGRnFZKB3Xmh8nz8fEld-SZMAymrEyeDn85d5b-GRG8"/>
+</div>
+</div>
+</main>
+<!-- Footer Security Notice -->
+<footer class="w-full px-gutter py-stack-md flex justify-center border-t border-outline-variant/10">
+<div class="flex items-center gap-stack-sm font-label-sm text-label-sm text-on-surface-variant">
+<span class="material-symbols-outlined text-[16px] text-on-tertiary-container" data-icon="lock" data-weight="fill" style="font-variation-settings: 'FILL' 1;">lock</span>
+<span>AES-256 Encrypted Environment</span>
+</div>
+</footer>
+</body></html>

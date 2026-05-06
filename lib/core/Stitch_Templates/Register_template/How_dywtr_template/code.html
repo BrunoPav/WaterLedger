@@ -1,0 +1,213 @@
+<!DOCTYPE html>
+
+<html class="light" lang="en"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600&amp;family=Manrope:wght@600;700;800&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<script id="tailwind-config">
+      tailwind.config = {
+        darkMode: "class",
+        theme: {
+          extend: {
+            "colors": {
+                    "surface-container-low": "#f2f4f6",
+                    "on-primary-container": "#76849f",
+                    "error": "#ba1a1a",
+                    "primary-fixed-dim": "#b9c7e4",
+                    "on-surface": "#191c1e",
+                    "surface-dim": "#d8dadc",
+                    "on-background": "#191c1e",
+                    "background": "#f7f9fb",
+                    "primary": "#000000",
+                    "on-secondary-fixed": "#001f24",
+                    "inverse-primary": "#b9c7e4",
+                    "tertiary": "#000000",
+                    "outline-variant": "#c5c6cd",
+                    "on-secondary-container": "#00616d",
+                    "secondary-fixed": "#9cf0ff",
+                    "on-primary-fixed-variant": "#39475f",
+                    "surface-container-lowest": "#ffffff",
+                    "on-error-container": "#93000a",
+                    "on-tertiary": "#ffffff",
+                    "surface-tint": "#515f78",
+                    "on-tertiary-fixed": "#002204",
+                    "on-error": "#ffffff",
+                    "primary-container": "#0d1c32",
+                    "surface": "#f7f9fb",
+                    "secondary-container": "#00e3fd",
+                    "error-container": "#ffdad6",
+                    "tertiary-fixed": "#a3f69c",
+                    "secondary": "#006875",
+                    "surface-container-high": "#e6e8ea",
+                    "inverse-surface": "#2d3133",
+                    "on-secondary": "#ffffff",
+                    "on-secondary-fixed-variant": "#004f58",
+                    "surface-bright": "#f7f9fb",
+                    "on-tertiary-fixed-variant": "#005312",
+                    "inverse-on-surface": "#eff1f3",
+                    "tertiary-container": "#002204",
+                    "on-primary-fixed": "#0d1c32",
+                    "secondary-fixed-dim": "#00daf3",
+                    "primary-fixed": "#d6e3ff",
+                    "on-surface-variant": "#44474d",
+                    "tertiary-fixed-dim": "#88d982",
+                    "surface-container": "#eceef0",
+                    "on-tertiary-container": "#469446",
+                    "outline": "#75777e",
+                    "on-primary": "#ffffff",
+                    "surface-container-highest": "#e0e3e5",
+                    "surface-variant": "#e0e3e5"
+            },
+            "borderRadius": {
+                    "DEFAULT": "0.25rem",
+                    "lg": "0.5rem",
+                    "xl": "0.75rem",
+                    "full": "9999px"
+            },
+            "spacing": {
+                    "stack-lg": "32px",
+                    "unit": "4px",
+                    "stack-sm": "8px",
+                    "stack-md": "16px",
+                    "gutter": "16px",
+                    "container-padding": "20px"
+            },
+            "fontFamily": {
+                    "display-lg": ["Manrope"],
+                    "label-sm": ["Inter"],
+                    "body-md": ["Inter"],
+                    "headline-md": ["Manrope"],
+                    "body-lg": ["Inter"]
+            },
+            "fontSize": {
+                    "display-lg": ["40px", {"lineHeight": "48px", "letterSpacing": "-0.02em", "fontWeight": "700"}],
+                    "label-sm": ["13px", {"lineHeight": "16px", "letterSpacing": "0.05em", "fontWeight": "600"}],
+                    "body-md": ["16px", {"lineHeight": "24px", "fontWeight": "400"}],
+                    "headline-md": ["24px", {"lineHeight": "32px", "letterSpacing": "-0.01em", "fontWeight": "600"}],
+                    "body-lg": ["18px", {"lineHeight": "28px", "fontWeight": "400"}]
+            }
+          },
+        },
+      }
+    </script>
+<style>
+        .material-symbols-outlined {
+            font-variation-settings: 'FILL' 0, 'wght' 200, 'GRAD' 0, 'opsz' 24;
+            font-size: 24px;
+        }
+        .glass-card {
+            background: rgba(255, 255, 255, 0.7);
+            backdrop-filter: blur(20px);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+        }
+        .selection-ring {
+            box-shadow: 0 0 0 4px #00e3fd;
+        }
+    </style>
+<style>
+    body {
+      min-height: max(884px, 100dvh);
+    }
+  </style>
+  </head>
+<body class="bg-surface font-body-md text-on-surface antialiased min-h-screen flex flex-col">
+<!-- Top Navigation Anchor (Suppressing Global Shell for Focused Journey) -->
+<header class="fixed top-0 left-0 w-full z-50 bg-surface/70 backdrop-blur-md border-b border-outline-variant/10">
+<div class="flex justify-between items-center px-gutter h-16 w-full max-w-7xl mx-auto">
+<span class="font-display-lg text-headline-md text-primary tracking-tight">Water Ledger</span>
+<button class="text-on-surface-variant hover:opacity-80 active:scale-95 transition-all">
+<span class="material-symbols-outlined">close</span>
+</button>
+</div>
+</header>
+<main class="flex-grow flex flex-col items-center justify-center px-gutter pt-24 pb-12">
+<div class="w-full max-w-4xl mx-auto">
+<!-- Header Section -->
+<div class="text-center mb-stack-lg">
+<h1 class="font-display-lg text-display-lg text-primary mb-stack-sm">How do you want to register?</h1>
+<p class="font-body-lg text-on-surface-variant max-w-lg mx-auto">Choose the account type that best describes your goals in the water credit ecosystem.</p>
+</div>
+<!-- Bento-style Card Selection Grid -->
+<div class="grid grid-cols-1 md:grid-cols-2 gap-stack-md items-stretch">
+<!-- Card 1: Retail Investor (Active/Selected State Example) -->
+<button class="flex flex-col text-left group relative p-stack-md bg-surface-container-lowest rounded-xl border-2 border-secondary-container selection-ring transition-all duration-300 hover:shadow-lg h-full overflow-hidden">
+<div class="absolute top-4 right-4 bg-secondary-container rounded-full p-1 flex items-center justify-center">
+<span class="material-symbols-outlined text-secondary" style="font-variation-settings: 'FILL' 1;">check_circle</span>
+</div>
+<div class="mb-stack-md w-16 h-16 rounded-xl bg-secondary/10 flex items-center justify-center text-secondary">
+<span class="material-symbols-outlined text-[40px]">person</span>
+</div>
+<div class="mt-auto">
+<h3 class="font-headline-md text-headline-md text-primary mb-unit">Retail Investor</h3>
+<p class="font-body-md text-on-surface-variant">Explore and invest in water credits</p>
+</div>
+<div class="mt-stack-md pt-stack-md border-t border-outline-variant/20 grid grid-cols-2 gap-2">
+<div class="flex items-center gap-2">
+<span class="material-symbols-outlined text-secondary text-sm">show_chart</span>
+<span class="text-[12px] font-label-sm text-on-surface-variant">Micro-investments</span>
+</div>
+<div class="flex items-center gap-2">
+<span class="material-symbols-outlined text-secondary text-sm">account_balance_wallet</span>
+<span class="text-[12px] font-label-sm text-on-surface-variant">Digital Wallet</span>
+</div>
+</div>
+<div class="absolute -bottom-6 -right-6 opacity-5 group-hover:opacity-10 transition-opacity">
+<img class="w-32 h-32 object-cover rounded-full" data-alt="A striking digital installation art piece featuring glowing, generative geometric shapes suspended in a vast, minimalist gallery space. The room is illuminated by high-key, soft white lighting that creates a bright, modern light-mode aesthetic. The artwork relies on a sophisticated palette of deep blacks and pristine whites, punctuated by intense accents of vibrant cyan. The mood is serene yet technologically advanced." src="https://lh3.googleusercontent.com/aida-public/AB6AXuCVSguaPAwgeL-4MBmmeQGyRiI4OfaACyFOkL9kn0n--LY_ceBFCL7itEeJX5i6el545xeFqaww38qt0u_p6GJmeHnEwXGl267FjBzTN-yt70UVUWjdmUGgWLbV1YqcC-MPZPP9Rpu8fGUqiRK2GHPr9z38kfTx8qShQKE3zMG4CJnL-vidavY553n8eP5lhXp_Xu9NCLXrScvFEGyfPpPKqlIAiY7H4i8fuVuIIMdus1nyivPgpiKt7z8MLa3A2Dmjg1tSPahlYag"/>
+</div>
+</button>
+<!-- Card 2: Company / Organization -->
+<button class="flex flex-col text-left group relative p-stack-md bg-surface-container-lowest rounded-xl border border-outline-variant/30 transition-all duration-300 hover:border-secondary-container/50 hover:shadow-md h-full overflow-hidden">
+<div class="mb-stack-md w-16 h-16 rounded-xl bg-primary/5 flex items-center justify-center text-primary">
+<span class="material-symbols-outlined text-[40px]">corporate_fare</span>
+</div>
+<div class="mt-auto">
+<h3 class="font-headline-md text-headline-md text-primary mb-unit">Company / Organization</h3>
+<p class="font-body-md text-on-surface-variant">Buy credits or request issuance for water sustainability projects</p>
+</div>
+<div class="mt-stack-md pt-stack-md border-t border-outline-variant/20 grid grid-cols-2 gap-2">
+<div class="flex items-center gap-2">
+<span class="material-symbols-outlined text-secondary text-sm">verified</span>
+<span class="text-[12px] font-label-sm text-on-surface-variant">Project Issuance</span>
+</div>
+<div class="flex items-center gap-2">
+<span class="material-symbols-outlined text-secondary text-sm">pie_chart</span>
+<span class="text-[12px] font-label-sm text-on-surface-variant">ESG Reporting</span>
+</div>
+</div>
+<div class="absolute -bottom-6 -right-6 opacity-5 group-hover:opacity-10 transition-opacity">
+<img class="w-32 h-32 object-cover rounded-full" data-alt="Detailed isometric architectural visualization of a sustainable urban infrastructure project with integrated water management systems. The scene is rendered in a minimalist white-mode aesthetic with subtle navy blue and vibrant cyan outlines. Lighting is crisp and even, suggesting a high-end institutional design. The composition is clean and organized, conveying trustworthiness and visionary engineering." src="https://lh3.googleusercontent.com/aida-public/AB6AXuC0rOxx0pZJ3MBT2RlbXCXIsE0lhvtbE3WvXU5nyn8N8xNwn0dZ16fMcU9zSVpk1Wt4ae3UOFVr1VgFHuQhcVrP2fVBVJoeH8sZbgV1RtTtrK2k46JJNBqKRinf5UsN1dD0S7blSiyuvONVFh0AmNVILeRQ73qwTkEk_IcCY80NgHAqE5lmEEbz8suVc1GzyAQpBfdmel3RuZNHQxyqUMiZci6olY2slZyO_xkVkeHOkw8IBQ5S4lM-xjMrbtpOWj4KBcdqDVkVxrc"/>
+</div>
+</button>
+</div>
+<!-- Action Section -->
+<div class="mt-stack-lg flex flex-col items-center gap-stack-md">
+<button class="w-full max-w-sm bg-primary text-on-primary py-4 px-8 rounded-full font-headline-md hover:opacity-90 active:scale-[0.98] transition-all shadow-lg">
+                    Continue with Registration
+                </button>
+<div class="flex items-center gap-2 text-on-surface-variant font-label-sm">
+<span>Already have an account?</span>
+<a class="text-secondary hover:underline" href="#">Log in</a>
+</div>
+</div>
+</div>
+</main>
+<!-- Footer Security Badge -->
+<footer class="w-full mt-auto py-8 px-gutter border-t border-outline-variant/10">
+<div class="max-w-7xl mx-auto flex flex-col md:flex-row justify-between items-center gap-stack-md text-on-surface-variant font-label-sm">
+<div class="flex items-center gap-4">
+<div class="flex items-center gap-1">
+<span class="material-symbols-outlined text-sm">lock</span>
+<span>End-to-end encrypted</span>
+</div>
+<div class="flex items-center gap-1">
+<span class="material-symbols-outlined text-sm">verified_user</span>
+<span>Institutional Grade Security</span>
+</div>
+</div>
+<p>© 2024 Water Ledger Inc. All rights reserved.</p>
+</div>
+</footer>
+</body></html>

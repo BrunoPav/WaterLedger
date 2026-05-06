@@ -1,0 +1,245 @@
+<!DOCTYPE html>
+
+<html class="light" lang="en"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<link href="https://fonts.googleapis.com/css2?family=Manrope:wght@400;600;700&amp;family=Inter:wght@400;600;700&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<script id="tailwind-config">
+      tailwind.config = {
+        darkMode: "class",
+        theme: {
+          extend: {
+            "colors": {
+                    "surface-container-low": "#f2f4f6",
+                    "on-primary-container": "#76849f",
+                    "error": "#ba1a1a",
+                    "primary-fixed-dim": "#b9c7e4",
+                    "on-surface": "#191c1e",
+                    "surface-dim": "#d8dadc",
+                    "on-background": "#191c1e",
+                    "background": "#f7f9fb",
+                    "primary": "#000000",
+                    "on-secondary-fixed": "#001f24",
+                    "inverse-primary": "#b9c7e4",
+                    "tertiary": "#000000",
+                    "outline-variant": "#c5c6cd",
+                    "on-secondary-container": "#00616d",
+                    "secondary-fixed": "#9cf0ff",
+                    "on-primary-fixed-variant": "#39475f",
+                    "surface-container-lowest": "#ffffff",
+                    "on-error-container": "#93000a",
+                    "on-tertiary": "#ffffff",
+                    "surface-tint": "#515f78",
+                    "on-tertiary-fixed": "#002204",
+                    "on-error": "#ffffff",
+                    "primary-container": "#0d1c32",
+                    "surface": "#f7f9fb",
+                    "secondary-container": "#00e3fd",
+                    "error-container": "#ffdad6",
+                    "tertiary-fixed": "#a3f69c",
+                    "secondary": "#006875",
+                    "surface-container-high": "#e6e8ea",
+                    "inverse-surface": "#2d3133",
+                    "on-secondary": "#ffffff",
+                    "on-secondary-fixed-variant": "#004f58",
+                    "surface-bright": "#f7f9fb",
+                    "on-tertiary-fixed-variant": "#005312",
+                    "inverse-on-surface": "#eff1f3",
+                    "tertiary-container": "#002204",
+                    "on-primary-fixed": "#0d1c32",
+                    "secondary-fixed-dim": "#00daf3",
+                    "primary-fixed": "#d6e3ff",
+                    "on-surface-variant": "#44474d",
+                    "tertiary-fixed-dim": "#88d982",
+                    "surface-container": "#eceef0",
+                    "on-tertiary-container": "#469446",
+                    "outline": "#75777e",
+                    "on-primary": "#ffffff",
+                    "surface-container-highest": "#e0e3e5",
+                    "surface-variant": "#e0e3e5"
+            },
+            "borderRadius": {
+                    "DEFAULT": "0.25rem",
+                    "lg": "0.5rem",
+                    "xl": "0.75rem",
+                    "full": "9999px"
+            },
+            "spacing": {
+                    "stack-lg": "32px",
+                    "unit": "4px",
+                    "stack-sm": "8px",
+                    "stack-md": "16px",
+                    "gutter": "16px",
+                    "container-padding": "20px"
+            },
+            "fontFamily": {
+                    "display-lg": ["Manrope"],
+                    "label-sm": ["Inter"],
+                    "body-md": ["Inter"],
+                    "headline-md": ["Manrope"],
+                    "body-lg": ["Inter"]
+            },
+            "fontSize": {
+                    "display-lg": ["40px", {"lineHeight": "48px", "letterSpacing": "-0.02em", "fontWeight": "700"}],
+                    "label-sm": ["13px", {"lineHeight": "16px", "letterSpacing": "0.05em", "fontWeight": "600"}],
+                    "body-md": ["16px", {"lineHeight": "24px", "fontWeight": "400"}],
+                    "headline-md": ["24px", {"lineHeight": "32px", "letterSpacing": "-0.01em", "fontWeight": "600"}],
+                    "body-lg": ["18px", {"lineHeight": "28px", "fontWeight": "400"}]
+            }
+          },
+        },
+      }
+    </script>
+<style>
+        .glass-panel {
+            background: rgba(255, 255, 255, 0.7);
+            backdrop-filter: blur(20px);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+        }
+        .input-focus-cyan:focus {
+            border-color: #00e3fd;
+            outline: none;
+            box-shadow: 0 0 0 1px #00e3fd;
+        }
+    </style>
+<style>
+    body {
+      min-height: max(884px, 100dvh);
+    }
+  </style>
+  </head>
+<body class="bg-surface text-on-surface font-body-md min-h-screen">
+<!-- Top Navigation Anchor (Suppressed for Transactional Page) -->
+<header class="fixed top-0 left-0 w-full z-50 bg-surface/70 backdrop-blur-md border-b border-outline-variant/10 shadow-sm">
+<div class="flex justify-between items-center px-gutter h-16 w-full max-w-7xl mx-auto">
+<h1 class="font-display-lg text-headline-md text-primary tracking-tight">Water Ledger</h1>
+<div class="flex items-center gap-4">
+<span class="font-label-sm text-on-surface-variant">Step 1 of 1</span>
+</div>
+</div>
+</header>
+<main class="pt-24 pb-12 px-container-padding max-w-4xl mx-auto">
+<!-- Hero Branding Section -->
+<div class="mb-stack-lg text-center md:text-left">
+<h2 class="font-display-lg text-display-lg text-primary mb-stack-sm">Corporate Onboarding</h2>
+<p class="font-body-lg text-on-surface-variant max-w-2xl">Establish your institutional water credit registry. Complete the following details to register your organization within the global water market ecosystem.</p>
+</div>
+<div class="grid grid-cols-1 md:grid-cols-12 gap-stack-lg">
+<!-- Form Canvas -->
+<form class="md:col-span-8 space-y-stack-md">
+<div class="bg-surface-container-lowest p-stack-lg rounded-xl border border-outline-variant/30 shadow-sm">
+<h3 class="font-headline-md text-headline-md text-primary mb-stack-md">Entity Information</h3>
+<div class="grid grid-cols-1 md:grid-cols-2 gap-stack-md">
+<!-- Company Name -->
+<div class="space-y-unit">
+<label class="font-label-sm text-on-surface-variant block">Company name</label>
+<input class="w-full bg-surface-container-low border-none rounded-lg px-stack-md py-3 font-body-md text-on-surface input-focus-cyan" placeholder="e.g. Aqua Global" type="text"/>
+</div>
+<!-- Legal Name -->
+<div class="space-y-unit">
+<label class="font-label-sm text-on-surface-variant block">Legal name</label>
+<input class="w-full bg-surface-container-low border-none rounded-lg px-stack-md py-3 font-body-md text-on-surface input-focus-cyan" placeholder="Full Registered Entity Name" type="text"/>
+</div>
+<!-- Tax ID -->
+<div class="space-y-unit">
+<label class="font-label-sm text-on-surface-variant block">Tax ID / CUIT</label>
+<input class="w-full bg-surface-container-low border-none rounded-lg px-stack-md py-3 font-body-md text-on-surface input-focus-cyan" placeholder="XX-XXXXXXXX-X" type="text"/>
+</div>
+<!-- Industry Sector -->
+<div class="space-y-unit">
+<label class="font-label-sm text-on-surface-variant block">Industry sector</label>
+<select class="w-full bg-surface-container-low border-none rounded-lg px-stack-md py-3 font-body-md text-on-surface input-focus-cyan appearance-none">
+<option>Agriculture &amp; Forestry</option>
+<option>Industrial Manufacturing</option>
+<option>Renewable Energy</option>
+<option>Municipal Infrastructure</option>
+</select>
+</div>
+</div>
+</div>
+<div class="bg-surface-container-lowest p-stack-lg rounded-xl border border-outline-variant/30 shadow-sm">
+<h3 class="font-headline-md text-headline-md text-primary mb-stack-md">Localization &amp; Contact</h3>
+<div class="grid grid-cols-1 md:grid-cols-2 gap-stack-md">
+<!-- Country -->
+<div class="space-y-unit">
+<label class="font-label-sm text-on-surface-variant block">Country</label>
+<input class="w-full bg-surface-container-low border-none rounded-lg px-stack-md py-3 font-body-md text-on-surface input-focus-cyan" placeholder="Select Country" type="text"/>
+</div>
+<!-- Phone -->
+<div class="space-y-unit">
+<label class="font-label-sm text-on-surface-variant block">Phone number</label>
+<input class="w-full bg-surface-container-low border-none rounded-lg px-stack-md py-3 font-body-md text-on-surface input-focus-cyan" placeholder="+1 (555) 000-0000" type="tel"/>
+</div>
+<!-- Address -->
+<div class="md:col-span-2 space-y-unit">
+<label class="font-label-sm text-on-surface-variant block">Address</label>
+<input class="w-full bg-surface-container-low border-none rounded-lg px-stack-md py-3 font-body-md text-on-surface input-focus-cyan" placeholder="Street, City, State, ZIP" type="text"/>
+</div>
+</div>
+</div>
+<div class="bg-surface-container-lowest p-stack-lg rounded-xl border border-outline-variant/30 shadow-sm">
+<h3 class="font-headline-md text-headline-md text-primary mb-stack-md">Access Credentials</h3>
+<div class="grid grid-cols-1 md:grid-cols-2 gap-stack-md">
+<!-- Email -->
+<div class="space-y-unit">
+<label class="font-label-sm text-on-surface-variant block">Corporate email</label>
+<input class="w-full bg-surface-container-low border-none rounded-lg px-stack-md py-3 font-body-md text-on-surface input-focus-cyan" placeholder="admin@company.com" type="email"/>
+</div>
+<!-- Password -->
+<div class="space-y-unit">
+<label class="font-label-sm text-on-surface-variant block">Password</label>
+<input class="w-full bg-surface-container-low border-none rounded-lg px-stack-md py-3 font-body-md text-on-surface input-focus-cyan" placeholder="••••••••" type="password"/>
+</div>
+</div>
+</div>
+<!-- Primary Action -->
+<div class="pt-stack-md">
+<button class="w-full bg-primary text-on-primary font-body-lg font-bold py-4 rounded-xl shadow-lg active:scale-95 transition-all flex justify-center items-center gap-2">
+<span>Create Account</span>
+<span class="material-symbols-outlined" style="font-variation-settings: 'FILL' 0;">arrow_forward</span>
+</button>
+<p class="text-center font-label-sm text-on-surface-variant mt-stack-md">
+                        By creating an account, you agree to our <a class="text-secondary underline underline-offset-4" href="#">Institutional Terms of Service</a>.
+                    </p>
+</div>
+</form>
+<!-- Sidebar Info/Trust Section -->
+<aside class="md:col-span-4 space-y-stack-md">
+<div class="glass-panel p-stack-md rounded-xl space-y-stack-md sticky top-24">
+<div class="h-48 w-full rounded-lg overflow-hidden relative">
+<img class="w-full h-full object-cover" data-alt="A macro photograph of clean, crystalline water droplets resting on a sleek, matte black surface. The lighting is cold and professional, reflecting the institutional and visionary brand identity. Soft blue and cyan light leaks create a sense of technological advancement and environmental consciousness in a high-finance setting." src="https://lh3.googleusercontent.com/aida-public/AB6AXuD8Mi5l11-mVDnrBKYINgSKGwTIgY6oNTL01Bb7SlIu0ukSLHFTud2JxqZPS9PHPHOLqz_3kizu3W5rgBtnqowYXSgu612Cq99sd8scWw8R0W78RzMn7le5P5ielhs81_F7FrQiVaX4FRd_V4squVWz3NS9CeLSPsPsBKe_2OWHQI0gGlTIhR37euPpBBwG1NcBgDHw_Rkck0X3l812slAM9BG9i2WLO9oHKQIwk9OGe61OSvQJXCreZs9LL7193x29adGltxdS2Jo"/>
+<div class="absolute inset-0 bg-gradient-to-t from-black/60 to-transparent flex items-end p-stack-md">
+<p class="text-white font-label-sm">Securing the world's most vital resource.</p>
+</div>
+</div>
+<div class="space-y-stack-sm">
+<div class="flex items-start gap-stack-sm">
+<span class="material-symbols-outlined text-secondary-container bg-primary-container p-2 rounded-lg" style="font-variation-settings: 'FILL' 1;">verified_user</span>
+<div>
+<h4 class="font-label-sm text-primary">ISO 14001 Certified</h4>
+<p class="text-label-sm text-on-surface-variant">Our ledger complies with international standards for environmental management.</p>
+</div>
+</div>
+<div class="flex items-start gap-stack-sm">
+<span class="material-symbols-outlined text-secondary-container bg-primary-container p-2 rounded-lg" style="font-variation-settings: 'FILL' 1;">analytics</span>
+<div>
+<h4 class="font-label-sm text-primary">Live Market Data</h4>
+<p class="text-label-sm text-on-surface-variant">Immediate access to real-time water credit pricing and ESG impact metrics.</p>
+</div>
+</div>
+</div>
+<div class="p-stack-sm bg-secondary-container/10 border border-secondary-container/20 rounded-lg">
+<p class="text-label-sm text-on-secondary-container leading-relaxed italic">
+                            "Joining Water Ledger allowed us to quantify our aquifer recharge efforts and secure sustainable financing in under three months."
+                        </p>
+<p class="font-label-sm text-primary mt-2">— Global Hydrology Partners</p>
+</div>
+</div>
+</aside>
+</div>
+</main>
+<!-- Bottom Navigation Suppressed for Registration Context -->
+</body></html>
