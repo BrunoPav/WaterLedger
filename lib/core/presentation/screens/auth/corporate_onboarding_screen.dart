@@ -522,7 +522,7 @@ class _CorporateOnboardingScreenState
             Expanded(
               flex: 2,
               child: ElevatedButton(
-                onPressed: isLastStep ? () {} : _nextStep,
+                onPressed: isLastStep ? () => context.go('/company-register-success') : _nextStep,
                 style: ElevatedButton.styleFrom(
                   backgroundColor: _primaryColor,
                   foregroundColor: _onPrimaryColor,

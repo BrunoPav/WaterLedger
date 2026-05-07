@@ -1,0 +1,249 @@
+<!DOCTYPE html>
+
+<html lang="en"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<link href="https://fonts.googleapis.com/css2?family=Manrope:wght@400;600;700&amp;family=Inter:wght@400;600&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<script id="tailwind-config">
+        tailwind.config = {
+            darkMode: "class",
+            theme: {
+                extend: {
+                    "colors": {
+                        "on-primary-container": "#76849f",
+                        "secondary": "#006875",
+                        "primary-fixed-dim": "#b9c7e4",
+                        "surface-container-lowest": "#ffffff",
+                        "on-tertiary-fixed-variant": "#005312",
+                        "on-tertiary": "#ffffff",
+                        "on-primary-fixed": "#0d1c32",
+                        "surface-tint": "#515f78",
+                        "on-secondary-fixed": "#001f24",
+                        "surface-container": "#eceef0",
+                        "on-tertiary-fixed": "#002204",
+                        "on-tertiary-container": "#469446",
+                        "secondary-fixed": "#9cf0ff",
+                        "outline-variant": "#c5c6cd",
+                        "on-surface": "#191c1e",
+                        "inverse-on-surface": "#eff1f3",
+                        "inverse-surface": "#2d3133",
+                        "on-primary-fixed-variant": "#39475f",
+                        "tertiary": "#000000",
+                        "on-secondary-container": "#00616d",
+                        "surface-container-high": "#e6e8ea",
+                        "secondary-fixed-dim": "#00daf3",
+                        "on-surface-variant": "#44474d",
+                        "on-error-container": "#93000a",
+                        "background": "#f7f9fb",
+                        "on-secondary": "#ffffff",
+                        "surface-dim": "#d8dadc",
+                        "tertiary-fixed-dim": "#88d982",
+                        "inverse-primary": "#b9c7e4",
+                        "surface-bright": "#f7f9fb",
+                        "tertiary-container": "#002204",
+                        "primary-fixed": "#d6e3ff",
+                        "primary-container": "#0d1c32",
+                        "outline": "#75777e",
+                        "on-secondary-fixed-variant": "#004f58",
+                        "surface-variant": "#e0e3e5",
+                        "error": "#ba1a1a",
+                        "on-background": "#191c1e",
+                        "on-primary": "#ffffff",
+                        "secondary-container": "#00e3fd",
+                        "error-container": "#ffdad6",
+                        "surface-container-low": "#f2f4f6",
+                        "on-error": "#ffffff",
+                        "tertiary-fixed": "#a3f69c",
+                        "surface": "#f7f9fb",
+                        "primary": "#000000",
+                        "surface-container-highest": "#e0e3e5"
+                    },
+                    "borderRadius": {
+                        "DEFAULT": "0.25rem",
+                        "lg": "0.5rem",
+                        "xl": "0.75rem",
+                        "full": "9999px"
+                    },
+                    "spacing": {
+                        "stack-sm": "8px",
+                        "stack-md": "16px",
+                        "gutter": "16px",
+                        "stack-lg": "32px",
+                        "container-padding": "20px",
+                        "unit": "4px"
+                    },
+                    "fontFamily": {
+                        "display-lg": ["Manrope"],
+                        "body-lg": ["Inter"],
+                        "headline-md": ["Manrope"],
+                        "body-md": ["Inter"],
+                        "label-sm": ["Inter"]
+                    },
+                    "fontSize": {
+                        "display-lg": ["40px", {"lineHeight": "48px", "letterSpacing": "-0.02em", "fontWeight": "700"}],
+                        "body-lg": ["18px", {"lineHeight": "28px", "fontWeight": "400"}],
+                        "headline-md": ["24px", {"lineHeight": "32px", "letterSpacing": "-0.01em", "fontWeight": "600"}],
+                        "body-md": ["16px", {"lineHeight": "24px", "fontWeight": "400"}],
+                        "label-sm": ["13px", {"lineHeight": "16px", "letterSpacing": "0.05em", "fontWeight": "600"}]
+                    }
+                },
+            },
+        }
+    </script>
+<style>
+        .glass-panel {
+            background: rgba(255, 255, 255, 0.7);
+            backdrop-filter: blur(20px);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+        }
+        .material-symbols-outlined {
+            font-variation-settings: 'FILL' 0, 'wght' 300, 'GRAD' 0, 'opsz' 24;
+        }
+    </style>
+<style>
+    body {
+      min-height: max(884px, 100dvh);
+    }
+  </style>
+  </head>
+<body class="bg-background text-on-surface font-body-md min-h-screen flex flex-col items-center">
+<!-- Top Navigation Anchor -->
+<header class="fixed top-0 w-full z-50 bg-surface/70 backdrop-blur-xl border-b border-outline-variant/10 shadow-sm flex justify-between items-center px-container-padding h-16">
+<div class="flex items-center gap-2">
+<span class="material-symbols-outlined text-secondary" style="font-variation-settings: 'FILL' 1;">water_drop</span>
+<span class="font-display-lg text-headline-md font-bold text-primary">AquaTrade</span>
+</div>
+<div class="flex items-center gap-4">
+<span class="font-label-sm text-on-surface-variant cursor-pointer hover:opacity-80">Already have an account?</span>
+<button class="font-label-sm text-secondary font-bold hover:opacity-80">Login</button>
+</div>
+</header>
+<main class="w-full max-w-4xl px-container-padding pt-24 pb-32 flex flex-col md:flex-row gap-stack-lg">
+<!-- Left Column: Branding/Value Prop -->
+<section class="flex-1 space-y-stack-md pt-8">
+<div class="space-y-unit">
+<span class="font-label-sm text-secondary-container bg-secondary-container/10 px-3 py-1 rounded-full border border-secondary-container/20">RETAIL INVESTOR</span>
+<h1 class="font-display-lg text-display-lg text-primary">Invest in a liquid future.</h1>
+<p class="font-body-lg text-on-surface-variant max-w-md">Join Water Ledger to access institutional-grade water assets and sustainable infrastructure projects across the globe.</p>
+</div>
+<div class="grid grid-cols-1 gap-stack-md mt-stack-lg">
+<div class="flex items-start gap-4 p-4 rounded-xl bg-surface-container-lowest border border-outline-variant/10 shadow-sm">
+<span class="material-symbols-outlined text-secondary">verified_user</span>
+<div>
+<p class="font-body-md font-bold text-on-surface">Institutional Trust</p>
+<p class="font-label-sm text-on-surface-variant">Regulatory compliant fintech platform for global water trading.</p>
+</div>
+</div>
+<div class="flex items-start gap-4 p-4 rounded-xl bg-surface-container-lowest border border-outline-variant/10 shadow-sm">
+<span class="material-symbols-outlined text-secondary">eco</span>
+<div>
+<p class="font-body-md font-bold text-on-surface">Environmental Impact</p>
+<p class="font-label-sm text-on-surface-variant">Support aquifer restoration and smart infrastructure directly.</p>
+</div>
+</div>
+</div>
+<div class="mt-stack-lg pt-stack-md hidden md:block">
+<div class="relative w-full h-48 rounded-2xl overflow-hidden shadow-lg border border-outline-variant/20">
+<img class="w-full h-full object-cover" data-alt="A serene landscape of a pristine mountain lake reflecting crystal clear blue skies during sunrise. The lighting is soft and ethereal, emphasizing the purity and value of natural water resources. The aesthetic is professional, clean, and aligns with high-finance environmental sustainability themes, using a palette of deep blues and cool whites." src="https://lh3.googleusercontent.com/aida-public/AB6AXuA9eEgaG5P83aIrLvcjI20-Em1jRLvTaQXrUKS1ctr-12ZcGFuk4T8r_s1ScdNQhWoaUDVMaWLdjnOvYKUX9TeRNzhngdtYVAjJBsrIOm14Z-215VkVjlkWsqDazjJxiGKh-zXcK-2pk5rLHjhE5CgFZdDgHLHPU06Af5TYQ7HmitQiQfJraFI7sguJ3XmZzWc9eGDJUqCTx_aZ_aX6V-LyHjVIFfg79m8hu5udGsuswmiamPbxU0K_KfVLkk5pmeirw1wCcEcsLVw"/>
+<div class="absolute inset-0 bg-gradient-to-t from-primary/60 to-transparent"></div>
+<div class="absolute bottom-4 left-4 text-white">
+<p class="font-label-sm uppercase tracking-widest opacity-80">Impact Snapshot</p>
+<p class="font-headline-md text-white">1.2M Kiloliters Conserved</p>
+</div>
+</div>
+</div>
+</section>
+<!-- Right Column: Registration Form -->
+<section class="flex-1">
+<div class="bg-surface-container-lowest p-8 rounded-3xl shadow-sm border border-outline-variant/10 glass-panel">
+<form class="space-y-stack-md">
+<h2 class="font-headline-md text-primary mb-stack-md">Create Account</h2>
+<div class="grid grid-cols-2 gap-stack-sm">
+<div class="space-y-unit">
+<label class="font-label-sm text-on-surface-variant">First Name</label>
+<input class="w-full px-4 py-3 bg-surface-container-low border-0 border-b border-outline-variant focus:border-secondary focus:ring-0 rounded-lg text-on-surface placeholder-on-surface-variant/40 transition-all" placeholder="John" type="text"/>
+</div>
+<div class="space-y-unit">
+<label class="font-label-sm text-on-surface-variant">Last Name</label>
+<input class="w-full px-4 py-3 bg-surface-container-low border-0 border-b border-outline-variant focus:border-secondary focus:ring-0 rounded-lg text-on-surface placeholder-on-surface-variant/40 transition-all" placeholder="Doe" type="text"/>
+</div>
+</div>
+<div class="space-y-unit">
+<label class="font-label-sm text-on-surface-variant">Email Address</label>
+<input class="w-full px-4 py-3 bg-surface-container-low border-0 border-b border-outline-variant focus:border-secondary focus:ring-0 rounded-lg text-on-surface placeholder-on-surface-variant/40 transition-all" placeholder="john.doe@finance.com" type="email"/>
+</div>
+<div class="grid grid-cols-1 md:grid-cols-2 gap-stack-sm">
+<div class="space-y-unit">
+<label class="font-label-sm text-on-surface-variant">Phone Number</label>
+<input class="w-full px-4 py-3 bg-surface-container-low border-0 border-b border-outline-variant focus:border-secondary focus:ring-0 rounded-lg text-on-surface placeholder-on-surface-variant/40 transition-all" placeholder="+1 (555) 000-0000" type="tel"/>
+</div>
+<div class="space-y-unit">
+<label class="font-label-sm text-on-surface-variant">Country</label>
+<select class="w-full px-4 py-3 bg-surface-container-low border-0 border-b border-outline-variant focus:border-secondary focus:ring-0 rounded-lg text-on-surface transition-all appearance-none">
+<option>United States</option>
+<option>United Kingdom</option>
+<option>Singapore</option>
+<option>Australia</option>
+</select>
+</div>
+</div>
+<div class="space-y-unit">
+<label class="font-label-sm text-on-surface-variant">Password</label>
+<div class="relative">
+<input class="w-full px-4 py-3 bg-surface-container-low border-0 border-b border-outline-variant focus:border-secondary focus:ring-0 rounded-lg text-on-surface placeholder-on-surface-variant/40 transition-all" placeholder="••••••••" type="password"/>
+<span class="material-symbols-outlined absolute right-4 top-3 text-on-surface-variant cursor-pointer">visibility</span>
+</div>
+</div>
+<!-- Optional Section: Interests -->
+<div class="pt-stack-md space-y-stack-sm">
+<p class="font-label-sm text-on-surface-variant uppercase tracking-wider">Investment Interests (Optional)</p>
+<div class="flex flex-wrap gap-2">
+<button class="px-3 py-2 rounded-full border border-outline-variant text-label-sm hover:border-secondary hover:text-secondary transition-colors" type="button">Aquifer Restoration</button>
+<button class="px-3 py-2 rounded-full border border-outline-variant text-label-sm hover:border-secondary hover:text-secondary transition-colors" type="button">Smart Infrastructure</button>
+<button class="px-3 py-2 rounded-full border border-secondary bg-secondary/5 text-secondary text-label-sm" type="button">Desalination Tech</button>
+<button class="px-3 py-2 rounded-full border border-outline-variant text-label-sm hover:border-secondary hover:text-secondary transition-colors" type="button">Water Rights</button>
+</div>
+</div>
+<!-- Optional Section: Risk Profile -->
+<div class="pt-stack-md space-y-stack-sm">
+<p class="font-label-sm text-on-surface-variant uppercase tracking-wider">Risk Profile (Optional)</p>
+<div class="grid grid-cols-3 gap-2">
+<div class="flex flex-col items-center justify-center p-3 rounded-xl border border-outline-variant hover:border-secondary cursor-pointer transition-all active:scale-95 group">
+<span class="font-label-sm text-on-surface-variant group-hover:text-secondary">Low</span>
+</div>
+<div class="flex flex-col items-center justify-center p-3 rounded-xl border border-secondary bg-secondary/5 cursor-pointer transition-all active:scale-95">
+<span class="font-label-sm text-secondary font-bold">Medium</span>
+</div>
+<div class="flex flex-col items-center justify-center p-3 rounded-xl border border-outline-variant hover:border-secondary cursor-pointer transition-all active:scale-95 group">
+<span class="font-label-sm text-on-surface-variant group-hover:text-secondary">High</span>
+</div>
+</div>
+</div>
+<div class="pt-stack-lg">
+<button class="w-full py-4 bg-primary text-on-primary font-bold rounded-xl shadow-lg active:scale-95 transition-transform flex items-center justify-center gap-2" type="submit">
+                            Create Account
+                            <span class="material-symbols-outlined text-sm">arrow_forward</span>
+</button>
+<p class="text-center font-label-sm text-on-surface-variant mt-4">
+                            By signing up, you agree to our <a class="text-secondary underline underline-offset-2" href="#">Terms of Service</a> and <a class="text-secondary underline underline-offset-2" href="#">Privacy Policy</a>.
+                        </p>
+</div>
+</form>
+</div>
+</section>
+</main>
+<!-- Success Feedback Overlay (Hidden by default, used for interaction reference) -->
+<div class="hidden fixed inset-0 z-[60] bg-primary/20 backdrop-blur-sm flex items-center justify-center p-container-padding">
+<div class="bg-surface-container-lowest p-stack-lg rounded-3xl shadow-2xl max-w-sm w-full text-center space-y-stack-md">
+<div class="w-16 h-16 bg-tertiary-fixed rounded-full flex items-center justify-center mx-auto">
+<span class="material-symbols-outlined text-on-tertiary-fixed text-4xl">check_circle</span>
+</div>
+<h3 class="font-headline-md text-primary">Registration Complete</h3>
+<p class="font-body-md text-on-surface-variant">Welcome to the future of liquid asset trading. Please check your email to verify your account.</p>
+<button class="w-full py-3 bg-secondary text-on-secondary rounded-xl font-bold">Go to Dashboard</button>
+</div>
+</div>
+</body></html>

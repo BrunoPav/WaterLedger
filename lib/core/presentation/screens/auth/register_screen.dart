@@ -315,8 +315,9 @@ class _RegisterScreenState extends State<RegisterScreen> {
             onPressed: () {
               if (_selected == _AccountType.company) {
                 context.push('/corporate-onboarding');
+              } else {
+                context.push('/retail-register');
               }
-              // Retail Investor: pendiente de implementar
             },
             style: ElevatedButton.styleFrom(
               backgroundColor: _primaryColor,

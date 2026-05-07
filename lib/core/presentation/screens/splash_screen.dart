@@ -28,7 +28,7 @@ class _SplashScreenState extends State<SplashScreen>
     super.initState();
     _progressController = AnimationController(
       vsync: this,
-      duration: const Duration(seconds: 10),
+      duration: const Duration(seconds: 5),
     )..forward().whenComplete(() {
         if (mounted) context.go('/login');
       });
