@@ -1,5 +1,5 @@
 import 'package:water_ledger/features/credit_issuance/domain/entities/water_project_entity.dart';
-import 'package:water_ledger/features/credit_issuance/domain/repository/credit_issuance_repository.dart';
+import 'package:water_ledger/features/credit_issuance/domain/repositories/credit_issuance_repository.dart';
 
 class UpdateWaterProjectUseCase {
   final CreditIssuanceRepository repository;

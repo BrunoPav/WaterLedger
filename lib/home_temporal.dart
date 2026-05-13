@@ -25,6 +25,13 @@ class HomeTemporal extends StatelessWidget {
                 },
                 child: Text('Ir a Empresa Emisora'),
               ),
+            ElevatedButton(
+                onPressed: () {
+                  context.push('/prueba-credito');
+                },
+                child: Text('Ir a Prueba de Crédito'),
+              ),  
+              
           ],
         ),
       ),

@@ -1,4 +1,5 @@
 import 'package:go_router/go_router.dart';
+import 'package:water_ledger/credito_temporal_screen.dart';
 import 'package:water_ledger/features/auditor/presentation/screens/auditor_screen.dart';
 import 'package:water_ledger/features/auditor/presentation/screens/documentation_screen.dart';
 import 'package:water_ledger/core/presentation/screens/auth/company_register_success_screen.dart';
@@ -13,7 +14,7 @@ import 'package:water_ledger/features/issuer/presentation/screen/issuing_company
 import 'package:water_ledger/home_temporal.dart';
 
 final GoRouter appRouter = GoRouter(
-  initialLocation: '/splash',
+  initialLocation: '/home',//iba splash
   routes: [
     GoRoute(path: '/splash', builder: (context, state) => const SplashScreen()),
     GoRoute(path: '/login', builder: (context, state) => const LoginScreen()),
@@ -23,6 +24,7 @@ final GoRouter appRouter = GoRouter(
     GoRoute(path: '/retail-register', builder: (context, state) => const RetailRegisterScreen()),
     GoRoute(path: '/retail-register-success', builder: (context, state) => const RetailRegisterSuccessScreen()),
     GoRoute(path: '/home', builder: (context, state) => const HomeTemporal()),
+    GoRoute(path: '/prueba-credito', builder: (context, state) => const CreditoTemporal()),
     GoRoute(
       path: '/issuing-company',
       builder: (context, state) => const IssuingCompanyScreen(),
