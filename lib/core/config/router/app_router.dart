@@ -10,6 +10,7 @@ import 'package:water_ledger/core/presentation/screens/auth/login_screen.dart';
 import 'package:water_ledger/core/presentation/screens/auth/register_screen.dart';
 import 'package:water_ledger/core/presentation/screens/splash_screen.dart';
 import 'package:water_ledger/features/credit_issuance/presentation/screens/credit_issuance_screen.dart';
+import 'package:water_ledger/features/credit_issuance/presentation/screens/roadmap_editor_screen.dart';
 import 'package:water_ledger/features/issuer/presentation/screen/issuing_company_screen.dart';
 import 'package:water_ledger/home_temporal.dart';
 
@@ -40,6 +41,10 @@ final GoRouter appRouter = GoRouter(
     GoRoute(
       path: '/credit-issuance',
       builder: (context, state) => const CreditIssuanceScreen(),
+    ),
+    GoRoute(
+      path: '/roadmap-editor',
+      builder: (context, state) => const RoadmapEditorScreen(),
     ),
   ],
 );  
