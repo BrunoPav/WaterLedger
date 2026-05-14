@@ -22,28 +22,34 @@ class HomeTemporal extends ConsumerWidget {
               child: Text('Ir a Auditor'),
             ),
             ElevatedButton(
-                onPressed: () {
-                  context.push('/issuing-company');
-                },
-                child: Text('Ir a Empresa Emisora'),
-              ),
+              onPressed: () {
+                context.push('/issuing-company');
+              },
+              child: Text('Ir a Empresa Emisora'),
+            ),
             ElevatedButton(
-                onPressed: () {
-                  context.push('/prueba-credito');
-                },
-                child: Text('Ir a Prueba de Crédito'),
-              ),
+              onPressed: () {
+                context.push('/prueba-credito');
+              },
+              child: Text('Ir a Prueba de Crédito'),
+            ),
             ElevatedButton(
-                onPressed: () async {
-                  // Crea un borrador con un companyId mockeado y navega al editor de roadmap
-                  await ref
-                      .read(creditRequestProvider.notifier)
-                      .createDraft('mock_company_id');
-                  if (!context.mounted) return;
-                  context.push('/roadmap-editor');
-                },
-                child: Text('Ir a Roadmap Editor (Paso 4)'),
-              ),
+              onPressed: () async {
+                // Crea un borrador con un companyId mockeado y navega al editor de roadmap
+                await ref
+                    .read(creditRequestProvider.notifier)
+                    .createDraft('mock_company_id');
+                if (!context.mounted) return;
+                context.push('/roadmap-editor');
+              },
+              child: Text('Ir a Roadmap Editor (Paso 4)'),
+            ),
+            ElevatedButton(
+              onPressed: () {
+                context.go('/project-info-test');
+              },
+              child: const Text('Ir a Project Info'),
+            ),
           ],
         ),
       ),
