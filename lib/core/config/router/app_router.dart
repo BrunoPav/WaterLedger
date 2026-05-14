@@ -14,18 +14,38 @@ import 'package:water_ledger/features/credit_issuance/presentation/screens/roadm
 import 'package:water_ledger/features/issuer/presentation/screen/issuing_company_screen.dart';
 import 'package:water_ledger/home_temporal.dart';
 
+import 'package:water_ledger/core/Stitch_Templates/Steps/step_3_project_info/project_info_step_screen.dart';
+
 final GoRouter appRouter = GoRouter(
-  initialLocation: '/home',//iba splash
+  initialLocation: '/home', //iba splash
   routes: [
     GoRoute(path: '/splash', builder: (context, state) => const SplashScreen()),
     GoRoute(path: '/login', builder: (context, state) => const LoginScreen()),
-    GoRoute(path: '/register', builder: (context, state) => const RegisterScreen()),
-    GoRoute(path: '/corporate-onboarding', builder: (context, state) => const CorporateOnboardingScreen()),
-    GoRoute(path: '/company-register-success', builder: (context, state) => const CompanyRegisterSuccessScreen()),
-    GoRoute(path: '/retail-register', builder: (context, state) => const RetailRegisterScreen()),
-    GoRoute(path: '/retail-register-success', builder: (context, state) => const RetailRegisterSuccessScreen()),
+    GoRoute(
+      path: '/register',
+      builder: (context, state) => const RegisterScreen(),
+    ),
+    GoRoute(
+      path: '/corporate-onboarding',
+      builder: (context, state) => const CorporateOnboardingScreen(),
+    ),
+    GoRoute(
+      path: '/company-register-success',
+      builder: (context, state) => const CompanyRegisterSuccessScreen(),
+    ),
+    GoRoute(
+      path: '/retail-register',
+      builder: (context, state) => const RetailRegisterScreen(),
+    ),
+    GoRoute(
+      path: '/retail-register-success',
+      builder: (context, state) => const RetailRegisterSuccessScreen(),
+    ),
     GoRoute(path: '/home', builder: (context, state) => const HomeTemporal()),
-    GoRoute(path: '/prueba-credito', builder: (context, state) => const CreditoTemporal()),
+    GoRoute(
+      path: '/prueba-credito',
+      builder: (context, state) => const CreditoTemporal(),
+    ),
     GoRoute(
       path: '/issuing-company',
       builder: (context, state) => const IssuingCompanyScreen(),
@@ -46,5 +66,9 @@ final GoRouter appRouter = GoRouter(
       path: '/roadmap-editor',
       builder: (context, state) => const RoadmapEditorScreen(),
     ),
+    GoRoute(
+      path: '/project-info-test',
+      builder: (context, state) => const ProjectInfoStepScreen(),
+    ),
   ],
-);  
+);
