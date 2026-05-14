@@ -112,7 +112,7 @@
       min-height: max(884px, 100dvh);
     }
   </style>
-  </head>
+</head>
 <body class="bg-surface font-body-md text-on-surface antialiased min-h-screen flex flex-col">
 <!-- Top Navigation Anchor (Suppressing Global Shell for Focused Journey) -->
 <header class="fixed top-0 left-0 w-full z-50 bg-surface/70 backdrop-blur-md border-b border-outline-variant/10">
@@ -131,8 +131,7 @@
 <p class="font-body-lg text-on-surface-variant max-w-lg mx-auto">Choose the account type that best describes your goals in the water credit ecosystem.</p>
 </div>
 <!-- Bento-style Card Selection Grid -->
-<div class="grid grid-cols-1 md:grid-cols-2 gap-stack-md items-stretch">
-<!-- Card 1: Retail Investor (Active/Selected State Example) -->
+<div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-stack-md items-stretch"><!-- Retail Investor -->
 <button class="flex flex-col text-left group relative p-stack-md bg-surface-container-lowest rounded-xl border-2 border-secondary-container selection-ring transition-all duration-300 hover:shadow-lg h-full overflow-hidden">
 <div class="absolute top-4 right-4 bg-secondary-container rounded-full p-1 flex items-center justify-center">
 <span class="material-symbols-outlined text-secondary" style="font-variation-settings: 'FILL' 1;">check_circle</span>
@@ -142,49 +141,104 @@
 </div>
 <div class="mt-auto">
 <h3 class="font-headline-md text-headline-md text-primary mb-unit">Retail Investor</h3>
-<p class="font-body-md text-on-surface-variant">Explore and invest in water credits</p>
+<p class="font-body-md text-on-surface-variant">Invest in verified water credits and track your portfolio.</p>
 </div>
-<div class="mt-stack-md pt-stack-md border-t border-outline-variant/20 grid grid-cols-2 gap-2">
-<div class="flex items-center gap-2">
+<div class="mt-stack-md pt-stack-md border-t border-outline-variant/20 flex gap-4">
+<div class="flex items-center gap-1">
 <span class="material-symbols-outlined text-secondary text-sm">show_chart</span>
-<span class="text-[12px] font-label-sm text-on-surface-variant">Micro-investments</span>
+<span class="text-[12px] font-label-sm text-on-surface-variant">Portfolio</span>
 </div>
-<div class="flex items-center gap-2">
+<div class="flex items-center gap-1">
 <span class="material-symbols-outlined text-secondary text-sm">account_balance_wallet</span>
-<span class="text-[12px] font-label-sm text-on-surface-variant">Digital Wallet</span>
+<span class="text-[12px] font-label-sm text-on-surface-variant">Wallet</span>
 </div>
-</div>
-<div class="absolute -bottom-6 -right-6 opacity-5 group-hover:opacity-10 transition-opacity">
-<img class="w-32 h-32 object-cover rounded-full" data-alt="A striking digital installation art piece featuring glowing, generative geometric shapes suspended in a vast, minimalist gallery space. The room is illuminated by high-key, soft white lighting that creates a bright, modern light-mode aesthetic. The artwork relies on a sophisticated palette of deep blacks and pristine whites, punctuated by intense accents of vibrant cyan. The mood is serene yet technologically advanced." src="https://lh3.googleusercontent.com/aida-public/AB6AXuCVSguaPAwgeL-4MBmmeQGyRiI4OfaACyFOkL9kn0n--LY_ceBFCL7itEeJX5i6el545xeFqaww38qt0u_p6GJmeHnEwXGl267FjBzTN-yt70UVUWjdmUGgWLbV1YqcC-MPZPP9Rpu8fGUqiRK2GHPr9z38kfTx8qShQKE3zMG4CJnL-vidavY553n8eP5lhXp_Xu9NCLXrScvFEGyfPpPKqlIAiY7H4i8fuVuIIMdus1nyivPgpiKt7z8MLa3A2Dmjg1tSPahlYag"/>
 </div>
 </button>
-<!-- Card 2: Company / Organization -->
+<!-- Company -->
 <button class="flex flex-col text-left group relative p-stack-md bg-surface-container-lowest rounded-xl border border-outline-variant/30 transition-all duration-300 hover:border-secondary-container/50 hover:shadow-md h-full overflow-hidden">
 <div class="mb-stack-md w-16 h-16 rounded-xl bg-primary/5 flex items-center justify-center text-primary">
 <span class="material-symbols-outlined text-[40px]">corporate_fare</span>
 </div>
 <div class="mt-auto">
-<h3 class="font-headline-md text-headline-md text-primary mb-unit">Company / Organization</h3>
-<p class="font-body-md text-on-surface-variant">Buy credits or request issuance for water sustainability projects</p>
+<h3 class="font-headline-md text-headline-md text-primary mb-unit">Company</h3>
+<p class="font-body-md text-on-surface-variant">Purchase credits and request water credit issuance for sustainability projects.</p>
 </div>
-<div class="mt-stack-md pt-stack-md border-t border-outline-variant/20 grid grid-cols-2 gap-2">
-<div class="flex items-center gap-2">
+<div class="mt-stack-md pt-stack-md border-t border-outline-variant/20 flex gap-4">
+<div class="flex items-center gap-1">
 <span class="material-symbols-outlined text-secondary text-sm">verified</span>
-<span class="text-[12px] font-label-sm text-on-surface-variant">Project Issuance</span>
+<span class="text-[12px] font-label-sm text-on-surface-variant">Issuance</span>
 </div>
-<div class="flex items-center gap-2">
+<div class="flex items-center gap-1">
 <span class="material-symbols-outlined text-secondary text-sm">pie_chart</span>
-<span class="text-[12px] font-label-sm text-on-surface-variant">ESG Reporting</span>
+<span class="text-[12px] font-label-sm text-on-surface-variant">ESG</span>
 </div>
-</div>
-<div class="absolute -bottom-6 -right-6 opacity-5 group-hover:opacity-10 transition-opacity">
-<img class="w-32 h-32 object-cover rounded-full" data-alt="Detailed isometric architectural visualization of a sustainable urban infrastructure project with integrated water management systems. The scene is rendered in a minimalist white-mode aesthetic with subtle navy blue and vibrant cyan outlines. Lighting is crisp and even, suggesting a high-end institutional design. The composition is clean and organized, conveying trustworthiness and visionary engineering." src="https://lh3.googleusercontent.com/aida-public/AB6AXuC0rOxx0pZJ3MBT2RlbXCXIsE0lhvtbE3WvXU5nyn8N8xNwn0dZ16fMcU9zSVpk1Wt4ae3UOFVr1VgFHuQhcVrP2fVBVJoeH8sZbgV1RtTtrK2k46JJNBqKRinf5UsN1dD0S7blSiyuvONVFh0AmNVILeRQ73qwTkEk_IcCY80NgHAqE5lmEEbz8suVc1GzyAQpBfdmel3RuZNHQxyqUMiZci6olY2slZyO_xkVkeHOkw8IBQ5S4lM-xjMrbtpOWj4KBcdqDVkVxrc"/>
 </div>
 </button>
+<!-- Auditor / Audit Firm -->
+<button class="flex flex-col text-left group relative p-stack-md bg-surface-container-lowest rounded-xl border border-outline-variant/30 transition-all duration-300 hover:border-secondary-container/50 hover:shadow-md h-full overflow-hidden">
+<div class="mb-stack-md w-16 h-16 rounded-xl bg-primary/5 flex items-center justify-center text-primary">
+<span class="material-symbols-outlined text-[40px]">fact_check</span>
 </div>
+<div class="mt-auto">
+<h3 class="font-headline-md text-headline-md text-primary mb-unit">Auditor</h3>
+<p class="font-body-md text-on-surface-variant">Review projects, manage audit stages, and validate submitted documentation.</p>
+</div>
+<div class="mt-stack-md pt-stack-md border-t border-outline-variant/20 flex gap-4">
+<div class="flex items-center gap-1">
+<span class="material-symbols-outlined text-secondary text-sm">assignment</span>
+<span class="text-[12px] font-label-sm text-on-surface-variant">Review</span>
+</div>
+<div class="flex items-center gap-1">
+<span class="material-symbols-outlined text-secondary text-sm">description</span>
+<span class="text-[12px] font-label-sm text-on-surface-variant">Docs</span>
+</div>
+</div>
+</button>
+<!-- Certification Entity -->
+<button class="flex flex-col text-left group relative p-stack-md bg-surface-container-lowest rounded-xl border border-outline-variant/30 transition-all duration-300 hover:border-secondary-container/50 hover:shadow-md h-full overflow-hidden">
+<div class="mb-stack-md w-16 h-16 rounded-xl bg-primary/5 flex items-center justify-center text-primary">
+<span class="material-symbols-outlined text-[40px]">workspace_premium</span>
+</div>
+<div class="mt-auto">
+<h3 class="font-headline-md text-headline-md text-primary mb-unit">Certification Entity</h3>
+<p class="font-body-md text-on-surface-variant">Validate approved projects and certify emission eligibility.</p>
+</div>
+<div class="mt-stack-md pt-stack-md border-t border-outline-variant/20 flex gap-4">
+<div class="flex items-center gap-1">
+<span class="material-symbols-outlined text-secondary text-sm">approval</span>
+<span class="text-[12px] font-label-sm text-on-surface-variant">Validate</span>
+</div>
+<div class="flex items-center gap-1">
+<span class="material-symbols-outlined text-secondary text-sm">military_tech</span>
+<span class="text-[12px] font-label-sm text-on-surface-variant">Certify</span>
+</div>
+</div>
+</button>
+<!-- Insurance Provider -->
+<button class="flex flex-col text-left group relative p-stack-md bg-surface-container-lowest rounded-xl border border-outline-variant/30 transition-all duration-300 hover:border-secondary-container/50 hover:shadow-md h-full overflow-hidden">
+<div class="mb-stack-md w-16 h-16 rounded-xl bg-primary/5 flex items-center justify-center text-primary">
+<span class="material-symbols-outlined text-[40px]">shield</span>
+</div>
+<div class="mt-auto">
+<h3 class="font-headline-md text-headline-md text-primary mb-unit">Insurance Provider</h3>
+<p class="font-body-md text-on-surface-variant">Offer insurance plans for approved sustainability projects.</p>
+</div>
+<div class="mt-stack-md pt-stack-md border-t border-outline-variant/20 flex gap-4">
+<div class="flex items-center gap-1">
+<span class="material-symbols-outlined text-secondary text-sm">policy</span>
+<span class="text-[12px] font-label-sm text-on-surface-variant">Plans</span>
+</div>
+<div class="flex items-center gap-1">
+<span class="material-symbols-outlined text-secondary text-sm">health_and_safety</span>
+<span class="text-[12px] font-label-sm text-on-surface-variant">Protection</span>
+</div>
+</div>
+</button></div>
 <!-- Action Section -->
 <div class="mt-stack-lg flex flex-col items-center gap-stack-md">
-<button class="w-full max-w-sm bg-primary text-on-primary py-4 px-8 rounded-full font-headline-md hover:opacity-90 active:scale-[0.98] transition-all shadow-lg">
+<p class="text-center text-on-surface-variant font-body-md max-w-md mx-auto mb-stack-md italic">
+    Operational access for auditors, certification entities, and insurance providers requires administrative approval.
+</p><button class="w-full max-w-sm bg-primary text-on-primary py-4 px-8 rounded-full font-headline-md hover:opacity-90 active:scale-[0.98] transition-all shadow-lg">
                     Continue with Registration
                 </button>
 <div class="flex items-center gap-2 text-on-surface-variant font-label-sm">

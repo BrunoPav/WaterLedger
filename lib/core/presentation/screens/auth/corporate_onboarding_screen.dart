@@ -138,15 +138,30 @@ class _CorporateOnboardingScreenState
                 child: Row(
                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
                   children: [
-                    const Text(
-                      'Water Ledger',
-                      style: TextStyle(
-                        fontFamily: 'Manrope',
-                        fontSize: 20,
-                        fontWeight: FontWeight.w700,
-                        color: _primaryColor,
-                        letterSpacing: -0.3,
-                      ),
+                    Row(
+                      children: [
+                        IconButton(
+                          onPressed: () => context.pop(),
+                          icon: const Icon(
+                            Icons.arrow_back,
+                            color: _onSurfaceVariantColor,
+                            size: 22,
+                          ),
+                          padding: EdgeInsets.zero,
+                          visualDensity: VisualDensity.compact,
+                        ),
+                        const SizedBox(width: 4),
+                        const Text(
+                          'Water Ledger',
+                          style: TextStyle(
+                            fontFamily: 'Manrope',
+                            fontSize: 20,
+                            fontWeight: FontWeight.w700,
+                            color: _primaryColor,
+                            letterSpacing: -0.3,
+                          ),
+                        ),
+                      ],
                     ),
                     Text(
                       'Step ${_currentStep + 1} of $_totalSteps',

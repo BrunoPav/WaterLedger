@@ -1,0 +1,279 @@
+<!DOCTYPE html>
+
+<html lang="en"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0, viewport-fit=cover" name="viewport"/>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<link href="https://fonts.googleapis.com/css2?family=Manrope:wght@400;600;700&amp;family=Inter:wght@400;600&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<script id="tailwind-config">
+        tailwind.config = {
+            darkMode: "class",
+            theme: {
+                extend: {
+                    "colors": {
+                        "on-surface": "#191c1e",
+                        "on-secondary": "#ffffff",
+                        "on-background": "#191c1e",
+                        "surface-container": "#eceef0",
+                        "primary-container": "#0d1c32",
+                        "error-container": "#ffdad6",
+                        "tertiary-container": "#002204",
+                        "on-surface-variant": "#44474d",
+                        "on-secondary-fixed-variant": "#004f58",
+                        "secondary-fixed-dim": "#00daf3",
+                        "outline": "#75777e",
+                        "tertiary-fixed": "#a3f69c",
+                        "primary-fixed-dim": "#b9c7e4",
+                        "outline-variant": "#c5c6cd",
+                        "background": "#f7f9fb",
+                        "on-error-container": "#93000a",
+                        "surface-container-lowest": "#ffffff",
+                        "error": "#ba1a1a",
+                        "surface-container-low": "#f2f4f6",
+                        "secondary-container": "#00e3fd",
+                        "on-primary-container": "#76849f",
+                        "on-error": "#ffffff",
+                        "surface-bright": "#f7f9fb",
+                        "surface-variant": "#e0e3e5",
+                        "secondary": "#006875",
+                        "primary": "#000000",
+                        "surface": "#f7f9fb",
+                        "inverse-primary": "#b9c7e4",
+                        "on-primary-fixed": "#0d1c32",
+                        "on-primary": "#ffffff",
+                        "inverse-on-surface": "#eff1f3",
+                        "surface-tint": "#515f78",
+                        "primary-fixed": "#d6e3ff",
+                        "on-tertiary-container": "#469446",
+                        "tertiary-fixed-dim": "#88d982",
+                        "tertiary": "#000000",
+                        "on-secondary-container": "#00616d",
+                        "surface-dim": "#d8dadc",
+                        "on-secondary-fixed": "#001f24",
+                        "surface-container-high": "#e6e8ea",
+                        "on-tertiary": "#ffffff",
+                        "on-primary-fixed-variant": "#39475f",
+                        "surface-container-highest": "#e0e3e5",
+                        "secondary-fixed": "#9cf0ff",
+                        "on-tertiary-fixed-variant": "#005312",
+                        "on-tertiary-fixed": "#002204",
+                        "inverse-surface": "#2d3133"
+                    },
+                    "borderRadius": {
+                        "DEFAULT": "0.25rem",
+                        "lg": "0.5rem",
+                        "xl": "0.75rem",
+                        "full": "9999px"
+                    },
+                    "spacing": {
+                        "unit": "4px",
+                        "stack-lg": "32px",
+                        "container-padding": "20px",
+                        "stack-sm": "8px",
+                        "gutter": "16px",
+                        "stack-md": "16px"
+                    },
+                    "fontFamily": {
+                        "headline-md": ["Manrope"],
+                        "display-lg": ["Manrope"],
+                        "body-lg": ["Inter"],
+                        "label-sm": ["Inter"],
+                        "body-md": ["Inter"]
+                    },
+                    "fontSize": {
+                        "headline-md": ["24px", {"lineHeight": "32px", "letterSpacing": "-0.01em", "fontWeight": "600"}],
+                        "display-lg": ["40px", {"lineHeight": "48px", "letterSpacing": "-0.02em", "fontWeight": "700"}],
+                        "body-lg": ["18px", {"lineHeight": "28px", "fontWeight": "400"}],
+                        "label-sm": ["13px", {"lineHeight": "16px", "letterSpacing": "0.05em", "fontWeight": "600"}],
+                        "body-md": ["16px", {"lineHeight": "24px", "fontWeight": "400"}]
+                    }
+                }
+            }
+        }
+    </script>
+<style>
+        body {
+            background-color: #f7f9fb;
+            font-family: 'Inter', sans-serif;
+            -webkit-font-smoothing: antialiased;
+        }
+        .glass-card {
+            background: rgba(255, 255, 255, 0.7);
+            backdrop-filter: blur(20px);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+        }
+        .material-symbols-outlined {
+            font-variation-settings: 'FILL' 0, 'wght' 300, 'GRAD' 0, 'opsz' 24;
+        }
+        .input-underlined {
+            border: none;
+            border-bottom: 1px solid #E2E8F0;
+            background: transparent;
+            padding: 8px 0;
+            transition: border-color 0.2s ease;
+        }
+        .input-underlined:focus {
+            outline: none;
+            border-bottom-color: #00e3fd;
+            ring: 0;
+        }
+    </style>
+<style>
+    body {
+      min-height: max(884px, 100dvh);
+    }
+  </style>
+  </head>
+<body class="text-on-surface">
+<!-- Top App Bar (As per JSON configuration, modified for back context) -->
+<header class="fixed top-0 left-0 w-full z-50 bg-surface/70 backdrop-blur-md border-b border-outline-variant/10 shadow-sm h-16 flex items-center px-4">
+<div class="flex items-center gap-4">
+<button class="active:scale-95 transition-all text-on-surface-variant">
+<span class="material-symbols-outlined">arrow_back</span>
+</button>
+<h1 class="font-display-lg text-headline-md text-primary tracking-tight">Water Ledger</h1>
+</div>
+</header>
+<main class="pt-24 pb-12 px-container-padding max-w-lg mx-auto">
+<!-- Header Section -->
+<section class="mb-stack-lg">
+<h2 class="font-headline-md text-headline-md text-on-surface mb-1">Register as Auditor</h2>
+<p class="font-body-md text-on-surface-variant">Apply to participate in the Water Ledger verification ecosystem.</p>
+</section>
+<!-- Form Container -->
+<form class="space-y-stack-md">
+<!-- Section 1: Basic Information -->
+<div class="bg-surface-container-lowest border border-outline-variant/30 rounded-xl p-stack-md shadow-[0_4px_12px_rgba(0,0,0,0.04)]">
+<h3 class="font-label-sm text-label-sm text-on-surface-variant uppercase tracking-widest mb-stack-md">Basic Information</h3>
+<div class="space-y-5">
+<div class="flex flex-col">
+<label class="font-label-sm text-label-sm text-on-surface-variant mb-1">Auditor / Firm Name</label>
+<input class="input-underlined font-body-md text-on-surface placeholder:text-outline-variant" placeholder="e.g. ESG Verification Partners" type="text"/>
+</div>
+<div class="flex flex-col">
+<label class="font-label-sm text-label-sm text-on-surface-variant mb-1">Business Email</label>
+<input class="input-underlined font-body-md text-on-surface placeholder:text-outline-variant" placeholder="email@firm.com" type="email"/>
+</div>
+<div class="grid grid-cols-2 gap-4">
+<div class="flex flex-col">
+<label class="font-label-sm text-label-sm text-on-surface-variant mb-1">Password</label>
+<input class="input-underlined font-body-md text-on-surface placeholder:text-outline-variant" placeholder="••••••••" type="password"/>
+</div>
+<div class="flex flex-col">
+<label class="font-label-sm text-label-sm text-on-surface-variant mb-1">Confirm Password</label>
+<input class="input-underlined font-body-md text-on-surface placeholder:text-outline-variant" placeholder="••••••••" type="password"/>
+</div>
+</div>
+<div class="flex flex-col">
+<label class="font-label-sm text-label-sm text-on-surface-variant mb-1">Phone Number</label>
+<input class="input-underlined font-body-md text-on-surface placeholder:text-outline-variant" placeholder="+1 (555) 000-0000" type="tel"/>
+</div>
+<div class="flex flex-col">
+<label class="font-label-sm text-label-sm text-on-surface-variant mb-1">Country / Region</label>
+<select class="input-underlined font-body-md text-on-surface bg-transparent appearance-none">
+<option>Select Region</option>
+<option>Australia</option>
+<option>United States</option>
+<option>European Union</option>
+<option>Singapore</option>
+</select>
+</div>
+</div>
+</div>
+<!-- Section 2: Audit Specialization -->
+<div class="bg-surface-container-lowest border border-outline-variant/30 rounded-xl p-stack-md shadow-[0_4px_12px_rgba(0,0,0,0.04)]">
+<label class="font-label-sm text-label-sm text-on-surface-variant uppercase tracking-widest mb-stack-md block">Audit Specialization</label>
+<div class="flex flex-wrap gap-2">
+<button class="px-4 py-2 rounded-full border border-secondary bg-secondary/5 text-secondary font-label-sm flex items-center gap-2" type="button">
+                        Environmental Audit
+                        <span class="material-symbols-outlined text-[18px]">check_circle</span>
+</button>
+<button class="px-4 py-2 rounded-full border border-outline-variant text-on-surface-variant font-label-sm hover:border-secondary transition-colors" type="button">
+                        Financial Audit
+                    </button>
+<button class="px-4 py-2 rounded-full border border-outline-variant text-on-surface-variant font-label-sm hover:border-secondary transition-colors" type="button">
+                        Accounting Audit
+                    </button>
+</div>
+</div>
+<!-- Section 3: Professional Information -->
+<div class="bg-surface-container-lowest border border-outline-variant/30 rounded-xl p-stack-md shadow-[0_4px_12px_rgba(0,0,0,0.04)]">
+<h3 class="font-label-sm text-label-sm text-on-surface-variant uppercase tracking-widest mb-stack-md">Professional Information</h3>
+<div class="space-y-5">
+<div class="flex flex-col">
+<label class="font-label-sm text-label-sm text-on-surface-variant mb-1">Years of Experience</label>
+<input class="input-underlined font-body-md text-on-surface placeholder:text-outline-variant" placeholder="5" type="number"/>
+</div>
+<div class="flex flex-col">
+<label class="font-label-sm text-label-sm text-on-surface-variant mb-1">Certifications / Licenses</label>
+<input class="input-underlined font-body-md text-on-surface placeholder:text-outline-variant" placeholder="e.g. ISO 14001 Lead Auditor" type="text"/>
+</div>
+<div class="flex flex-col">
+<label class="font-label-sm text-label-sm text-on-surface-variant mb-1">Website (optional)</label>
+<input class="input-underlined font-body-md text-on-surface placeholder:text-outline-variant" placeholder="https://www.firm.com" type="url"/>
+</div>
+</div>
+</div>
+<!-- Section 4: Supporting Documentation -->
+<div class="bg-surface-container-lowest border border-outline-variant/30 rounded-xl p-stack-md shadow-[0_4px_12px_rgba(0,0,0,0.04)]">
+<label class="font-label-sm text-label-sm text-on-surface-variant uppercase tracking-widest mb-stack-md block">Supporting Documentation</label>
+<div class="grid grid-cols-1 gap-4">
+<!-- Upload Card 1 -->
+<div class="border-2 border-dashed border-outline-variant/40 rounded-xl p-4 flex items-center justify-between group hover:border-secondary transition-colors">
+<div class="flex items-center gap-3">
+<div class="w-10 h-10 rounded-lg bg-surface-container flex items-center justify-center text-primary">
+<span class="material-symbols-outlined">description</span>
+</div>
+<div>
+<p class="font-label-sm text-on-surface">Accreditation Documents</p>
+<p class="text-[11px] text-on-surface-variant">PDF, JPG (Max 10MB)</p>
+</div>
+</div>
+<button class="text-secondary font-label-sm active:scale-95 transition-transform" type="button">Upload File</button>
+</div>
+<!-- Upload Card 2 -->
+<div class="border-2 border-dashed border-outline-variant/40 rounded-xl p-4 flex items-center justify-between group hover:border-secondary transition-colors">
+<div class="flex items-center gap-3">
+<div class="w-10 h-10 rounded-lg bg-surface-container flex items-center justify-center text-primary">
+<span class="material-symbols-outlined">verified_user</span>
+</div>
+<div>
+<p class="font-label-sm text-on-surface">Professional Certifications</p>
+<p class="text-[11px] text-on-surface-variant">PDF, JPG (Max 10MB)</p>
+</div>
+</div>
+<button class="text-secondary font-label-sm active:scale-95 transition-transform" type="button">Upload File</button>
+</div>
+</div>
+</div>
+<!-- Bottom Informational Card -->
+<div class="bg-surface-container-low rounded-xl p-4 flex gap-4 items-start">
+<div class="mt-1">
+<span class="material-symbols-outlined text-secondary" style="font-variation-settings: 'FILL' 1;">gpp_maybe</span>
+</div>
+<div>
+<h4 class="font-label-sm text-on-surface">Administrative Approval Required</h4>
+<p class="font-body-md text-[14px] text-on-surface-variant leading-relaxed">Your account will remain pending until reviewed and approved by a platform administrator.</p>
+</div>
+</div>
+<!-- Image Asset for Branding Context -->
+<div class="relative h-40 rounded-2xl overflow-hidden mb-4">
+<img alt="Auditor Workspace" class="w-full h-full object-cover" data-alt="A professional and modern office interior with large glass windows overlooking a serene water body. The scene is bathed in natural, bright daylight, creating a calm and institutional atmosphere. Minimalist furniture in deep navy and brushed steel accents occupy the space, reflecting a high-end fintech brand identity. The overall aesthetic is clean, visionary, and extremely sophisticated." src="https://lh3.googleusercontent.com/aida-public/AB6AXuCu1Me2icIzSAX3zsULGUVf5BCvQVQgvp0wZSCz0iKVEA9syVmTy6DAfY5D5uRDZko6UUyFvarIOAmBimGGrsC2Lc-maW_Q0Q4OOTactV76UNFDtY_BsXsZyjo2gbNhHFDKJknMLN-Wznl_iunskQf2txyrel2z9dFVCuh8tzYW4c-En6SapfN488k5pTAoFjBFU86NWqx4KUE5VAGakqqTIYULAt7gIoUEqnG2vj2Rnpg5NWx-QcgypV2AzSUwQiuZDgVnlvsziBM"/>
+<div class="absolute inset-0 bg-gradient-to-t from-primary/40 to-transparent"></div>
+</div>
+<!-- Actions -->
+<div class="space-y-3 pt-4">
+<button class="w-full bg-primary text-on-primary font-label-sm py-4 rounded-xl shadow-lg active:scale-[0.98] transition-all" type="submit">
+                    Submit Registration
+                </button>
+<button class="w-full text-on-surface-variant font-label-sm py-2 hover:text-primary transition-colors" type="button">
+                    Back
+                </button>
+</div>
+</form>
+</main>
+<!-- Bottom Nav Bar (Suppressed for transactional screens as per logic, but adding a spacer for visual balance if needed) -->
+<div class="h-8"></div>
+</body></html>

@@ -2,7 +2,15 @@ import 'dart:ui';
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 
-enum _AccountType { retailInvestor, company }
+// Versión anterior con 2 tipos (comentada al expandir a 5 tipos según nuevo diseño):
+// enum _AccountType { retailInvestor, company }
+enum _AccountType {
+  retailInvestor,
+  company,
+  auditor,
+  certificationEntity,
+  insuranceProvider,
+}
 
 class RegisterScreen extends StatefulWidget {
   const RegisterScreen({super.key});
@@ -39,27 +47,96 @@ class _RegisterScreenState extends State<RegisterScreen> {
                 children: [
                   _buildTitleSection(),
                   const SizedBox(height: 32),
+                  // Cards anteriores (2 tipos) — comentados al expandir a 5 tipos:
+                  // _buildCard(
+                  //   type: _AccountType.retailInvestor,
+                  //   icon: Icons.person_outline,
+                  //   title: 'Retail Investor',
+                  //   description: 'Explore and invest in water credits',
+                  //   features: [
+                  //     (Icons.show_chart, 'Micro-investments'),
+                  //     (Icons.account_balance_wallet_outlined, 'Digital Wallet'),
+                  //   ],
+                  // ),
+                  // _buildCard(
+                  //   type: _AccountType.company,
+                  //   icon: Icons.corporate_fare,
+                  //   title: 'Company / Organization',
+                  //   description: 'Buy credits or request issuance for water sustainability projects',
+                  //   features: [
+                  //     (Icons.verified_outlined, 'Project Issuance'),
+                  //     (Icons.pie_chart_outline, 'ESG Reporting'),
+                  //   ],
+                  // ),
                   _buildCard(
                     type: _AccountType.retailInvestor,
                     icon: Icons.person_outline,
                     title: 'Retail Investor',
-                    description: 'Explore and invest in water credits',
+                    description: 'Invest in verified water credits and track your portfolio.',
                     features: [
-                      (Icons.show_chart, 'Micro-investments'),
-                      (Icons.account_balance_wallet_outlined, 'Digital Wallet'),
+                      (Icons.show_chart, 'Portfolio'),
+                      (Icons.account_balance_wallet_outlined, 'Wallet'),
                     ],
                   ),
                   const SizedBox(height: 16),
                   _buildCard(
                     type: _AccountType.company,
                     icon: Icons.corporate_fare,
-                    title: 'Company / Organization',
-                    description:
-                        'Buy credits or request issuance for water sustainability projects',
+                    title: 'Company',
+                    description: 'Purchase credits and request water credit issuance for sustainability projects.',
                     features: [
-                      (Icons.verified_outlined, 'Project Issuance'),
-                      (Icons.pie_chart_outline, 'ESG Reporting'),
+                      (Icons.verified_outlined, 'Issuance'),
+                      (Icons.pie_chart_outline, 'ESG'),
                     ],
+                  ),
+                  const SizedBox(height: 16),
+                  _buildCard(
+                    type: _AccountType.auditor,
+                    icon: Icons.fact_check_outlined,
+                    title: 'Auditor',
+                    description: 'Review projects, manage audit stages, and validate submitted documentation.',
+                    features: [
+                      (Icons.assignment_outlined, 'Review'),
+                      (Icons.description_outlined, 'Docs'),
+                    ],
+                  ),
+                  const SizedBox(height: 16),
+                  _buildCard(
+                    type: _AccountType.certificationEntity,
+                    icon: Icons.workspace_premium_outlined,
+                    title: 'Certification Entity',
+                    description: 'Validate approved projects and certify emission eligibility.',
+                    features: [
+                      (Icons.verified_user_outlined, 'Validate'),
+                      (Icons.military_tech_outlined, 'Certify'),
+                    ],
+                  ),
+                  const SizedBox(height: 16),
+                  _buildCard(
+                    type: _AccountType.insuranceProvider,
+                    icon: Icons.shield_outlined,
+                    title: 'Insurance Provider',
+                    description: 'Offer insurance plans for approved sustainability projects.',
+                    features: [
+                      (Icons.policy_outlined, 'Plans'),
+                      (Icons.health_and_safety_outlined, 'Protection'),
+                    ],
+                  ),
+                  const SizedBox(height: 24),
+                  // Aviso legal para los 3 tipos que requieren aprobación administrativa
+                  const Padding(
+                    padding: EdgeInsets.symmetric(horizontal: 4),
+                    child: Text(
+                      'Operational access for auditors, certification entities, and insurance providers requires administrative approval.',
+                      textAlign: TextAlign.center,
+                      style: TextStyle(
+                        fontFamily: 'Inter',
+                        fontSize: 13,
+                        fontStyle: FontStyle.italic,
+                        color: _onSurfaceVariantColor,
+                        height: 1.5,
+                      ),
+                    ),
                   ),
                   const SizedBox(height: 32),
                   _buildActions(context),
@@ -313,10 +390,23 @@ class _RegisterScreenState extends State<RegisterScreen> {
           width: double.infinity,
           child: ElevatedButton(
             onPressed: () {
-              if (_selected == _AccountType.company) {
-                context.push('/corporate-onboarding');
-              } else {
-                context.push('/retail-register');
+              // Lógica anterior con solo 2 tipos (comentada al expandir a 5):
+              // if (_selected == _AccountType.company) {
+              //   context.push('/corporate-onboarding');
+              // } else {
+              //   context.push('/retail-register');
+              // }
+              switch (_selected) {
+                case _AccountType.retailInvestor:
+                  context.push('/retail-register');
+                case _AccountType.company:
+                  context.push('/corporate-onboarding');
+                case _AccountType.auditor:
+                  context.push('/auditor-register');
+                // Certification Entity e Insurance Provider — ruta placeholder hasta implementar su flujo:
+                case _AccountType.certificationEntity:
+                case _AccountType.insuranceProvider:
+                  context.push('/corporate-onboarding');
               }
             },
             style: ElevatedButton.styleFrom(

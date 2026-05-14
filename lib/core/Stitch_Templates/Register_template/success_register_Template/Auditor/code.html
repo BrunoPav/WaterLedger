@@ -1,0 +1,176 @@
+<!DOCTYPE html>
+
+<html class="light" lang="en"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>Registration Success - Water Ledger</title>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600&amp;family=Manrope:wght@600;700;800&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<script id="tailwind-config">
+        tailwind.config = {
+            darkMode: "class",
+            theme: {
+                extend: {
+                    "colors": {
+                        "on-surface": "#191c1e",
+                        "on-secondary": "#ffffff",
+                        "on-background": "#191c1e",
+                        "surface-container": "#eceef0",
+                        "primary-container": "#0d1c32",
+                        "error-container": "#ffdad6",
+                        "tertiary-container": "#002204",
+                        "on-surface-variant": "#44474d",
+                        "on-secondary-fixed-variant": "#004f58",
+                        "secondary-fixed-dim": "#00daf3",
+                        "outline": "#75777e",
+                        "tertiary-fixed": "#a3f69c",
+                        "primary-fixed-dim": "#b9c7e4",
+                        "outline-variant": "#c5c6cd",
+                        "background": "#f7f9fb",
+                        "on-error-container": "#93000a",
+                        "surface-container-lowest": "#ffffff",
+                        "error": "#ba1a1a",
+                        "surface-container-low": "#f2f4f6",
+                        "secondary-container": "#00e3fd",
+                        "on-primary-container": "#76849f",
+                        "on-error": "#ffffff",
+                        "surface-bright": "#f7f9fb",
+                        "surface-variant": "#e0e3e5",
+                        "secondary": "#006875",
+                        "primary": "#000000",
+                        "surface": "#f7f9fb",
+                        "inverse-primary": "#b9c7e4",
+                        "on-primary-fixed": "#0d1c32",
+                        "on-primary": "#ffffff",
+                        "inverse-on-surface": "#eff1f3",
+                        "surface-tint": "#515f78",
+                        "primary-fixed": "#d6e3ff",
+                        "on-tertiary-container": "#469446",
+                        "tertiary-fixed-dim": "#88d982",
+                        "tertiary": "#000000",
+                        "on-secondary-container": "#00616d",
+                        "surface-dim": "#d8dadc",
+                        "on-secondary-fixed": "#001f24",
+                        "surface-container-high": "#e6e8ea",
+                        "on-tertiary": "#ffffff",
+                        "on-primary-fixed-variant": "#39475f",
+                        "surface-container-highest": "#e0e3e5",
+                        "secondary-fixed": "#9cf0ff",
+                        "on-tertiary-fixed-variant": "#005312",
+                        "on-tertiary-fixed": "#002204",
+                        "inverse-surface": "#2d3133"
+                    },
+                    "borderRadius": {
+                        "DEFAULT": "0.25rem",
+                        "lg": "0.5rem",
+                        "xl": "0.75rem",
+                        "full": "9999px"
+                    },
+                    "spacing": {
+                        "unit": "4px",
+                        "stack-lg": "32px",
+                        "container-padding": "20px",
+                        "stack-sm": "8px",
+                        "gutter": "16px",
+                        "stack-md": "16px"
+                    },
+                    "fontFamily": {
+                        "headline-md": ["Manrope"],
+                        "display-lg": ["Manrope"],
+                        "body-lg": ["Inter"],
+                        "label-sm": ["Inter"],
+                        "body-md": ["Inter"]
+                    },
+                    "fontSize": {
+                        "headline-md": ["24px", {"lineHeight": "32px", "letterSpacing": "-0.01em", "fontWeight": "600"}],
+                        "display-lg": ["40px", {"lineHeight": "48px", "letterSpacing": "-0.02em", "fontWeight": "700"}],
+                        "body-lg": ["18px", {"lineHeight": "28px", "fontWeight": "400"}],
+                        "label-sm": ["13px", {"lineHeight": "16px", "letterSpacing": "0.05em", "fontWeight": "600"}],
+                        "body-md": ["16px", {"lineHeight": "24px", "fontWeight": "400"}]
+                    }
+                },
+            },
+        }
+    </script>
+<style>
+        .material-symbols-outlined {
+            font-variation-settings: 'FILL' 0, 'wght' 200, 'GRAD' 0, 'opsz' 24;
+        }
+        .glass-card {
+            background: rgba(255, 255, 255, 0.7);
+            backdrop-filter: blur(20px);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+        }
+    </style>
+<style>
+    body {
+      min-height: max(884px, 100dvh);
+    }
+  </style>
+  </head>
+<body class="bg-background text-on-surface font-body-md min-h-screen flex flex-col items-center justify-between">
+<!-- Success Content Container -->
+<main class="flex-grow flex flex-col items-center justify-center px-container-padding w-full max-w-md pt-stack-lg">
+<!-- Success Illustration Section -->
+<div class="relative w-48 h-48 mb-stack-lg flex items-center justify-center">
+<!-- Animated background circles for visual depth -->
+<div class="absolute inset-0 bg-secondary-fixed/20 rounded-full blur-2xl"></div>
+<div class="relative z-10 w-32 h-32 rounded-full bg-gradient-to-tr from-secondary to-secondary-fixed-dim flex items-center justify-center shadow-xl">
+<span class="material-symbols-outlined text-white text-7xl" style="font-variation-settings: 'wght' 400;">check</span>
+</div>
+</div>
+<!-- Typography Section -->
+<div class="text-center mb-stack-lg">
+<h1 class="font-headline-md text-headline-md text-primary mb-stack-sm px-4">
+                Registration Submitted Successfully
+            </h1>
+<p class="font-body-md text-on-surface-variant max-w-[280px] mx-auto">
+                Your application is currently under review.
+            </p>
+</div>
+<!-- Summary Card (Bento/Glassmorphism Style) -->
+<div class="w-full space-y-stack-md">
+<div class="glass-card bg-surface-container-lowest p-stack-md rounded-xl border border-outline-variant/30 shadow-sm flex items-center justify-between">
+<div class="flex items-center gap-3">
+<div class="w-10 h-10 rounded-full bg-secondary-container/20 flex items-center justify-center">
+<span class="material-symbols-outlined text-secondary" style="font-variation-settings: 'FILL' 1;">verified_user</span>
+</div>
+<div>
+<p class="font-label-sm text-on-surface-variant uppercase tracking-wider">Account Status</p>
+<p class="font-headline-md text-[18px] text-primary">Pending Approval</p>
+</div>
+</div>
+<div class="h-2 w-2 rounded-full bg-secondary-fixed-dim animate-pulse"></div>
+</div>
+<!-- Process Information -->
+<div class="glass-card bg-surface-container-low p-stack-md rounded-xl border border-outline-variant/10">
+<div class="flex items-start gap-4">
+<span class="material-symbols-outlined text-on-surface-variant mt-1" style="font-variation-settings: 'wght' 300;">info</span>
+<p class="font-body-md text-on-surface-variant text-sm leading-relaxed">
+                        Our institutional verification team is reviewing your Auditor credentials. This process typically takes 24-48 business hours. You will receive an email notification once your account is active.
+                    </p>
+</div>
+</div>
+</div>
+</main>
+<!-- Navigation/Action Footer Area -->
+<footer class="w-full max-w-md px-container-padding pb-stack-lg pt-stack-md flex flex-col items-center gap-stack-md">
+<!-- Primary CTA -->
+<button class="w-full h-14 bg-primary text-on-primary rounded-xl font-headline-md text-[16px] flex items-center justify-center gap-2 active:scale-95 transition-all shadow-lg">
+            Back to Login
+        </button>
+<!-- Brand Footer -->
+<div class="flex flex-col items-center gap-2 opacity-60 mt-stack-sm">
+<div class="flex items-center gap-2">
+<span class="material-symbols-outlined text-sm" style="font-variation-settings: 'FILL' 1;">water_drop</span>
+<span class="font-label-sm tracking-widest uppercase">Water Ledger Inc.</span>
+</div>
+<p class="text-[10px] font-label-sm text-on-surface-variant">© 2024 Secure Institutional Infrastructure</p>
+</div>
+</footer>
+<!-- Visual Decor (Background Accents) -->
+<div class="fixed top-0 right-0 -z-10 w-64 h-64 bg-secondary-fixed/10 rounded-full blur-[100px]"></div>
+<div class="fixed bottom-0 left-0 -z-10 w-64 h-64 bg-primary-fixed/5 rounded-full blur-[100px]"></div>
+</body></html>
