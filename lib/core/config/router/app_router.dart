@@ -1,4 +1,5 @@
 import 'package:go_router/go_router.dart';
+import 'package:water_ledger/credito_temporal_screen.dart';
 import 'package:water_ledger/features/auditor/presentation/screens/auditor_screen.dart';
 import 'package:water_ledger/features/auditor/presentation/screens/documentation_screen.dart';
 import 'package:water_ledger/core/presentation/screens/auth/auditor_register_screen.dart';
@@ -15,11 +16,14 @@ import 'package:water_ledger/core/presentation/screens/auth/login_screen.dart';
 import 'package:water_ledger/core/presentation/screens/auth/register_screen.dart';
 import 'package:water_ledger/core/presentation/screens/splash_screen.dart';
 import 'package:water_ledger/features/credit_issuance/presentation/screens/credit_issuance_screen.dart';
+import 'package:water_ledger/features/credit_issuance/presentation/screens/roadmap_editor_screen.dart';
 import 'package:water_ledger/features/issuer/presentation/screen/issuing_company_screen.dart';
 import 'package:water_ledger/home_temporal.dart';
 
+import 'package:water_ledger/core/Stitch_Templates/Steps/step_3_project_info/project_info_step_screen.dart';
+
 final GoRouter appRouter = GoRouter(
-  initialLocation: '/splash',
+  initialLocation: '/home', //iba splash
   routes: [
     GoRoute(path: '/splash', builder: (context, state) => const SplashScreen()),
     GoRoute(path: '/login', builder: (context, state) => const LoginScreen()),
@@ -36,6 +40,10 @@ final GoRouter appRouter = GoRouter(
     GoRoute(path: '/retail-register-success', builder: (context, state) => const RetailRegisterSuccessScreen()),
     GoRoute(path: '/home', builder: (context, state) => const HomeTemporal()),
     GoRoute(
+      path: '/prueba-credito',
+      builder: (context, state) => const CreditoTemporal(),
+    ),
+    GoRoute(
       path: '/issuing-company',
       builder: (context, state) => const IssuingCompanyScreen(),
     ),
@@ -51,5 +59,13 @@ final GoRouter appRouter = GoRouter(
       path: '/credit-issuance',
       builder: (context, state) => const CreditIssuanceScreen(),
     ),
+    GoRoute(
+      path: '/roadmap-editor',
+      builder: (context, state) => const RoadmapEditorScreen(),
+    ),
+    GoRoute(
+      path: '/project-info-test',
+      builder: (context, state) => const ProjectInfoStepScreen(),
+    ),
   ],
-);  
+);
