@@ -2,14 +2,15 @@ import 'dart:ui';
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 
-class AuditorRegisterScreen extends StatefulWidget {
-  const AuditorRegisterScreen({super.key});
+class CertifierRegisterScreen extends StatefulWidget {
+  const CertifierRegisterScreen({super.key});
 
   @override
-  State<AuditorRegisterScreen> createState() => _AuditorRegisterScreenState();
+  State<CertifierRegisterScreen> createState() =>
+      _CertifierRegisterScreenState();
 }
 
-class _AuditorRegisterScreenState extends State<AuditorRegisterScreen> {
+class _CertifierRegisterScreenState extends State<CertifierRegisterScreen> {
   int _currentStep = 0;
   // Actualizado de 4 a 5 al sumar el paso de credenciales de la cuenta al final del flujo:
   // static const int _totalSteps = 4;
@@ -46,16 +47,20 @@ class _AuditorRegisterScreenState extends State<AuditorRegisterScreen> {
   final _cargoFuncionController = TextEditingController();
   String? _docVinculoFileName;
 
-  // -- Step 4: Habilitación Profesional --
-  final _matriculaController = TextEditingController();
-  final _entidadEmisoraController = TextEditingController();
-  final _organismoReguladorController = TextEditingController();
-  final _vigenciaMatriculaController = TextEditingController();
-  final _polizaMontoController = TextEditingController();
-  final _polizaVigenciaController = TextEditingController();
-  final _anosExperienciaController = TextEditingController();
-  final Set<String> _selectedCertificaciones = {'ISO 14001'};
-  static const _certOptions = ['ISO 14001', 'GRI', 'ISO 14046', 'AWS', 'Verra'];
+  // -- Step 4: Acreditación del certificador --
+  final _entidadAcreditadoraController = TextEditingController();
+  final _numeroAcreditacionController = TextEditingController();
+  final _vigenciaAcreditacionController = TextEditingController();
+  final _alcanceMaterialController = TextEditingController();
+  final Set<String> _selectedEstandares = {'ISO 14046'};
+  static const _estandarOptions = [
+    'ISO 14046',
+    'AWS',
+    'VCS / Verra',
+    'Gold Standard',
+    'ISO 14064',
+    'CDP Water',
+  ];
 
   // -- Step 5: Credenciales de la cuenta --
   final _emailCuentaController = TextEditingController();
@@ -64,7 +69,7 @@ class _AuditorRegisterScreenState extends State<AuditorRegisterScreen> {
   bool _obscurePassword = true;
   bool _obscureConfirmPassword = true;
 
-  // -- Design tokens --
+  // -- Design tokens (alineados con DESIGN.md del template) --
   static const _bgColor = Color(0xFFF7F9FB);
   static const _primaryColor = Color(0xFF000000);
   static const _onPrimaryColor = Color(0xFFFFFFFF);
@@ -76,6 +81,8 @@ class _AuditorRegisterScreenState extends State<AuditorRegisterScreen> {
   static const _surfaceContainerColor = Color(0xFFECEEF0);
   static const _surfaceLowestColor = Color(0xFFFFFFFF);
   static const _outlineVariantColor = Color(0xFFC5C6CD);
+  // Verde institucional del template (on-tertiary-container) para mensajes de aprobación.
+  static const _approvalGreen = Color(0xFF469446);
 
   @override
   void dispose() {
@@ -97,13 +104,10 @@ class _AuditorRegisterScreenState extends State<AuditorRegisterScreen> {
     _emailRepController.dispose();
     _telefonoCelularController.dispose();
     _cargoFuncionController.dispose();
-    _matriculaController.dispose();
-    _entidadEmisoraController.dispose();
-    _organismoReguladorController.dispose();
-    _vigenciaMatriculaController.dispose();
-    _polizaMontoController.dispose();
-    _polizaVigenciaController.dispose();
-    _anosExperienciaController.dispose();
+    _entidadAcreditadoraController.dispose();
+    _numeroAcreditacionController.dispose();
+    _vigenciaAcreditacionController.dispose();
+    _alcanceMaterialController.dispose();
     _emailCuentaController.dispose();
     _passwordController.dispose();
     _confirmPasswordController.dispose();
@@ -224,14 +228,14 @@ class _AuditorRegisterScreenState extends State<AuditorRegisterScreen> {
       'Sobre la\nEmpresa',
       'Documentación\nRequerida',
       'Representante\nLegal',
-      'Habilitación\nProfesional',
+      'Acreditación\nde Certificación',
       'Credenciales\nde la Cuenta',
     ];
     const subtitles = [
-      'Información institucional de la firma auditora.',
+      'Información institucional de la entidad certificadora.',
       'Documentos legales y contables de la organización.',
       'Datos del usuario que operará en nombre de la empresa.',
-      'Matrícula, organismo regulador y certificaciones del auditor.',
+      'Organismo acreditador, estándar y alcance de la certificación.',
       'Configurá las credenciales con las que vas a acceder a la plataforma.',
     ];
 
@@ -246,7 +250,7 @@ class _AuditorRegisterScreenState extends State<AuditorRegisterScreen> {
             border: Border.all(color: _cyanColor.withValues(alpha: 0.25)),
           ),
           child: const Text(
-            'REGISTRO AUDITOR',
+            'REGISTRO CERTIFICADOR',
             style: TextStyle(
               fontFamily: 'Inter',
               fontSize: 11,
@@ -326,7 +330,7 @@ class _AuditorRegisterScreenState extends State<AuditorRegisterScreen> {
       0 => _buildStepEmpresa(),
       1 => _buildStepDocumentacion(),
       2 => _buildStepRepresentante(),
-      3 => _buildStepHabilitacion(),
+      3 => _buildStepAcreditacion(),
       4 => _buildStepCredenciales(),
       _ => const SizedBox.shrink(),
     };
@@ -335,7 +339,12 @@ class _AuditorRegisterScreenState extends State<AuditorRegisterScreen> {
   // ------------------------------------------------------------------ //
   //  HELPERS
   // ------------------------------------------------------------------ //
-  Widget _buildSectionCard({required String title, required List<Widget> children}) {
+  // Section card del template: icono secundario + título grande (body-lg/bold).
+  Widget _buildSectionCard({
+    required String title,
+    required IconData icon,
+    required List<Widget> children,
+  }) {
     return Container(
       padding: const EdgeInsets.all(20),
       decoration: BoxDecoration(
@@ -344,7 +353,7 @@ class _AuditorRegisterScreenState extends State<AuditorRegisterScreen> {
         border: Border.all(color: _outlineVariantColor.withValues(alpha: 0.3)),
         boxShadow: [
           BoxShadow(
-            color: Colors.black.withValues(alpha: 0.04),
+            color: Colors.black.withValues(alpha: 0.02),
             blurRadius: 12,
             offset: const Offset(0, 4),
           ),
@@ -353,18 +362,47 @@ class _AuditorRegisterScreenState extends State<AuditorRegisterScreen> {
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
+          Row(
+            children: [
+              Icon(icon, color: _secondaryColor, size: 22),
+              const SizedBox(width: 8),
+              Text(
+                title,
+                style: const TextStyle(
+                  fontFamily: 'Manrope',
+                  fontSize: 18,
+                  fontWeight: FontWeight.w700,
+                  color: _onSurfaceColor,
+                  letterSpacing: -0.2,
+                ),
+              ),
+            ],
+          ),
+          const SizedBox(height: 18),
+          ...children,
+        ],
+      ),
+    );
+  }
+
+  // Section title sin card — para grupos como "Supporting Documentation".
+  Widget _buildSectionTitle({required String title, required IconData icon}) {
+    return Padding(
+      padding: const EdgeInsets.only(left: 2, bottom: 12),
+      child: Row(
+        children: [
+          Icon(icon, color: _secondaryColor, size: 22),
+          const SizedBox(width: 8),
           Text(
-            title.toUpperCase(),
-            style: TextStyle(
-              fontFamily: 'Inter',
-              fontSize: 11,
-              fontWeight: FontWeight.w600,
-              color: _onSurfaceVariantColor.withValues(alpha: 0.7),
-              letterSpacing: 1.0,
+            title,
+            style: const TextStyle(
+              fontFamily: 'Manrope',
+              fontSize: 18,
+              fontWeight: FontWeight.w700,
+              color: _onSurfaceColor,
+              letterSpacing: -0.2,
             ),
           ),
-          const SizedBox(height: 20),
-          ...children,
         ],
       ),
     );
@@ -382,17 +420,20 @@ class _AuditorRegisterScreenState extends State<AuditorRegisterScreen> {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-        Text(
-          label,
-          style: TextStyle(
-            fontFamily: 'Inter',
-            fontSize: 12,
-            fontWeight: FontWeight.w600,
-            color: _onSurfaceVariantColor.withValues(alpha: 0.8),
-            letterSpacing: 0.4,
+        Padding(
+          padding: const EdgeInsets.only(left: 4),
+          child: Text(
+            label,
+            style: TextStyle(
+              fontFamily: 'Inter',
+              fontSize: 13,
+              fontWeight: FontWeight.w600,
+              color: _onSurfaceVariantColor.withValues(alpha: 0.8),
+              letterSpacing: 0.4,
+            ),
           ),
         ),
-        const SizedBox(height: 6),
+        const SizedBox(height: 4),
         TextField(
           controller: controller,
           keyboardType: keyboardType,
@@ -406,9 +447,19 @@ class _AuditorRegisterScreenState extends State<AuditorRegisterScreen> {
             filled: true,
             fillColor: _surfaceContainerLowColor,
             contentPadding: const EdgeInsets.symmetric(horizontal: 14, vertical: 13),
-            border: OutlineInputBorder(borderRadius: BorderRadius.circular(8), borderSide: BorderSide.none),
-            enabledBorder: OutlineInputBorder(borderRadius: BorderRadius.circular(8), borderSide: BorderSide.none),
-            focusedBorder: OutlineInputBorder(borderRadius: BorderRadius.circular(8), borderSide: const BorderSide(color: _cyanColor, width: 2)),
+            // Estilo del template: bottom-border-only sobre fill, focus en cyan.
+            border: const UnderlineInputBorder(
+              borderRadius: BorderRadius.vertical(top: Radius.circular(8)),
+              borderSide: BorderSide(color: _outlineVariantColor),
+            ),
+            enabledBorder: const UnderlineInputBorder(
+              borderRadius: BorderRadius.vertical(top: Radius.circular(8)),
+              borderSide: BorderSide(color: _outlineVariantColor),
+            ),
+            focusedBorder: const UnderlineInputBorder(
+              borderRadius: BorderRadius.vertical(top: Radius.circular(8)),
+              borderSide: BorderSide(color: _cyanColor, width: 2),
+            ),
           ),
         ),
       ],
@@ -424,22 +475,26 @@ class _AuditorRegisterScreenState extends State<AuditorRegisterScreen> {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-        Text(
-          label,
-          style: TextStyle(
-            fontFamily: 'Inter',
-            fontSize: 12,
-            fontWeight: FontWeight.w600,
-            color: _onSurfaceVariantColor.withValues(alpha: 0.8),
-            letterSpacing: 0.4,
+        Padding(
+          padding: const EdgeInsets.only(left: 4),
+          child: Text(
+            label,
+            style: TextStyle(
+              fontFamily: 'Inter',
+              fontSize: 13,
+              fontWeight: FontWeight.w600,
+              color: _onSurfaceVariantColor.withValues(alpha: 0.8),
+              letterSpacing: 0.4,
+            ),
           ),
         ),
-        const SizedBox(height: 6),
+        const SizedBox(height: 4),
         Container(
           padding: const EdgeInsets.symmetric(horizontal: 14),
           decoration: BoxDecoration(
             color: _surfaceContainerLowColor,
-            borderRadius: BorderRadius.circular(8),
+            borderRadius: const BorderRadius.vertical(top: Radius.circular(8)),
+            border: Border(bottom: BorderSide(color: _outlineVariantColor)),
           ),
           child: DropdownButtonHideUnderline(
             child: DropdownButton<String>(
@@ -455,7 +510,56 @@ class _AuditorRegisterScreenState extends State<AuditorRegisterScreen> {
     );
   }
 
-  Widget _buildUploadCard({
+  // Bento card — basado en el template: borde dasheado, ícono+label centrados.
+  Widget _buildBentoUpload({
+    required String title,
+    required IconData icon,
+    String? fileName,
+    required VoidCallback onTap,
+  }) {
+    final hasFile = fileName != null;
+    return GestureDetector(
+      onTap: onTap,
+      child: AnimatedContainer(
+        duration: const Duration(milliseconds: 180),
+        padding: const EdgeInsets.symmetric(vertical: 18, horizontal: 12),
+        decoration: BoxDecoration(
+          color: hasFile ? _secondaryColor.withValues(alpha: 0.05) : _surfaceLowestColor,
+          borderRadius: BorderRadius.circular(16),
+          border: Border.all(
+            color: hasFile ? _secondaryColor : _outlineVariantColor.withValues(alpha: 0.5),
+            width: hasFile ? 1.5 : 1.5,
+          ),
+        ),
+        child: Column(
+          mainAxisSize: MainAxisSize.min,
+          children: [
+            Icon(
+              hasFile ? Icons.check_circle_outline_rounded : icon,
+              color: hasFile ? _secondaryColor : _onSurfaceVariantColor,
+              size: 30,
+            ),
+            const SizedBox(height: 8),
+            Text(
+              hasFile ? 'Archivo cargado' : title,
+              textAlign: TextAlign.center,
+              style: TextStyle(
+                fontFamily: 'Inter',
+                fontSize: 12,
+                fontWeight: FontWeight.w600,
+                color: hasFile ? _secondaryColor : _onSurfaceColor,
+                height: 1.3,
+              ),
+            ),
+          ],
+        ),
+      ),
+    );
+  }
+
+  // Upload row — sigue siendo útil para el doc del representante (paso 3) que tiene
+  // texto descriptivo más largo que no encaja bien en bento vertical.
+  Widget _buildUploadRow({
     required String title,
     required String subtitle,
     required IconData icon,
@@ -533,9 +637,10 @@ class _AuditorRegisterScreenState extends State<AuditorRegisterScreen> {
   // ------------------------------------------------------------------ //
   Widget _buildStepEmpresa() {
     return _buildSectionCard(
-      title: 'Datos de la empresa',
+      title: 'Información básica',
+      icon: Icons.corporate_fare,
       children: [
-        _buildField(label: 'Nombre de fantasía', controller: _nombreFantasiaController, hint: 'e.g. Aqua Auditors'),
+        _buildField(label: 'Nombre de fantasía', controller: _nombreFantasiaController, hint: 'e.g. Aqua Certifiers'),
         const SizedBox(height: 16),
         _buildField(label: 'Razón social', controller: _razonSocialController, hint: 'Nombre legal completo'),
         const SizedBox(height: 16),
@@ -577,34 +682,81 @@ class _AuditorRegisterScreenState extends State<AuditorRegisterScreen> {
   }
 
   // ------------------------------------------------------------------ //
-  //  PASO 2 — DOCUMENTACIÓN
+  //  PASO 2 — DOCUMENTACIÓN (bento style del template)
   // ------------------------------------------------------------------ //
   Widget _buildStepDocumentacion() {
-    return _buildSectionCard(
-      title: 'Documentación legal',
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-        _buildUploadCard(
-          icon: Icons.description_outlined,
-          title: 'Estatuto o acta constitutiva',
-          subtitle: 'PDF · Máx. 10 MB',
-          fileName: _estatutoFileName,
-          onTap: () => setState(() => _estatutoFileName = 'estatuto.pdf'),
+        _buildSectionTitle(
+          title: 'Documentación de respaldo',
+          icon: Icons.cloud_upload_outlined,
+        ),
+        Padding(
+          padding: const EdgeInsets.only(left: 2, bottom: 16),
+          child: Text(
+            'Cargá los documentos legales y contables que respaldan la operación de la entidad.',
+            style: TextStyle(
+              fontFamily: 'Inter',
+              fontSize: 13,
+              color: _onSurfaceVariantColor.withValues(alpha: 0.85),
+              height: 1.5,
+            ),
+          ),
+        ),
+        // Bento grid 2 columnas (la 3ra se expande full-width como en el template).
+        Row(
+          children: [
+            Expanded(
+              child: _buildBentoUpload(
+                icon: Icons.description_outlined,
+                title: 'Estatuto o acta constitutiva',
+                fileName: _estatutoFileName,
+                onTap: () => setState(() => _estatutoFileName = 'estatuto.pdf'),
+              ),
+            ),
+            const SizedBox(width: 12),
+            Expanded(
+              child: _buildBentoUpload(
+                icon: Icons.receipt_long_outlined,
+                title: 'Constancia de inscripción fiscal',
+                fileName: _constanciaFiscalFileName,
+                onTap: () => setState(() => _constanciaFiscalFileName = 'constancia_fiscal.pdf'),
+              ),
+            ),
+          ],
         ),
         const SizedBox(height: 12),
-        _buildUploadCard(
-          icon: Icons.receipt_long_outlined,
-          title: 'Constancia de inscripción fiscal',
-          subtitle: 'AFIP / ARCA o equivalente · PDF',
-          fileName: _constanciaFiscalFileName,
-          onTap: () => setState(() => _constanciaFiscalFileName = 'constancia_fiscal.pdf'),
-        ),
-        const SizedBox(height: 12),
-        _buildUploadCard(
+        _buildBentoUpload(
           icon: Icons.balance_outlined,
           title: 'Último balance firmado',
-          subtitle: 'PDF · Máx. 10 MB',
           fileName: _balanceFileName,
           onTap: () => setState(() => _balanceFileName = 'balance.pdf'),
+        ),
+        const SizedBox(height: 16),
+        // Nota de formato
+        Container(
+          padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 10),
+          decoration: BoxDecoration(
+            color: _surfaceContainerLowColor,
+            borderRadius: BorderRadius.circular(10),
+          ),
+          child: Row(
+            children: [
+              Icon(Icons.info_outline_rounded, size: 16, color: _onSurfaceVariantColor.withValues(alpha: 0.7)),
+              const SizedBox(width: 8),
+              Expanded(
+                child: Text(
+                  'Formatos aceptados: PDF · Máx. 10 MB por archivo',
+                  style: TextStyle(
+                    fontFamily: 'Inter',
+                    fontSize: 12,
+                    color: _onSurfaceVariantColor.withValues(alpha: 0.85),
+                  ),
+                ),
+              ),
+            ],
+          ),
         ),
       ],
     );
@@ -616,8 +768,9 @@ class _AuditorRegisterScreenState extends State<AuditorRegisterScreen> {
   Widget _buildStepRepresentante() {
     return _buildSectionCard(
       title: 'Representante legal',
+      icon: Icons.person_outline,
       children: [
-        _buildUploadCard(
+        _buildUploadRow(
           icon: Icons.gavel_outlined,
           title: 'Poder o acta habilitante',
           subtitle: 'Documento que autoriza operar en nombre de la empresa',
@@ -644,7 +797,7 @@ class _AuditorRegisterScreenState extends State<AuditorRegisterScreen> {
         const SizedBox(height: 16),
         _buildField(label: 'Cargo o función en la empresa', controller: _cargoFuncionController, hint: 'Director / Gerente'),
         const SizedBox(height: 16),
-        _buildUploadCard(
+        _buildUploadRow(
           icon: Icons.badge_outlined,
           title: 'Documento que acredita el vínculo',
           subtitle: 'Nombramiento, poder o contrato laboral',
@@ -656,46 +809,36 @@ class _AuditorRegisterScreenState extends State<AuditorRegisterScreen> {
   }
 
   // ------------------------------------------------------------------ //
-  //  PASO 4 — HABILITACIÓN PROFESIONAL (Auditor específico)
+  //  PASO 4 — ACREDITACIÓN (Certificador específico)
   // ------------------------------------------------------------------ //
-  Widget _buildStepHabilitacion() {
+  Widget _buildStepAcreditacion() {
     return Column(
       children: [
-        // Matrícula y organismo
+        // Organismo y número de acreditación
         _buildSectionCard(
-          title: 'Matrícula y organismo',
+          title: 'Organismo acreditador',
+          icon: Icons.verified_outlined,
           children: [
-            Row(
-              children: [
-                Expanded(child: _buildField(label: 'Nro. de matrícula / registro', controller: _matriculaController, hint: 'MP-XXXXX')),
-                const SizedBox(width: 12),
-                Expanded(child: _buildField(label: 'Entidad emisora', controller: _entidadEmisoraController, hint: 'FACPCE')),
-              ],
-            ),
-            const SizedBox(height: 16),
-            _buildField(label: 'Organismo regulador', controller: _organismoReguladorController, hint: 'FACPCE, IFAC-member, etc.'),
-            const SizedBox(height: 16),
             _buildField(
-              label: 'Fecha de vigencia de la matrícula',
-              controller: _vigenciaMatriculaController,
-              hint: 'DD/MM/AAAA',
-              suffix: const Icon(Icons.calendar_today_outlined, size: 18, color: _onSurfaceVariantColor),
+              label: 'Entidad que lo acredita',
+              controller: _entidadAcreditadoraController,
+              hint: 'IRAM, ISO, GRI, Verra, etc.',
             ),
-          ],
-        ),
-        const SizedBox(height: 16),
-        // Póliza de seguro
-        _buildSectionCard(
-          title: 'Póliza de responsabilidad profesional',
-          children: [
+            const SizedBox(height: 16),
             Row(
               children: [
-                Expanded(child: _buildField(label: 'Monto de cobertura', controller: _polizaMontoController, hint: 'USD 500.000', keyboardType: TextInputType.number)),
+                Expanded(
+                  child: _buildField(
+                    label: 'Nro. de acreditación',
+                    controller: _numeroAcreditacionController,
+                    hint: 'ACR-XXXXX',
+                  ),
+                ),
                 const SizedBox(width: 12),
                 Expanded(
                   child: _buildField(
-                    label: 'Vigencia de la póliza',
-                    controller: _polizaVigenciaController,
+                    label: 'Vigencia',
+                    controller: _vigenciaAcreditacionController,
                     hint: 'DD/MM/AAAA',
                     suffix: const Icon(Icons.calendar_today_outlined, size: 18, color: _onSurfaceVariantColor),
                   ),
@@ -705,48 +848,41 @@ class _AuditorRegisterScreenState extends State<AuditorRegisterScreen> {
           ],
         ),
         const SizedBox(height: 16),
-        // Experiencia y certificaciones
+        // Estándares — chips multi-select estilo Operational Scope del template
         _buildSectionCard(
-          title: 'Experiencia y certificaciones',
+          title: 'Estándares de certificación',
+          icon: Icons.workspace_premium_outlined,
           children: [
-            _buildField(
-              label: 'Años de experiencia en proyectos hídricos o ambientales',
-              controller: _anosExperienciaController,
-              hint: '5',
-              keyboardType: TextInputType.number,
-            ),
-            const SizedBox(height: 20),
             Text(
-              'CERTIFICACIONES AMBIENTALES',
+              'Seleccioná los estándares bajo los cuales tu entidad está habilitada para certificar.',
               style: TextStyle(
                 fontFamily: 'Inter',
-                fontSize: 11,
-                fontWeight: FontWeight.w600,
-                color: _onSurfaceVariantColor.withValues(alpha: 0.7),
-                letterSpacing: 1.0,
+                fontSize: 13,
+                color: _onSurfaceVariantColor.withValues(alpha: 0.85),
+                height: 1.5,
               ),
             ),
-            const SizedBox(height: 12),
+            const SizedBox(height: 16),
             Wrap(
               spacing: 8,
               runSpacing: 8,
-              children: _certOptions.map((cert) {
-                final selected = _selectedCertificaciones.contains(cert);
+              children: _estandarOptions.map((estandar) {
+                final selected = _selectedEstandares.contains(estandar);
                 return GestureDetector(
                   onTap: () => setState(() {
                     if (selected) {
-                      _selectedCertificaciones.remove(cert);
+                      _selectedEstandares.remove(estandar);
                     } else {
-                      _selectedCertificaciones.add(cert);
+                      _selectedEstandares.add(estandar);
                     }
                   }),
                   child: AnimatedContainer(
                     duration: const Duration(milliseconds: 180),
                     padding: const EdgeInsets.symmetric(horizontal: 14, vertical: 8),
                     decoration: BoxDecoration(
-                      color: selected ? _secondaryColor.withValues(alpha: 0.07) : Colors.transparent,
+                      color: selected ? _cyanColor.withValues(alpha: 0.10) : _surfaceLowestColor,
                       border: Border.all(
-                        color: selected ? _secondaryColor : _outlineVariantColor,
+                        color: selected ? _secondaryColor : _outlineVariantColor.withValues(alpha: 0.6),
                         width: selected ? 1.5 : 1,
                       ),
                       borderRadius: BorderRadius.circular(99),
@@ -754,24 +890,38 @@ class _AuditorRegisterScreenState extends State<AuditorRegisterScreen> {
                     child: Row(
                       mainAxisSize: MainAxisSize.min,
                       children: [
+                        if (selected) ...[
+                          const Icon(Icons.check_circle_rounded, size: 16, color: _secondaryColor),
+                          const SizedBox(width: 6),
+                        ],
                         Text(
-                          cert,
+                          estandar,
                           style: TextStyle(
                             fontFamily: 'Inter',
-                            fontSize: 12,
+                            fontSize: 13,
                             fontWeight: FontWeight.w600,
                             color: selected ? _secondaryColor : _onSurfaceVariantColor,
                           ),
                         ),
-                        if (selected) ...[
-                          const SizedBox(width: 6),
-                          Icon(Icons.check_circle_rounded, size: 14, color: _secondaryColor),
-                        ],
                       ],
                     ),
                   ),
                 );
               }).toList(),
+            ),
+          ],
+        ),
+        const SizedBox(height: 16),
+        // Alcance material
+        _buildSectionCard(
+          title: 'Alcance de la acreditación',
+          icon: Icons.zoom_out_map_outlined,
+          children: [
+            _buildField(
+              label: 'Qué tipos de proyecto puede certificar',
+              controller: _alcanceMaterialController,
+              hint: 'Detallá el alcance material: tipos de proyectos, sectores, regiones, etc.',
+              maxLines: 4,
             ),
           ],
         ),
@@ -785,6 +935,7 @@ class _AuditorRegisterScreenState extends State<AuditorRegisterScreen> {
   Widget _buildStepCredenciales() {
     return _buildSectionCard(
       title: 'Credenciales de la cuenta',
+      icon: Icons.lock_outline,
       children: [
         _buildField(
           label: 'E-mail de la cuenta',
@@ -851,47 +1002,59 @@ class _AuditorRegisterScreenState extends State<AuditorRegisterScreen> {
   }
 
   // ------------------------------------------------------------------ //
-  //  CARD — Aprobación administrativa
+  //  CARD — Aprobación administrativa (glass-panel + verde institucional)
   // ------------------------------------------------------------------ //
   Widget _buildAdminApprovalCard() {
-    return Container(
-      padding: const EdgeInsets.all(16),
-      decoration: BoxDecoration(
-        color: _surfaceContainerLowColor,
-        borderRadius: BorderRadius.circular(12),
-      ),
-      child: Row(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          const Icon(Icons.gpp_maybe_outlined, color: _secondaryColor, size: 22),
-          const SizedBox(width: 12),
-          const Expanded(
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                Text(
-                  'Aprobación administrativa requerida',
-                  style: TextStyle(
-                    fontFamily: 'Inter',
-                    fontSize: 13,
-                    fontWeight: FontWeight.w600,
-                    color: _onSurfaceColor,
-                  ),
-                ),
-                SizedBox(height: 4),
-                Text(
-                  'Tu cuenta quedará pendiente hasta ser revisada y aprobada por un administrador de la plataforma.',
-                  style: TextStyle(
-                    fontFamily: 'Inter',
-                    fontSize: 13,
-                    color: _onSurfaceVariantColor,
-                    height: 1.5,
-                  ),
-                ),
-              ],
-            ),
+    return ClipRRect(
+      borderRadius: BorderRadius.circular(16),
+      child: BackdropFilter(
+        filter: ImageFilter.blur(sigmaX: 20, sigmaY: 20),
+        child: Container(
+          padding: const EdgeInsets.all(16),
+          decoration: BoxDecoration(
+            color: Colors.white.withValues(alpha: 0.7),
+            borderRadius: BorderRadius.circular(16),
+            border: Border.all(color: _outlineVariantColor.withValues(alpha: 0.2)),
+            boxShadow: [
+              BoxShadow(
+                color: Colors.black.withValues(alpha: 0.03),
+                blurRadius: 12,
+                offset: const Offset(0, 4),
+              ),
+            ],
           ),
-        ],
+          child: Row(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              const Icon(Icons.info_outline_rounded, color: _approvalGreen, size: 22),
+              const SizedBox(width: 12),
+              Expanded(
+                child: RichText(
+                  text: TextSpan(
+                    style: const TextStyle(
+                      fontFamily: 'Inter',
+                      fontSize: 13,
+                      color: _onSurfaceVariantColor,
+                      height: 1.55,
+                    ),
+                    children: const [
+                      TextSpan(
+                        text: 'Aprobación administrativa requerida — ',
+                        style: TextStyle(
+                          fontWeight: FontWeight.w700,
+                          color: _approvalGreen,
+                        ),
+                      ),
+                      TextSpan(
+                        text: 'Tu organización deberá ser revisada y aprobada por un administrador de la plataforma antes de operar como certificadora.',
+                      ),
+                    ],
+                  ),
+                ),
+              ),
+            ],
+          ),
+        ),
       ),
     );
   }
@@ -920,7 +1083,7 @@ class _AuditorRegisterScreenState extends State<AuditorRegisterScreen> {
         Expanded(
           flex: 2,
           child: ElevatedButton(
-            onPressed: isLastStep ? () => context.go('/auditor-register-success') : _nextStep,
+            onPressed: isLastStep ? () => context.go('/certifier-register-success') : _nextStep,
             style: ElevatedButton.styleFrom(
               backgroundColor: _primaryColor,
               foregroundColor: _onPrimaryColor,

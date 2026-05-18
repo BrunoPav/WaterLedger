@@ -1,0 +1,279 @@
+<!DOCTYPE html>
+
+<html class="light" lang="en"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0, viewport-fit=cover" name="viewport"/>
+<title>Register as Insurance Provider | Water Ledger</title>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600&amp;family=Manrope:wght@600;700;800&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<script id="tailwind-config">
+        tailwind.config = {
+            darkMode: "class",
+            theme: {
+                extend: {
+                    "colors": {
+                        "on-error": "#ffffff",
+                        "on-tertiary-fixed": "#002204",
+                        "on-primary-fixed": "#0d1c32",
+                        "on-secondary-container": "#00616d",
+                        "primary-container": "#0d1c32",
+                        "error-container": "#ffdad6",
+                        "secondary-fixed": "#9cf0ff",
+                        "surface": "#f7f9fb",
+                        "on-secondary": "#ffffff",
+                        "surface-bright": "#f7f9fb",
+                        "surface-dim": "#d8dadc",
+                        "on-primary-container": "#76849f",
+                        "inverse-primary": "#b9c7e4",
+                        "surface-tint": "#515f78",
+                        "on-background": "#191c1e",
+                        "background": "#f7f9fb",
+                        "surface-container-highest": "#e0e3e5",
+                        "tertiary": "#000000",
+                        "tertiary-container": "#002204",
+                        "outline": "#75777e",
+                        "on-surface-variant": "#44474d",
+                        "tertiary-fixed": "#a3f69c",
+                        "secondary-container": "#00e3fd",
+                        "on-tertiary": "#ffffff",
+                        "inverse-surface": "#2d3133",
+                        "primary": "#000000",
+                        "error": "#ba1a1a",
+                        "primary-fixed-dim": "#b9c7e4",
+                        "primary-fixed": "#d6e3ff",
+                        "on-surface": "#191c1e",
+                        "surface-container-high": "#e6e8ea",
+                        "on-primary": "#ffffff",
+                        "surface-variant": "#e0e3e5",
+                        "outline-variant": "#c5c6cd",
+                        "secondary": "#006875",
+                        "on-tertiary-container": "#469446",
+                        "on-secondary-fixed-variant": "#004f58",
+                        "tertiary-fixed-dim": "#88d982",
+                        "on-secondary-fixed": "#001f24",
+                        "surface-container-lowest": "#ffffff",
+                        "on-primary-fixed-variant": "#39475f",
+                        "on-error-container": "#93000a",
+                        "surface-container-low": "#f2f4f6",
+                        "on-tertiary-fixed-variant": "#005312",
+                        "inverse-on-surface": "#eff1f3",
+                        "surface-container": "#eceef0",
+                        "secondary-fixed-dim": "#00daf3"
+                    },
+                    "borderRadius": {
+                        "DEFAULT": "0.25rem",
+                        "lg": "0.5rem",
+                        "xl": "0.75rem",
+                        "full": "9999px"
+                    },
+                    "spacing": {
+                        "stack-md": "16px",
+                        "stack-lg": "32px",
+                        "gutter": "16px",
+                        "container-padding": "20px",
+                        "stack-sm": "8px",
+                        "unit": "4px"
+                    },
+                    "fontFamily": {
+                        "body-lg": ["Inter"],
+                        "label-sm": ["Inter"],
+                        "display-lg": ["Manrope"],
+                        "body-md": ["Inter"],
+                        "headline-md": ["Manrope"]
+                    },
+                    "fontSize": {
+                        "body-lg": ["18px", {"lineHeight": "28px", "fontWeight": "400"}],
+                        "label-sm": ["13px", {"lineHeight": "16px", "letterSpacing": "0.05em", "fontWeight": "600"}],
+                        "display-lg": ["40px", {"lineHeight": "48px", "letterSpacing": "-0.02em", "fontWeight": "700"}],
+                        "body-md": ["16px", {"lineHeight": "24px", "fontWeight": "400"}],
+                        "headline-md": ["24px", {"lineHeight": "32px", "letterSpacing": "-0.01em", "fontWeight": "600"}]
+                    }
+                },
+            },
+        }
+    </script>
+<style>
+        .glass-card {
+            background: rgba(255, 255, 255, 0.7);
+            backdrop-filter: blur(20px);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+        }
+        .material-symbols-outlined {
+            font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 24;
+        }
+        input:focus {
+            outline: none;
+            border-color: #00e3fd !important;
+            box-shadow: 0 0 0 1px #00e3fd;
+        }
+    </style>
+<style>
+    body {
+      min-height: max(884px, 100dvh);
+    }
+  </style>
+  </head>
+<body class="bg-background text-on-surface font-body-md selection:bg-secondary-container/30">
+<!-- Top Navigation Shell - Suppressed for transactional screen (Registration) -->
+<!-- Applying "Administrative Approval Required" focused journey rules -->
+<main class="min-h-screen pb-stack-lg">
+<!-- Hero Section -->
+<section class="pt-12 px-container-padding pb-8">
+<div class="mb-stack-md inline-flex items-center gap-2 text-secondary font-label-sm">
+<span class="material-symbols-outlined text-[20px]">verified_user</span>
+<span>INSTITUTIONAL PORTAL</span>
+</div>
+<h1 class="font-display-lg text-display-lg text-primary mb-2">Register as Insurance Provider</h1>
+<p class="text-on-surface-variant font-body-md">Apply to offer insurance coverage for verified sustainability projects.</p>
+</section>
+<!-- Registration Form Body -->
+<form class="px-container-padding space-y-stack-md">
+<!-- 1. Basic Information -->
+<div class="glass-card bg-surface-container-lowest rounded-xl p-5 border border-outline-variant/10 shadow-sm space-y-4">
+<div class="flex items-center gap-2 mb-2">
+<span class="material-symbols-outlined text-primary" data-icon="corporate_fare">corporate_fare</span>
+<h2 class="font-headline-md text-[18px] text-primary">Basic Information</h2>
+</div>
+<div class="space-y-4">
+<div class="space-y-1">
+<label class="font-label-sm text-on-surface-variant ml-1">Insurance Provider Name</label>
+<input class="w-full bg-surface-container-low border-none rounded-lg p-3 text-body-md placeholder:text-outline/50" placeholder="Global Eco Assurance Ltd." type="text"/>
+</div>
+<div class="space-y-1">
+<label class="font-label-sm text-on-surface-variant ml-1">Business Email</label>
+<input class="w-full bg-surface-container-low border-none rounded-lg p-3 text-body-md placeholder:text-outline/50" placeholder="underwriting@company.com" type="email"/>
+</div>
+<div class="grid grid-cols-2 gap-3">
+<div class="space-y-1">
+<label class="font-label-sm text-on-surface-variant ml-1">Password</label>
+<input class="w-full bg-surface-container-low border-none rounded-lg p-3 text-body-md" placeholder="••••••••" type="password"/>
+</div>
+<div class="space-y-1">
+<label class="font-label-sm text-on-surface-variant ml-1">Confirm</label>
+<input class="w-full bg-surface-container-low border-none rounded-lg p-3 text-body-md" placeholder="••••••••" type="password"/>
+</div>
+</div>
+<div class="space-y-1">
+<label class="font-label-sm text-on-surface-variant ml-1">Phone Number</label>
+<input class="w-full bg-surface-container-low border-none rounded-lg p-3 text-body-md placeholder:text-outline/50" placeholder="+1 (555) 000-0000" type="tel"/>
+</div>
+<div class="space-y-1">
+<label class="font-label-sm text-on-surface-variant ml-1">Country / Region</label>
+<select class="w-full bg-surface-container-low border-none rounded-lg p-3 text-body-md appearance-none">
+<option>Switzerland</option>
+<option>United Kingdom</option>
+<option>United States</option>
+<option>Singapore</option>
+</select>
+</div>
+</div>
+</div>
+<!-- 2. Insurance Information -->
+<div class="glass-card bg-surface-container-lowest rounded-xl p-5 border border-outline-variant/10 shadow-sm space-y-4">
+<div class="flex items-center gap-2 mb-2">
+<span class="material-symbols-outlined text-primary" data-icon="description">description</span>
+<h2 class="font-headline-md text-[18px] text-primary">Insurance Information</h2>
+</div>
+<div class="space-y-4">
+<div class="space-y-1">
+<label class="font-label-sm text-on-surface-variant ml-1">Insurance Specialization</label>
+<input class="w-full bg-surface-container-low border-none rounded-lg p-3 text-body-md" placeholder="Climate &amp; Environmental Risk" type="text"/>
+</div>
+<div class="grid grid-cols-2 gap-3">
+<div class="space-y-1">
+<label class="font-label-sm text-on-surface-variant ml-1">Years Experience</label>
+<input class="w-full bg-surface-container-low border-none rounded-lg p-3 text-body-md" placeholder="15" type="number"/>
+</div>
+<div class="space-y-1">
+<label class="font-label-sm text-on-surface-variant ml-1">License Number</label>
+<input class="w-full bg-surface-container-low border-none rounded-lg p-3 text-body-md" placeholder="FIN-99201-B" type="text"/>
+</div>
+</div>
+<div class="space-y-1">
+<label class="font-label-sm text-on-surface-variant ml-1">Website (optional)</label>
+<input class="w-full bg-surface-container-low border-none rounded-lg p-3 text-body-md" placeholder="https://www.provider.com" type="url"/>
+</div>
+</div>
+</div>
+<!-- 3. Coverage Areas -->
+<div class="glass-card bg-surface-container-lowest rounded-xl p-5 border border-outline-variant/10 shadow-sm space-y-4">
+<div class="flex items-center gap-2 mb-2">
+<span class="material-symbols-outlined text-primary" data-icon="grid_view">grid_view</span>
+<h2 class="font-headline-md text-[18px] text-primary">Coverage Areas</h2>
+</div>
+<div class="flex flex-wrap gap-2">
+<button class="px-4 py-2 rounded-full border border-outline-variant bg-surface text-label-sm text-on-surface-variant active:scale-95 transition-all" type="button">Environmental Coverage</button>
+<button class="px-4 py-2 rounded-full border border-secondary bg-secondary-container/10 text-label-sm text-secondary font-bold active:scale-95 transition-all" type="button">Financial Risk</button>
+<button class="px-4 py-2 rounded-full border border-outline-variant bg-surface text-label-sm text-on-surface-variant active:scale-95 transition-all" type="button">Operational Risk</button>
+<button class="px-4 py-2 rounded-full border border-outline-variant bg-surface text-label-sm text-on-surface-variant active:scale-95 transition-all" type="button">ESG Sustainability Coverage</button>
+<button class="px-4 py-2 rounded-full border border-outline-variant bg-surface text-label-sm text-on-surface-variant active:scale-95 transition-all" type="button">Water Infrastructure Protection</button>
+</div>
+</div>
+<!-- 4. Supporting Documentation -->
+<div class="glass-card bg-surface-container-lowest rounded-xl p-5 border border-outline-variant/10 shadow-sm space-y-4">
+<div class="flex items-center gap-2 mb-2">
+<span class="material-symbols-outlined text-primary" data-icon="cloud_upload">cloud_upload</span>
+<h2 class="font-headline-md text-[18px] text-primary">Supporting Documentation</h2>
+</div>
+<div class="space-y-3">
+<div class="flex items-center justify-between p-4 bg-surface-container rounded-xl border border-dashed border-outline-variant group cursor-pointer active:scale-[0.98] transition-transform">
+<div class="flex items-center gap-3">
+<span class="material-symbols-outlined text-on-surface-variant">article</span>
+<div>
+<p class="font-label-sm text-primary">Regulatory Licenses</p>
+<p class="text-[11px] text-on-surface-variant uppercase tracking-wider">PDF, JPG (Max 5MB)</p>
+</div>
+</div>
+<span class="material-symbols-outlined text-secondary">add_circle</span>
+</div>
+<div class="flex items-center justify-between p-4 bg-surface-container rounded-xl border border-dashed border-outline-variant group cursor-pointer active:scale-[0.98] transition-transform">
+<div class="flex items-center gap-3">
+<span class="material-symbols-outlined text-on-surface-variant">verified</span>
+<div>
+<p class="font-label-sm text-primary">Insurance Certifications</p>
+<p class="text-[11px] text-on-surface-variant uppercase tracking-wider">PDF Only</p>
+</div>
+</div>
+<span class="material-symbols-outlined text-secondary">add_circle</span>
+</div>
+<div class="flex items-center justify-between p-4 bg-surface-container rounded-xl border border-dashed border-outline-variant group cursor-pointer active:scale-[0.98] transition-transform">
+<div class="flex items-center gap-3">
+<span class="material-symbols-outlined text-on-surface-variant">account_balance</span>
+<div>
+<p class="font-label-sm text-primary">Company Accreditation</p>
+<p class="text-[11px] text-on-surface-variant uppercase tracking-wider">Official Docs</p>
+</div>
+</div>
+<span class="material-symbols-outlined text-secondary">add_circle</span>
+</div>
+</div>
+</div>
+<!-- Administrative Approval Card -->
+<div class="p-5 bg-primary-container text-on-primary-container rounded-xl flex gap-4 items-start shadow-md">
+<span class="material-symbols-outlined text-secondary-fixed-dim" style="font-variation-settings: 'FILL' 1;">info</span>
+<div class="space-y-1">
+<h3 class="font-headline-md text-[16px] text-on-primary">Administrative Approval Required</h3>
+<p class="text-[14px] leading-relaxed text-on-primary-container">Your organization must be reviewed and approved by a platform administrator before publishing insurance plans.</p>
+</div>
+</div>
+<!-- Actions -->
+<div class="pt-4 space-y-3">
+<button class="w-full bg-primary text-on-primary py-4 rounded-xl font-headline-md text-[18px] shadow-lg active:scale-95 transition-all" type="submit">
+                    Submit Registration
+                </button>
+<button class="w-full bg-surface-container-highest/50 text-primary py-4 rounded-xl font-headline-md text-[18px] active:scale-95 transition-all" type="button">
+                    Back
+                </button>
+</div>
+<!-- Footer Spacing -->
+<div class="h-8"></div>
+</form>
+</main>
+<!-- Visual Polish: Background Gradients -->
+<div class="fixed top-0 left-0 w-full h-full -z-10 overflow-hidden pointer-events-none">
+<div class="absolute -top-[10%] -right-[10%] w-[50%] h-[50%] bg-secondary-container/5 blur-[120px] rounded-full"></div>
+<div class="absolute top-[40%] -left-[10%] w-[40%] h-[40%] bg-primary-container/5 blur-[100px] rounded-full"></div>
+</div>
+</body></html>

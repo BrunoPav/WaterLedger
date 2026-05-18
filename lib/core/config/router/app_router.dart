@@ -3,6 +3,10 @@ import 'package:water_ledger/features/auditor/presentation/screens/auditor_scree
 import 'package:water_ledger/features/auditor/presentation/screens/documentation_screen.dart';
 import 'package:water_ledger/core/presentation/screens/auth/auditor_register_screen.dart';
 import 'package:water_ledger/core/presentation/screens/auth/auditor_register_success_screen.dart';
+import 'package:water_ledger/core/presentation/screens/auth/certifier_register_screen.dart';
+import 'package:water_ledger/core/presentation/screens/auth/certifier_register_success_screen.dart';
+import 'package:water_ledger/core/presentation/screens/auth/insurance_register_screen.dart';
+import 'package:water_ledger/core/presentation/screens/auth/insurance_register_success_screen.dart';
 import 'package:water_ledger/core/presentation/screens/auth/company_register_success_screen.dart';
 import 'package:water_ledger/core/presentation/screens/auth/corporate_onboarding_screen.dart';
 import 'package:water_ledger/core/presentation/screens/auth/retail_register_screen.dart';
@@ -25,6 +29,10 @@ final GoRouter appRouter = GoRouter(
     GoRoute(path: '/retail-register', builder: (context, state) => const RetailRegisterScreen()),
     GoRoute(path: '/auditor-register', builder: (context, state) => const AuditorRegisterScreen()),
     GoRoute(path: '/auditor-register-success', builder: (context, state) => const AuditorRegisterSuccessScreen()),
+    GoRoute(path: '/certifier-register', builder: (context, state) => const CertifierRegisterScreen()),
+    GoRoute(path: '/certifier-register-success', builder: (context, state) => const CertifierRegisterSuccessScreen()),
+    GoRoute(path: '/insurance-register', builder: (context, state) => const InsuranceRegisterScreen()),
+    GoRoute(path: '/insurance-register-success', builder: (context, state) => const InsuranceRegisterSuccessScreen()),
     GoRoute(path: '/retail-register-success', builder: (context, state) => const RetailRegisterSuccessScreen()),
     GoRoute(path: '/home', builder: (context, state) => const HomeTemporal()),
     GoRoute(
