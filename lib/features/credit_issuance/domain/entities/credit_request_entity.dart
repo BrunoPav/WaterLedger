@@ -18,7 +18,7 @@ class CreditRequestEntity {
     required this.issuerCompanyId,
     required this.proyectoId,
     required this.creditAmount,
-    this.status = RequestStatus.pending,  
+    this.status = RequestStatus.draft,
     required this.createdAt,
     this.updatedAt,
   });

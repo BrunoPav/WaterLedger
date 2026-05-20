@@ -1,5 +1,4 @@
 import 'package:go_router/go_router.dart';
-import 'package:water_ledger/credito_temporal_screen.dart';
 import 'package:water_ledger/features/auditor/presentation/screens/auditor_screen.dart';
 import 'package:water_ledger/features/auditor/presentation/screens/documentation_screen.dart';
 import 'package:water_ledger/core/presentation/screens/auth/company_register_success_screen.dart';
@@ -11,6 +10,8 @@ import 'package:water_ledger/core/presentation/screens/auth/register_screen.dart
 import 'package:water_ledger/core/presentation/screens/splash_screen.dart';
 import 'package:water_ledger/features/credit_issuance/presentation/screens/credit_issuance_screen.dart';
 import 'package:water_ledger/features/credit_issuance/presentation/screens/roadmap_editor_screen.dart';
+import 'package:water_ledger/features/credit_issuance/presentation/screens/submission_confirmation_screen.dart';
+import 'package:water_ledger/features/credit_issuance/presentation/screens/request_tracking_screen.dart';
 import 'package:water_ledger/features/issuer/presentation/screen/issuing_company_screen.dart';
 import 'package:water_ledger/home_temporal.dart';
 
@@ -43,10 +44,6 @@ final GoRouter appRouter = GoRouter(
     ),
     GoRoute(path: '/home', builder: (context, state) => const HomeTemporal()),
     GoRoute(
-      path: '/prueba-credito',
-      builder: (context, state) => const CreditoTemporal(),
-    ),
-    GoRoute(
       path: '/issuing-company',
       builder: (context, state) => const IssuingCompanyScreen(),
     ),
@@ -65,6 +62,14 @@ final GoRouter appRouter = GoRouter(
     GoRoute(
       path: '/roadmap-editor',
       builder: (context, state) => const RoadmapEditorScreen(),
+    ),
+    GoRoute(
+      path: '/submission-confirmation',
+      builder: (context, state) => const SubmissionConfirmationScreen(),
+    ),
+    GoRoute(
+      path: '/request-tracking',
+      builder: (context, state) => const RequestTrackingScreen(),
     ),
     GoRoute(
       path: '/project-info-test',

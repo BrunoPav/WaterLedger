@@ -154,6 +154,33 @@ class _RoadmapEditorScreenState extends ConsumerState<RoadmapEditorScreen> {
     }
   }
 
+  Future<void> _submitRequest() async {
+    final roadmap = RoadmapEntity(phases: _phases);
+    final errors = RoadmapValidator.validate(roadmap);
+    if (errors.isNotEmpty) {
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(content: Text(errors.first), duration: const Duration(seconds: 3)),
+      );
+      return;
+    }
+
+    try {
+      // Guardar roadmap primero
+      await ref.read(creditRequestProvider.notifier).updateRoadmap(roadmap);
+      
+      // Luego enviar la solicitud
+      await ref.read(creditRequestProvider.notifier).submitRequest();
+      
+      if (!mounted) return;
+      context.push('/submission-confirmation');
+    } catch (e) {
+      if (!mounted) return;
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(content: Text('Error al enviar: $e')),
+      );
+    }
+  }
+
   // ------------------------------------------------------------------ //
   //  BUILD
   // ------------------------------------------------------------------ //
@@ -784,39 +811,69 @@ class _RoadmapEditorScreenState extends ConsumerState<RoadmapEditorScreen> {
             top: false,
             child: Padding(
               padding: const EdgeInsets.fromLTRB(16, 12, 16, 12),
-              child: Row(
+              child: Column(
+                mainAxisSize: MainAxisSize.min,
                 children: [
-                  Expanded(
-                    child: TextButton.icon(
-                      onPressed: () => context.pop(),
-                      icon: const Icon(Icons.arrow_back, size: 18, color: _onSurfaceVariantColor),
-                      label: const Text(
-                        'Back',
-                        style: TextStyle(
-                          fontFamily: 'Inter',
-                          fontSize: 13,
-                          fontWeight: FontWeight.w600,
-                          color: _onSurfaceVariantColor,
+                  Row(
+                    children: [
+                      Expanded(
+                        child: TextButton.icon(
+                          onPressed: () => context.pop(),
+                          icon: const Icon(Icons.arrow_back, size: 18, color: _onSurfaceVariantColor),
+                          label: const Text(
+                            'Back',
+                            style: TextStyle(
+                              fontFamily: 'Inter',
+                              fontSize: 13,
+                              fontWeight: FontWeight.w600,
+                              color: _onSurfaceVariantColor,
+                            ),
+                          ),
                         ),
                       ),
-                    ),
+                      const SizedBox(width: 8),
+                      ElevatedButton(
+                        onPressed: _saveAndContinue,
+                        style: ElevatedButton.styleFrom(
+                          backgroundColor: _primaryColor,
+                          foregroundColor: _onPrimaryColor,
+                          padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 14),
+                          shape: const StadiumBorder(),
+                          elevation: 1,
+                        ),
+                        child: const Text(
+                          'Save and Continue',
+                          style: TextStyle(
+                            fontFamily: 'Manrope',
+                            fontSize: 14,
+                            fontWeight: FontWeight.w600,
+                          ),
+                        ),
+                      ),
+                    ],
                   ),
-                  const SizedBox(width: 8),
-                  ElevatedButton(
-                    onPressed: _saveAndContinue,
-                    style: ElevatedButton.styleFrom(
-                      backgroundColor: _primaryColor,
-                      foregroundColor: _onPrimaryColor,
-                      padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 14),
-                      shape: const StadiumBorder(),
-                      elevation: 1,
-                    ),
-                    child: const Text(
-                      'Save and Continue',
-                      style: TextStyle(
-                        fontFamily: 'Manrope',
-                        fontSize: 14,
-                        fontWeight: FontWeight.w600,
+                  const SizedBox(height: 8),
+                  SizedBox(
+                    width: double.infinity,
+                    child: ElevatedButton.icon(
+                      onPressed: _submitRequest,
+                      style: ElevatedButton.styleFrom(
+                        backgroundColor: _secondaryColor,
+                        foregroundColor: Colors.white,
+                        padding: const EdgeInsets.symmetric(vertical: 14),
+                        shape: RoundedRectangleBorder(
+                          borderRadius: BorderRadius.circular(8),
+                        ),
+                        elevation: 1,
+                      ),
+                      icon: const Icon(Icons.send_outlined, size: 18),
+                      label: const Text(
+                        'Enviar Solicitud',
+                        style: TextStyle(
+                          fontFamily: 'Manrope',
+                          fontSize: 14,
+                          fontWeight: FontWeight.w600,
+                        ),
                       ),
                     ),
                   ),

@@ -1,3 +1,4 @@
+import 'dart:math';
 import 'package:water_ledger/features/credit_issuance/domain/entities/credit_request_entity.dart';
 import 'package:water_ledger/features/credit_issuance/domain/entities/document_entity.dart';
 import 'package:water_ledger/features/credit_issuance/domain/entities/roadmap_entity.dart';
@@ -8,17 +9,26 @@ import 'package:water_ledger/features/credit_issuance/domain/repositories/credit
 class TestCreditIssuanceRepository implements CreditIssuanceRepository {
 
   final List<CreditRequestEntity> _requests = [];
+  final Random _random = Random();
+
+  /// Generates a unique request ID in format: REQ_YYYYMMDD_XXXXXX
+  String _generateRequestId() {
+    final now = DateTime.now();
+    final dateCode = '${now.year}${now.month.toString().padLeft(2, '0')}${now.day.toString().padLeft(2, '0')}';
+    final randomSuffix = _random.nextInt(999999).toString().padLeft(6, '0');
+    return 'REQ_${dateCode}_$randomSuffix';
+  }
 
   @override
   Future<CreditRequestEntity> createDraft({
     required String companyId
   }) async {
-    //creo un CreditRequestEntity con datos de prueba
+    // Generar un ID único para la solicitud
     final draft = CreditRequestEntity(
-      id: 'test_request_id',
+      id: _generateRequestId(),
       issuerCompanyId: companyId,
-      proyectoId: "null",
-      creditAmount: 100.0,
+      proyectoId: 'null',
+      creditAmount: 0.0,
       status: RequestStatus.draft,
       createdAt: DateTime.now(),
     );
@@ -61,6 +71,7 @@ class TestCreditIssuanceRepository implements CreditIssuanceRepository {
   }) async {
     final request = _requests.firstWhere((r) => r.id == requestId);
     request.status = RequestStatus.pending;
+    request.updatedAt = DateTime.now();
   }
 
   @override

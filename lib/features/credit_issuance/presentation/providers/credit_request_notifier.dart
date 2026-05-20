@@ -3,6 +3,7 @@ import 'package:water_ledger/features/credit_issuance/domain/entities/credit_req
 import 'package:water_ledger/features/credit_issuance/domain/entities/roadmap_entity.dart';
 import 'package:water_ledger/features/credit_issuance/domain/enums/request_status.dart';
 import 'package:water_ledger/features/credit_issuance/domain/use_cases/create_credit_request_use_case.dart';
+import 'package:water_ledger/features/credit_issuance/domain/use_cases/submit_credit_request_use_case.dart';
 import 'package:water_ledger/features/credit_issuance/domain/use_cases/update_roadmap_use_case.dart';
 import 'package:water_ledger/features/credit_issuance/presentation/providers/repository_provider.dart';
 
@@ -14,6 +15,7 @@ class CreditRequestNotifier extends Notifier<CreditRequestEntity> {
 
   late final CreateCreditRequestUseCase _createCreditRequestUseCase = ref.read(createCreditRequestUseCaseProvider);
   late final UpdateRoadmapUseCase _updateRoadmapUseCase = ref.read(updateRoadmapUseCaseProvider);
+  late final SubmitCreditRequestUseCase _submitCreditRequestUseCase = ref.read(submitCreditRequestUseCaseProvider);
 
   @override
   CreditRequestEntity build() {
@@ -42,5 +44,10 @@ class CreditRequestNotifier extends Notifier<CreditRequestEntity> {
     state.updatedAt = DateTime.now();
     // Forzar rebuild del state mutando la referencia
     state = state;
+  }
+
+  Future<void> submitRequest() async {
+    final updated = await _submitCreditRequestUseCase(state.id);
+    state = updated;
   }
 }

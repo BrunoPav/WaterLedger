@@ -26,13 +26,7 @@ class HomeTemporal extends ConsumerWidget {
                 context.push('/issuing-company');
               },
               child: Text('Ir a Empresa Emisora'),
-            ),
-            ElevatedButton(
-              onPressed: () {
-                context.push('/prueba-credito');
-              },
-              child: Text('Ir a Prueba de Crédito'),
-            ),
+            ),            
             ElevatedButton(
               onPressed: () async {
                 // Crea un borrador con un companyId mockeado y navega al editor de roadmap
