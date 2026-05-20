@@ -111,9 +111,23 @@ class _RetailRegisterScreenState extends State<RetailRegisterScreen> {
                 child: Row(
                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
                   children: [
-                    // Logo
+                    // Logo + back arrow
+                    // Agregamos un IconButton al inicio para permitir volver al selector
+                    // de tipo de cuenta en caso de equivocarse de opción.
                     Row(
                       children: [
+                        IconButton(
+                          onPressed: () => context.pop(),
+                          padding: EdgeInsets.zero,
+                          constraints: const BoxConstraints(minWidth: 36, minHeight: 36),
+                          visualDensity: VisualDensity.compact,
+                          icon: const Icon(
+                            Icons.arrow_back,
+                            color: _onSurfaceVariantColor,
+                            size: 20,
+                          ),
+                        ),
+                        const SizedBox(width: 6),
                         Icon(Icons.water_drop, color: _secondaryColor, size: 20),
                         const SizedBox(width: 7),
                         const Text(

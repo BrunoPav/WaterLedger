@@ -1,0 +1,301 @@
+<!DOCTYPE html>
+
+<html class="light" lang="en"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0, viewport-fit=cover" name="viewport"/>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600&amp;family=Manrope:wght@600;700;800&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<script id="tailwind-config">
+      tailwind.config = {
+        darkMode: "class",
+        theme: {
+          extend: {
+            "colors": {
+                    "on-secondary-container": "#00616d",
+                    "error-container": "#ffdad6",
+                    "surface-tint": "#515f78",
+                    "on-tertiary": "#ffffff",
+                    "tertiary-container": "#002204",
+                    "secondary-fixed-dim": "#00daf3",
+                    "on-primary-fixed": "#0d1c32",
+                    "on-error-container": "#93000a",
+                    "tertiary": "#000000",
+                    "on-secondary": "#ffffff",
+                    "on-error": "#ffffff",
+                    "surface-container-high": "#e6e8ea",
+                    "outline": "#75777e",
+                    "tertiary-fixed-dim": "#88d982",
+                    "on-secondary-fixed-variant": "#004f58",
+                    "secondary-container": "#00e3fd",
+                    "surface": "#f7f9fb",
+                    "on-primary-fixed-variant": "#39475f",
+                    "surface-variant": "#e0e3e5",
+                    "primary-container": "#0d1c32",
+                    "surface-container": "#eceef0",
+                    "surface-container-low": "#f2f4f6",
+                    "secondary": "#006875",
+                    "error": "#ba1a1a",
+                    "on-surface-variant": "#44474d",
+                    "surface-container-lowest": "#ffffff",
+                    "on-primary-container": "#76849f",
+                    "surface-dim": "#d8dadc",
+                    "on-surface": "#191c1e",
+                    "on-tertiary-container": "#469446",
+                    "on-tertiary-fixed": "#002204",
+                    "inverse-surface": "#2d3133",
+                    "secondary-fixed": "#9cf0ff",
+                    "outline-variant": "#c5c6cd",
+                    "background": "#f7f9fb",
+                    "primary": "#000000",
+                    "tertiary-fixed": "#a3f69c"
+            },
+            "borderRadius": {
+                    "DEFAULT": "0.25rem",
+                    "lg": "0.5rem",
+                    "xl": "0.75rem",
+                    "2xl": "1rem",
+                    "full": "9999px"
+            },
+            "spacing": {
+                    "stack-sm": "8px",
+                    "container-padding": "20px",
+                    "unit": "4px",
+                    "gutter": "16px",
+                    "stack-md": "16px",
+                    "stack-lg": "32px"
+            },
+            "fontFamily": {
+                    "display-lg": ["Manrope"],
+                    "body-md": ["Inter"],
+                    "body-lg": ["Inter"],
+                    "headline-md": ["Manrope"],
+                    "label-sm": ["Inter"]
+            },
+            "fontSize": {
+                    "display-lg": ["40px", {"lineHeight": "48px", "letterSpacing": "-0.02em", "fontWeight": "700"}],
+                    "body-md": ["16px", {"lineHeight": "24px", "fontWeight": "400"}],
+                    "body-lg": ["18px", {"lineHeight": "28px", "fontWeight": "400"}],
+                    "headline-md": ["24px", {"lineHeight": "32px", "letterSpacing": "-0.01em", "fontWeight": "600"}],
+                    "label-sm": ["13px", {"lineHeight": "16px", "letterSpacing": "0.05em", "fontWeight": "600"}]
+            }
+          },
+        },
+      }
+    </script>
+<style>
+        .material-symbols-outlined {
+            font-variation-settings: 'FILL' 0, 'wght' 300, 'GRAD' 0, 'opsz' 24;
+            font-size: 24px;
+        }
+        .glass-panel {
+            background: rgba(255, 255, 255, 0.7);
+            backdrop-filter: blur(20px);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+        }
+    </style>
+<style>
+    body {
+      min-height: max(884px, 100dvh);
+    }
+  </style>
+  </head>
+<body class="bg-background text-on-surface font-body-md min-h-screen pb-32">
+<!-- Top App Bar -->
+<header class="fixed top-0 left-0 w-full z-50 bg-surface/70 backdrop-blur-md border-b border-outline-variant/10 shadow-sm">
+<div class="flex justify-between items-center px-gutter h-16 w-full max-w-7xl mx-auto">
+<div class="flex items-center gap-3">
+<button class="active:scale-95 transition-all text-on-surface-variant">
+<span class="material-symbols-outlined">arrow_back</span>
+</button>
+<h1 class="font-display-lg text-headline-md text-primary tracking-tight">Water Ledger</h1>
+</div>
+<div class="w-8 h-8 rounded-full bg-surface-container-high overflow-hidden border border-outline-variant/20">
+<img alt="User Profile" class="w-full h-full object-cover" data-alt="A professional headshot of a mature environmental consultant in a minimalist office setting. The lighting is soft and natural, emphasizing trust and institutional expertise. The color palette is composed of soft grays, deep blues, and crisp whites, reflecting a high-end corporate identity for sustainability validation." src="https://lh3.googleusercontent.com/aida-public/AB6AXuCS6b12mAN5A5hI0bSiW9QE6ezrBAoObd4AHLkkDVSgiUfckF6koRqY9qPf1-Vxo2K1GeDlqcmbsR9J0VVqUkui8f4TfVqpVz2A19xyLkeHWuSKClYcmKwp9dv9NV114qW2p9F6gRV6kGUu8Zf7bEP1QImg3mE0xpKTuH_Zyx3rznP6Q73CkBujqkwuPZAp2Z9BZufzEE5ogUwphIXDy0xkYLDHvwAO3-JzKr6u4cYC8yeqzwnfqdqgjA9MHw1xLlfQbPP4DeD_tF4"/>
+</div>
+</div>
+</header>
+<main class="mt-20 px-container-padding max-w-2xl mx-auto space-y-stack-lg">
+<!-- Hero Section -->
+<section class="space-y-stack-sm pt-4">
+<h2 class="font-headline-md text-headline-md text-primary">Register as Certification Entity</h2>
+<p class="font-body-md text-on-surface-variant leading-relaxed">
+                Apply to validate sustainability projects and certify water credit eligibility.
+            </p>
+</section>
+<!-- Form Formatted as Professional Cards -->
+<form class="space-y-stack-lg">
+<!-- Section 1: Basic Information -->
+<div class="bg-surface-container-lowest border border-outline-variant/30 rounded-2xl p-gutter shadow-[0_4px_12px_rgba(0,0,0,0.02)] space-y-stack-md">
+<div class="flex items-center gap-2 mb-2">
+<span class="material-symbols-outlined text-secondary">corporate_fare</span>
+<h3 class="font-headline-md text-body-lg font-bold">Basic Information</h3>
+</div>
+<div class="space-y-4">
+<div class="flex flex-col gap-1">
+<label class="font-label-sm text-on-surface-variant ml-1">Entity Name</label>
+<input class="w-full bg-surface-container-low border-b border-outline-variant focus:border-secondary-container rounded-t-lg px-4 py-3 outline-none transition-all" placeholder="Global Hydrology Group" type="text"/>
+</div>
+<div class="flex flex-col gap-1">
+<label class="font-label-sm text-on-surface-variant ml-1">Business Email</label>
+<input class="w-full bg-surface-container-low border-b border-outline-variant focus:border-secondary-container rounded-t-lg px-4 py-3 outline-none transition-all" placeholder="verification@ghg.org" type="email"/>
+</div>
+<div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+<div class="flex flex-col gap-1">
+<label class="font-label-sm text-on-surface-variant ml-1">Password</label>
+<input class="w-full bg-surface-container-low border-b border-outline-variant focus:border-secondary-container rounded-t-lg px-4 py-3 outline-none transition-all" placeholder="••••••••" type="password"/>
+</div>
+<div class="flex flex-col gap-1">
+<label class="font-label-sm text-on-surface-variant ml-1">Confirm Password</label>
+<input class="w-full bg-surface-container-low border-b border-outline-variant focus:border-secondary-container rounded-t-lg px-4 py-3 outline-none transition-all" placeholder="••••••••" type="password"/>
+</div>
+</div>
+<div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+<div class="flex flex-col gap-1">
+<label class="font-label-sm text-on-surface-variant ml-1">Phone</label>
+<input class="w-full bg-surface-container-low border-b border-outline-variant focus:border-secondary-container rounded-t-lg px-4 py-3 outline-none transition-all" placeholder="+1 (555) 000-0000" type="tel"/>
+</div>
+<div class="flex flex-col gap-1">
+<label class="font-label-sm text-on-surface-variant ml-1">Country/Region</label>
+<input class="w-full bg-surface-container-low border-b border-outline-variant focus:border-secondary-container rounded-t-lg px-4 py-3 outline-none transition-all" placeholder="European Union" type="text"/>
+</div>
+</div>
+</div>
+</div>
+<!-- Section 2: Certification Info -->
+<div class="bg-surface-container-lowest border border-outline-variant/30 rounded-2xl p-gutter shadow-[0_4px_12px_rgba(0,0,0,0.02)] space-y-stack-md">
+<div class="flex items-center gap-2 mb-2">
+<span class="material-symbols-outlined text-secondary">verified</span>
+<h3 class="font-headline-md text-body-lg font-bold">Certification Info</h3>
+</div>
+<div class="space-y-4">
+<div class="flex flex-col gap-1">
+<label class="font-label-sm text-on-surface-variant ml-1">Area/Expertise</label>
+<select class="w-full bg-surface-container-low border-b border-outline-variant focus:border-secondary-container rounded-t-lg px-4 py-3 outline-none transition-all appearance-none">
+<option>Watershed Management</option>
+<option>Desalination Verification</option>
+<option>Agricultural Water Efficiency</option>
+<option>Urban Water Systems</option>
+</select>
+</div>
+<div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+<div class="flex flex-col gap-1">
+<label class="font-label-sm text-on-surface-variant ml-1">Years of Experience</label>
+<input class="w-full bg-surface-container-low border-b border-outline-variant focus:border-secondary-container rounded-t-lg px-4 py-3 outline-none transition-all" placeholder="10" type="number"/>
+</div>
+<div class="flex flex-col gap-1">
+<label class="font-label-sm text-on-surface-variant ml-1">Accreditation Number</label>
+<input class="w-full bg-surface-container-low border-b border-outline-variant focus:border-secondary-container rounded-t-lg px-4 py-3 outline-none transition-all" placeholder="ISO-14064-WV-2024" type="text"/>
+</div>
+</div>
+<div class="flex flex-col gap-1">
+<label class="font-label-sm text-on-surface-variant ml-1">Website (optional)</label>
+<input class="w-full bg-surface-container-low border-b border-outline-variant focus:border-secondary-container rounded-t-lg px-4 py-3 outline-none transition-all" placeholder="https://ghg-verification.org" type="url"/>
+</div>
+</div>
+</div>
+<!-- Section 3: Supporting Documentation (Bento Style) -->
+<div class="space-y-stack-sm">
+<h3 class="font-headline-md text-body-lg font-bold flex items-center gap-2">
+<span class="material-symbols-outlined text-secondary">cloud_upload</span>
+                    Supporting Documentation
+                </h3>
+<div class="grid grid-cols-2 md:grid-cols-3 gap-4">
+<!-- Doc Card 1 -->
+<button class="group flex flex-col items-center justify-center p-4 bg-surface-container-lowest border-2 border-dashed border-outline-variant/40 rounded-2xl hover:border-secondary-container transition-all active:scale-95" type="button">
+<span class="material-symbols-outlined text-on-surface-variant group-hover:text-secondary-container mb-2">description</span>
+<p class="font-label-sm text-center">Accreditation Documents</p>
+</button>
+<!-- Doc Card 2 -->
+<button class="group flex flex-col items-center justify-center p-4 bg-surface-container-lowest border-2 border-dashed border-outline-variant/40 rounded-2xl hover:border-secondary-container transition-all active:scale-95" type="button">
+<span class="material-symbols-outlined text-on-surface-variant group-hover:text-secondary-container mb-2">workspace_premium</span>
+<p class="font-label-sm text-center">Professional Certs</p>
+</button>
+<!-- Doc Card 3 -->
+<button class="group flex flex-col items-center justify-center p-4 bg-surface-container-lowest border-2 border-dashed border-outline-variant/40 rounded-2xl hover:border-secondary-container transition-all active:scale-95 col-span-2 md:col-span-1" type="button">
+<span class="material-symbols-outlined text-on-surface-variant group-hover:text-secondary-container mb-2">gavel</span>
+<p class="font-label-sm text-center">Regulatory Licenses</p>
+</button>
+</div>
+</div>
+<!-- Section 4: Operational Scope (Chips) -->
+<div class="space-y-stack-sm">
+<h3 class="font-headline-md text-body-lg font-bold flex items-center gap-2">
+<span class="material-symbols-outlined text-secondary">zoom_out</span>
+                    Operational Scope
+                </h3>
+<div class="flex flex-wrap gap-2">
+<div class="px-4 py-2 rounded-full bg-secondary-container/10 border border-secondary/20 text-secondary font-label-sm flex items-center gap-2 cursor-pointer hover:bg-secondary-container/20 transition-colors">
+<span class="material-symbols-outlined !text-[18px]" style="font-variation-settings: 'FILL' 1;">check_circle</span>
+                        Environmental Certification
+                    </div>
+<div class="px-4 py-2 rounded-full bg-surface-container-lowest border border-outline-variant/40 text-on-surface-variant font-label-sm flex items-center gap-2 cursor-pointer hover:border-secondary transition-all">
+                        Sustainability Verification
+                    </div>
+<div class="px-4 py-2 rounded-full bg-surface-container-lowest border border-outline-variant/40 text-on-surface-variant font-label-sm flex items-center gap-2 cursor-pointer hover:border-secondary transition-all">
+                        Water Impact Validation
+                    </div>
+<div class="px-4 py-2 rounded-full bg-surface-container-lowest border border-outline-variant/40 text-on-surface-variant font-label-sm flex items-center gap-2 cursor-pointer hover:border-secondary transition-all">
+                        ESG Compliance
+                    </div>
+</div>
+</div>
+<!-- Administrative Info Card -->
+<div class="glass-panel p-gutter rounded-2xl flex gap-4 items-start border border-outline-variant/20 shadow-sm">
+<span class="material-symbols-outlined text-on-tertiary-container mt-0.5">info</span>
+<p class="font-label-sm text-on-surface-variant leading-relaxed">
+<span class="text-on-tertiary-container font-bold">Administrative Approval Required</span> - Your organization must be reviewed and approved by a platform administrator before accessing certification operations.
+                </p>
+</div>
+<!-- Actions -->
+<div class="flex flex-col gap-3 pb-8">
+<button class="w-full h-14 bg-primary text-on-primary font-headline-md text-body-md rounded-2xl active:scale-[0.98] transition-all shadow-md flex items-center justify-center gap-2" type="submit">
+                    Submit Registration
+                </button>
+<button class="w-full h-14 bg-transparent border border-outline-variant text-on-surface font-headline-md text-body-md rounded-2xl active:scale-[0.98] transition-all" type="button">
+                    Back
+                </button>
+</div>
+</form>
+</main>
+<!-- Bottom Navigation Bar (Placeholder logic: hidden for focused task) -->
+<nav class="fixed bottom-0 left-0 w-full z-50 bg-surface/80 backdrop-blur-xl border-t border-outline-variant/20 shadow-[0_-4px_12px_rgba(0,0,0,0.04)] rounded-t-xl md:hidden">
+<div class="flex justify-around items-center h-20 px-2 pb-safe w-full">
+<div class="flex flex-col items-center gap-1 text-on-surface-variant hover:text-primary transition-colors">
+<span class="material-symbols-outlined">home</span>
+<span class="font-label-sm text-label-sm">Home</span>
+</div>
+<div class="flex flex-col items-center gap-1 text-on-surface-variant hover:text-primary transition-colors">
+<span class="material-symbols-outlined">pending_actions</span>
+<span class="font-label-sm text-label-sm">Requests</span>
+</div>
+<div class="flex flex-col items-center gap-1 text-on-surface-variant hover:text-primary transition-colors">
+<span class="material-symbols-outlined">water_drop</span>
+<span class="font-label-sm text-label-sm">Credits</span>
+</div>
+<div class="flex flex-col items-center gap-1 text-on-surface-variant hover:text-primary transition-colors">
+<span class="material-symbols-outlined">storefront</span>
+<span class="font-label-sm text-label-sm">Market</span>
+</div>
+<div class="flex flex-col items-center gap-1 text-secondary bg-secondary-container/10 rounded-xl px-3 py-1.5 transition-colors">
+<span class="material-symbols-outlined" style="font-variation-settings: 'FILL' 1;">person</span>
+<span class="font-label-sm text-label-sm">Profile</span>
+</div>
+</div>
+</nav>
+<!-- Post-Submission Feedback (Simulated Interaction Overlay) -->
+<!-- This would normally be triggered via JS, shown here as a layout demonstration -->
+<div class="fixed inset-0 z-[100] flex items-center justify-center px-container-padding bg-on-background/10 backdrop-blur-sm pointer-events-none opacity-0 transition-opacity duration-300">
+<div class="bg-surface-container-lowest p-stack-lg rounded-2xl shadow-2xl border border-outline-variant/20 max-w-sm text-center space-y-stack-md">
+<div class="w-16 h-16 bg-on-tertiary-container/10 text-on-tertiary-container rounded-full flex items-center justify-center mx-auto">
+<span class="material-symbols-outlined text-[40px]" style="font-variation-settings: 'FILL' 1;">check_circle</span>
+</div>
+<div class="space-y-1">
+<h4 class="font-headline-md text-body-lg text-primary">Registration Submitted Successfully</h4>
+<p class="font-body-md text-on-surface-variant">Your application is currently under administrative review.</p>
+</div>
+<button class="w-full h-12 bg-primary text-on-primary rounded-xl font-label-sm">Done</button>
+</div>
+</div>
+</body></html>
