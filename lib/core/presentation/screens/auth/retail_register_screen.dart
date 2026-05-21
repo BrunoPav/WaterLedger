@@ -1,15 +1,17 @@
 import 'dart:ui';
 import 'package:flutter/material.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
+import 'package:water_ledger/core/presentation/providers/session_provider.dart';
 
-class RetailRegisterScreen extends StatefulWidget {
+class RetailRegisterScreen extends ConsumerStatefulWidget {
   const RetailRegisterScreen({super.key});
 
   @override
-  State<RetailRegisterScreen> createState() => _RetailRegisterScreenState();
+  ConsumerState<RetailRegisterScreen> createState() => _RetailRegisterScreenState();
 }
 
-class _RetailRegisterScreenState extends State<RetailRegisterScreen> {
+class _RetailRegisterScreenState extends ConsumerState<RetailRegisterScreen> {
   final _firstNameController = TextEditingController();
   final _lastNameController = TextEditingController();
   final _emailController = TextEditingController();
@@ -25,6 +27,8 @@ class _RetailRegisterScreenState extends State<RetailRegisterScreen> {
     'Water Rights',
   ];
   final Set<String> _selectedInterests = {'Desalination Tech'};
+
+  bool _isLoading = false;
 
   // Risk profile
   String _selectedRisk = 'Medium';
@@ -59,6 +63,36 @@ class _RetailRegisterScreenState extends State<RetailRegisterScreen> {
     _phoneController.dispose();
     _passwordController.dispose();
     super.dispose();
+  }
+
+  Future<void> _handleRegister() async {
+    final email = _emailController.text.trim();
+    final password = _passwordController.text;
+    final fullName = '${_firstNameController.text.trim()} ${_lastNameController.text.trim()}'.trim();
+    if (email.isEmpty || password.isEmpty || fullName.isEmpty) {
+      ScaffoldMessenger.of(context).showSnackBar(
+        const SnackBar(content: Text('Completá nombre, email y contraseña')),
+      );
+      return;
+    }
+    setState(() => _isLoading = true);
+    try {
+      await ref.read(authRepositoryProvider).registerRetail(
+        email: email,
+        password: password,
+        fullName: fullName,
+        dni: '',
+      );
+      if (!mounted) return;
+      context.go('/retail-register-success');
+    } catch (e) {
+      if (!mounted) return;
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(content: Text('Error al registrarse: $e')),
+      );
+    } finally {
+      if (mounted) setState(() => _isLoading = false);
+    }
   }
 
   @override
@@ -699,7 +733,7 @@ class _RetailRegisterScreenState extends State<RetailRegisterScreen> {
     return SizedBox(
       width: double.infinity,
       child: ElevatedButton(
-        onPressed: () => context.go('/retail-register-success'),
+        onPressed: _isLoading ? null : _handleRegister,
         style: ElevatedButton.styleFrom(
           backgroundColor: _primaryColor,
           foregroundColor: _onPrimaryColor,
@@ -709,21 +743,27 @@ class _RetailRegisterScreenState extends State<RetailRegisterScreen> {
           ),
           elevation: 1,
         ),
-        child: const Row(
-          mainAxisAlignment: MainAxisAlignment.center,
-          children: [
-            Text(
-              'Create Account',
-              style: TextStyle(
-                fontFamily: 'Manrope',
-                fontSize: 17,
-                fontWeight: FontWeight.w700,
+        child: _isLoading
+            ? const SizedBox(
+                height: 20,
+                width: 20,
+                child: CircularProgressIndicator(strokeWidth: 2, color: Colors.white),
+              )
+            : const Row(
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: [
+                  Text(
+                    'Create Account',
+                    style: TextStyle(
+                      fontFamily: 'Manrope',
+                      fontSize: 17,
+                      fontWeight: FontWeight.w700,
+                    ),
+                  ),
+                  SizedBox(width: 8),
+                  Icon(Icons.arrow_forward_rounded, size: 20),
+                ],
               ),
-            ),
-            SizedBox(width: 8),
-            Icon(Icons.arrow_forward_rounded, size: 20),
-          ],
-        ),
       ),
     );
   }

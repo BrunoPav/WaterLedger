@@ -1,18 +1,21 @@
 import 'dart:ui';
 import 'package:flutter/material.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
+import 'package:water_ledger/core/presentation/providers/session_provider.dart';
 
-class LoginScreen extends StatefulWidget {
+class LoginScreen extends ConsumerStatefulWidget {
   const LoginScreen({super.key});
 
   @override
-  State<LoginScreen> createState() => _LoginScreenState();
+  ConsumerState<LoginScreen> createState() => _LoginScreenState();
 }
 
-class _LoginScreenState extends State<LoginScreen> {
+class _LoginScreenState extends ConsumerState<LoginScreen> {
   final _emailController = TextEditingController();
   final _passwordController = TextEditingController();
   bool _obscurePassword = true;
+  bool _isLoading = false;
 
   // -- Design tokens extraídos de DESIGN.md / Stitch Template --
   static const _bgColor = Color(0xFFF7F9FB);
@@ -32,6 +35,30 @@ class _LoginScreenState extends State<LoginScreen> {
     _emailController.dispose();
     _passwordController.dispose();
     super.dispose();
+  }
+
+  Future<void> _handleLogin() async {
+    final email = _emailController.text.trim();
+    final password = _passwordController.text;
+    if (email.isEmpty || password.isEmpty) {
+      ScaffoldMessenger.of(context).showSnackBar(
+        const SnackBar(content: Text('Completá email y contraseña')),
+      );
+      return;
+    }
+    setState(() => _isLoading = true);
+    try {
+      await ref.read(authRepositoryProvider).login(email: email, password: password);
+      if (!mounted) return;
+      context.go('/home');
+    } catch (e) {
+      if (!mounted) return;
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(content: Text('Error al iniciar sesión: $e')),
+      );
+    } finally {
+      if (mounted) setState(() => _isLoading = false);
+    }
   }
 
   @override
@@ -236,7 +263,7 @@ class _LoginScreenState extends State<LoginScreen> {
               SizedBox(
                 width: double.infinity,
                 child: ElevatedButton(
-                  onPressed: () {},
+                  onPressed: _isLoading ? null : _handleLogin,
                   style: ElevatedButton.styleFrom(
                     backgroundColor: _primaryColor,
                     foregroundColor: _onPrimaryColor,
@@ -246,14 +273,23 @@ class _LoginScreenState extends State<LoginScreen> {
                     ),
                     elevation: 1,
                   ),
-                  child: const Text(
-                    'Login',
-                    style: TextStyle(
-                      fontFamily: 'Inter',
-                      fontSize: 18,
-                      fontWeight: FontWeight.w600,
-                    ),
-                  ),
+                  child: _isLoading
+                      ? const SizedBox(
+                          height: 20,
+                          width: 20,
+                          child: CircularProgressIndicator(
+                            strokeWidth: 2,
+                            color: Colors.white,
+                          ),
+                        )
+                      : const Text(
+                          'Login',
+                          style: TextStyle(
+                            fontFamily: 'Inter',
+                            fontSize: 18,
+                            fontWeight: FontWeight.w600,
+                          ),
+                        ),
                 ),
               ),
               const SizedBox(height: 24),

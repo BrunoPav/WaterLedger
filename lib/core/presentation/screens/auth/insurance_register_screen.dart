@@ -1,16 +1,18 @@
 import 'dart:ui';
 import 'package:flutter/material.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
+import 'package:water_ledger/core/presentation/providers/session_provider.dart';
 
-class InsuranceRegisterScreen extends StatefulWidget {
+class InsuranceRegisterScreen extends ConsumerStatefulWidget {
   const InsuranceRegisterScreen({super.key});
 
   @override
-  State<InsuranceRegisterScreen> createState() =>
+  ConsumerState<InsuranceRegisterScreen> createState() =>
       _InsuranceRegisterScreenState();
 }
 
-class _InsuranceRegisterScreenState extends State<InsuranceRegisterScreen> {
+class _InsuranceRegisterScreenState extends ConsumerState<InsuranceRegisterScreen> {
   int _currentStep = 0;
   static const int _totalSteps = 5;
 
@@ -66,6 +68,7 @@ class _InsuranceRegisterScreenState extends State<InsuranceRegisterScreen> {
   final _confirmPasswordController = TextEditingController();
   bool _obscurePassword = true;
   bool _obscureConfirmPassword = true;
+  bool _isLoading = false;
 
   // -- Design tokens (alineados con DESIGN.md del template) --
   static const _bgColor = Color(0xFFF7F9FB);
@@ -119,6 +122,70 @@ class _InsuranceRegisterScreenState extends State<InsuranceRegisterScreen> {
 
   void _prevStep() {
     if (_currentStep > 0) setState(() => _currentStep--);
+  }
+
+  Future<void> _handleRegister() async {
+    final email = _emailCuentaController.text.trim();
+    final password = _passwordController.text;
+    final confirmPassword = _confirmPasswordController.text;
+    if (email.isEmpty || password.isEmpty) {
+      ScaffoldMessenger.of(context).showSnackBar(
+        const SnackBar(content: Text('Completá email y contraseña')),
+      );
+      return;
+    }
+    if (password != confirmPassword) {
+      ScaffoldMessenger.of(context).showSnackBar(
+        const SnackBar(content: Text('Las contraseñas no coinciden')),
+      );
+      return;
+    }
+    setState(() => _isLoading = true);
+    try {
+      await ref.read(authRepositoryProvider).registerInsurer(
+        email: email,
+        password: password,
+        companyData: {
+          'fantasyName': _nombreFantasiaController.text.trim(),
+          'legalName': _razonSocialController.text.trim(),
+          'cuit': _cuitController.text.trim(),
+          'societyType': _tipoSociedad,
+          'country': _paisController.text.trim(),
+          'province': _provinciaController.text.trim(),
+          'legalAddress': _domicilioLegalController.text.trim(),
+          'incorporationDate': _fechaConstitucionController.text.trim(),
+          'website': _sitioWebController.text.trim(),
+          'phone': _telefonoCorporativoController.text.trim(),
+          'institutionalEmail': _emailInstitucionalController.text.trim(),
+          'mailingAddress': _correspondenciaController.text.trim(),
+        },
+        representativeData: {
+          'fullName': _nombreApellidoController.text.trim(),
+          'idNumber': _dniCuilController.text.trim(),
+          'birthDate': _fechaNacimientoController.text.trim(),
+          'nationality': _nacionalidadController.text.trim(),
+          'email': _emailRepController.text.trim(),
+          'phone': _telefonoCelularController.text.trim(),
+          'position': _cargoFuncionController.text.trim(),
+        },
+        insurerRoleData: {
+          'supervisoryBody': _organismoSupervisor,
+          'authorizationNumber': _numeroAutorizacionController.text.trim(),
+          'resolution': _resolucionController.text.trim(),
+          'resolutionExpiry': _vigenciaResolucionController.text.trim(),
+          'coverageAreas': _selectedCoberturas.toList(),
+        },
+      );
+      if (!mounted) return;
+      context.go('/insurance-register-success');
+    } catch (e) {
+      if (!mounted) return;
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(content: Text('Error al registrarse: $e')),
+      );
+    } finally {
+      if (mounted) setState(() => _isLoading = false);
+    }
   }
 
   // ------------------------------------------------------------------ //
@@ -940,7 +1007,7 @@ class _InsuranceRegisterScreenState extends State<InsuranceRegisterScreen> {
         Expanded(
           flex: 2,
           child: ElevatedButton(
-            onPressed: isLastStep ? () => context.go('/insurance-register-success') : _nextStep,
+            onPressed: _isLoading ? null : (isLastStep ? _handleRegister : _nextStep),
             style: ElevatedButton.styleFrom(
               backgroundColor: _primaryColor,
               foregroundColor: _onPrimaryColor,
@@ -948,17 +1015,19 @@ class _InsuranceRegisterScreenState extends State<InsuranceRegisterScreen> {
               shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
               elevation: 1,
             ),
-            child: Row(
-              mainAxisAlignment: MainAxisAlignment.center,
-              children: [
-                Text(
-                  isLastStep ? 'Enviar registro' : 'Continuar',
-                  style: const TextStyle(fontFamily: 'Inter', fontSize: 16, fontWeight: FontWeight.w600),
-                ),
-                const SizedBox(width: 8),
-                const Icon(Icons.arrow_forward, size: 18),
-              ],
-            ),
+            child: _isLoading
+                ? const SizedBox(height: 20, width: 20, child: CircularProgressIndicator(strokeWidth: 2, color: Colors.white))
+                : Row(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    children: [
+                      Text(
+                        isLastStep ? 'Enviar registro' : 'Continuar',
+                        style: const TextStyle(fontFamily: 'Inter', fontSize: 16, fontWeight: FontWeight.w600),
+                      ),
+                      const SizedBox(width: 8),
+                      const Icon(Icons.arrow_forward, size: 18),
+                    ],
+                  ),
           ),
         ),
       ],

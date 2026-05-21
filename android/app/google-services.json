@@ -1,0 +1,29 @@
+{
+  "project_info": {
+    "project_number": "944601640368",
+    "project_id": "waterledger-e7544",
+    "storage_bucket": "waterledger-e7544.firebasestorage.app"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:944601640368:android:8f2db57c61fcc4279cfa75",
+        "android_client_info": {
+          "package_name": "com.example.water_ledger"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyDsjCYwo1bUxDzwNaDqf1HC1T3sA0nAIS4"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

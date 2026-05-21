@@ -24,7 +24,7 @@ import 'package:water_ledger/home_temporal.dart';
 import 'package:water_ledger/core/Stitch_Templates/Steps/step_3_project_info/project_info_step_screen.dart';
 
 final GoRouter appRouter = GoRouter(
-  initialLocation: '/home', //iba splash
+  initialLocation: '/splash', //iba splash
   routes: [
     GoRoute(path: '/splash', builder: (context, state) => const SplashScreen()),
     GoRoute(path: '/login', builder: (context, state) => const LoginScreen()),

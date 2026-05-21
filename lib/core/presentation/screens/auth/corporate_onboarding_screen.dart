@@ -1,17 +1,19 @@
 import 'dart:ui';
 import 'package:flutter/material.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
+import 'package:water_ledger/core/presentation/providers/session_provider.dart';
 
-class CorporateOnboardingScreen extends StatefulWidget {
+class CorporateOnboardingScreen extends ConsumerStatefulWidget {
   const CorporateOnboardingScreen({super.key});
 
   @override
-  State<CorporateOnboardingScreen> createState() =>
+  ConsumerState<CorporateOnboardingScreen> createState() =>
       _CorporateOnboardingScreenState();
 }
 
 class _CorporateOnboardingScreenState
-    extends State<CorporateOnboardingScreen> {
+    extends ConsumerState<CorporateOnboardingScreen> {
   int _currentStep = 0;
   static const int _totalSteps = 3;
 
@@ -36,6 +38,7 @@ class _CorporateOnboardingScreenState
   final _emailController = TextEditingController();
   final _passwordController = TextEditingController();
   bool _obscurePassword = true;
+  bool _isLoading = false;
 
   // -- Design tokens --
   static const _bgColor = Color(0xFFF7F9FB);
@@ -68,6 +71,37 @@ class _CorporateOnboardingScreenState
 
   void _prevStep() {
     if (_currentStep > 0) setState(() => _currentStep--);
+  }
+
+  Future<void> _handleRegister() async {
+    final email = _emailController.text.trim();
+    final password = _passwordController.text;
+    final companyName = _companyNameController.text.trim();
+    final cuit = _taxIdController.text.trim();
+    if (email.isEmpty || password.isEmpty || companyName.isEmpty) {
+      ScaffoldMessenger.of(context).showSnackBar(
+        const SnackBar(content: Text('Completá todos los campos requeridos')),
+      );
+      return;
+    }
+    setState(() => _isLoading = true);
+    try {
+      await ref.read(authRepositoryProvider).registerCompany(
+        email: email,
+        password: password,
+        companyName: companyName,
+        cuit: cuit,
+      );
+      if (!mounted) return;
+      context.go('/company-register-success');
+    } catch (e) {
+      if (!mounted) return;
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(content: Text('Error al registrarse: $e')),
+      );
+    } finally {
+      if (mounted) setState(() => _isLoading = false);
+    }
   }
 
   @override
@@ -537,7 +571,7 @@ class _CorporateOnboardingScreenState
             Expanded(
               flex: 2,
               child: ElevatedButton(
-                onPressed: isLastStep ? () => context.go('/company-register-success') : _nextStep,
+                onPressed: _isLoading ? null : (isLastStep ? _handleRegister : _nextStep),
                 style: ElevatedButton.styleFrom(
                   backgroundColor: _primaryColor,
                   foregroundColor: _onPrimaryColor,
@@ -546,21 +580,27 @@ class _CorporateOnboardingScreenState
                       borderRadius: BorderRadius.circular(12)),
                   elevation: 1,
                 ),
-                child: Row(
-                  mainAxisAlignment: MainAxisAlignment.center,
-                  children: [
-                    Text(
-                      isLastStep ? 'Create Account' : 'Continue',
-                      style: const TextStyle(
-                        fontFamily: 'Inter',
-                        fontSize: 16,
-                        fontWeight: FontWeight.w600,
+                child: _isLoading
+                    ? const SizedBox(
+                        height: 20,
+                        width: 20,
+                        child: CircularProgressIndicator(strokeWidth: 2, color: Colors.white),
+                      )
+                    : Row(
+                        mainAxisAlignment: MainAxisAlignment.center,
+                        children: [
+                          Text(
+                            isLastStep ? 'Create Account' : 'Continue',
+                            style: const TextStyle(
+                              fontFamily: 'Inter',
+                              fontSize: 16,
+                              fontWeight: FontWeight.w600,
+                            ),
+                          ),
+                          const SizedBox(width: 8),
+                          const Icon(Icons.arrow_forward, size: 18),
+                        ],
                       ),
-                    ),
-                    const SizedBox(width: 8),
-                    const Icon(Icons.arrow_forward, size: 18),
-                  ],
-                ),
               ),
             ),
           ],
