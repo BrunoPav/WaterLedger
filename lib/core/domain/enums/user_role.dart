@@ -3,7 +3,8 @@ enum UserRole {
   company,
   auditor,
   certifier,
-  insurer;
+  insurer,
+  admin;
 
   String get value {
     switch (this) {
@@ -12,6 +13,7 @@ enum UserRole {
       case UserRole.auditor:   return 'Auditor';
       case UserRole.certifier: return 'Certifier';
       case UserRole.insurer:   return 'Insurer';
+      case UserRole.admin:     return 'Admin';
     }
   }
 

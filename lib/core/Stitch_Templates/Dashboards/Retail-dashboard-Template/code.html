@@ -1,0 +1,306 @@
+<!DOCTYPE html>
+
+<html class="light" lang="en"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>AquaTrade | Retail Investor Dashboard</title>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<link href="https://fonts.googleapis.com/css2?family=Manrope:wght@400;600;700;800&amp;family=Inter:wght@400;500;600&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<style>
+        .glass-card {
+            background: rgba(255, 255, 255, 0.7);
+            backdrop-filter: blur(20px);
+            -webkit-backdrop-filter: blur(20px);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+        }
+        .hide-scrollbar::-webkit-scrollbar {
+            display: none;
+        }
+        .hide-scrollbar {
+            -ms-overflow-style: none;
+            scrollbar-width: none;
+        }
+    </style>
+<script id="tailwind-config">
+        tailwind.config = {
+          darkMode: "class",
+          theme: {
+            extend: {
+              "colors": {
+                      "on-primary-container": "#76849f",
+                      "secondary": "#006875",
+                      "primary-fixed-dim": "#b9c7e4",
+                      "surface-container-lowest": "#ffffff",
+                      "on-tertiary-fixed-variant": "#005312",
+                      "on-tertiary": "#ffffff",
+                      "on-primary-fixed": "#0d1c32",
+                      "surface-tint": "#515f78",
+                      "on-secondary-fixed": "#001f24",
+                      "surface-container": "#eceef0",
+                      "on-tertiary-fixed": "#002204",
+                      "on-tertiary-container": "#469446",
+                      "secondary-fixed": "#9cf0ff",
+                      "outline-variant": "#c5c6cd",
+                      "on-surface": "#191c1e",
+                      "inverse-on-surface": "#eff1f3",
+                      "inverse-surface": "#2d3133",
+                      "on-primary-fixed-variant": "#39475f",
+                      "tertiary": "#000000",
+                      "on-secondary-container": "#00616d",
+                      "surface-container-high": "#e6e8ea",
+                      "secondary-fixed-dim": "#00daf3",
+                      "on-surface-variant": "#44474d",
+                      "on-error-container": "#93000a",
+                      "background": "#f7f9fb",
+                      "on-secondary": "#ffffff",
+                      "surface-dim": "#d8dadc",
+                      "tertiary-fixed-dim": "#88d982",
+                      "inverse-primary": "#b9c7e4",
+                      "surface-bright": "#f7f9fb",
+                      "tertiary-container": "#002204",
+                      "primary-fixed": "#d6e3ff",
+                      "primary-container": "#0d1c32",
+                      "outline": "#75777e",
+                      "on-secondary-fixed-variant": "#004f58",
+                      "surface-variant": "#e0e3e5",
+                      "error": "#ba1a1a",
+                      "on-background": "#191c1e",
+                      "on-primary": "#ffffff",
+                      "secondary-container": "#00e3fd",
+                      "error-container": "#ffdad6",
+                      "surface-container-low": "#f2f4f6",
+                      "on-error": "#ffffff",
+                      "tertiary-fixed": "#a3f69c",
+                      "surface": "#f7f9fb",
+                      "primary": "#000000",
+                      "surface-container-highest": "#e0e3e5"
+              },
+              "borderRadius": {
+                      "DEFAULT": "0.25rem",
+                      "lg": "0.5rem",
+                      "xl": "0.75rem",
+                      "full": "9999px"
+              },
+              "spacing": {
+                      "stack-sm": "8px",
+                      "stack-md": "16px",
+                      "gutter": "16px",
+                      "stack-lg": "32px",
+                      "container-padding": "20px",
+                      "unit": "4px"
+              },
+              "fontFamily": {
+                      "display-lg": ["Manrope"],
+                      "body-lg": ["Inter"],
+                      "headline-md": ["Manrope"],
+                      "body-md": ["Inter"],
+                      "label-sm": ["Inter"]
+              },
+              "fontSize": {
+                      "display-lg": ["40px", {"lineHeight": "48px", "letterSpacing": "-0.02em", "fontWeight": "700"}],
+                      "body-lg": ["18px", {"lineHeight": "28px", "fontWeight": "400"}],
+                      "headline-md": ["24px", {"lineHeight": "32px", "letterSpacing": "-0.01em", "fontWeight": "600"}],
+                      "body-md": ["16px", {"lineHeight": "24px", "fontWeight": "400"}],
+                      "label-sm": ["13px", {"lineHeight": "16px", "letterSpacing": "0.05em", "fontWeight": "600"}]
+              }
+            },
+          },
+        }
+      </script>
+<style>
+    body {
+      min-height: max(884px, 100dvh);
+    }
+  </style>
+  </head>
+<body class="bg-background text-on-surface font-body-md selection:bg-secondary-container">
+<!-- TopAppBar -->
+<header class="fixed top-0 w-full z-50 bg-surface/70 backdrop-blur-xl border-b border-outline-variant/10 shadow-sm flex justify-between items-center px-container-padding h-16">
+<div class="flex items-center gap-3">
+<div class="w-8 h-8 rounded-full overflow-hidden border border-outline-variant/20">
+<img alt="User" data-alt="A high-quality professional headshot of a friendly young male investor with a clean-cut look, wearing a casual navy sweater. The background is a soft-focus modern office with natural light, creating a trustworthy and institutional feel. The lighting is bright and optimistic, reflecting a high-end financial application aesthetic." src="https://lh3.googleusercontent.com/aida-public/AB6AXuBZuuaUcloNi4cM4p08qTuXYuypa9iLTyg0NromPTaf2w9t72e0cVzdpSNUa4TmomHAQsbvB9ne1fg_yrMCwddFuYTbLovmi6Zji6IoEP7sajuPB7_h3Y3ugTMHJvbDqo2cklOK9529AvEK_qhbro5ngLaYpX69RIG4bVdzGOh3d8DsERQ1Nhrfl_umPT-BtciiJWqSavoSAg0kMN5C9HFec7aLqTF9nRFKfab_VbG4LB9VmCHHCh8E2cw1G9UT24TTKRIByYln4fc"/>
+</div>
+<span class="font-display-lg text-headline-md font-bold text-primary">AquaTrade</span>
+</div>
+<div class="flex items-center gap-4">
+<button class="active:scale-95 transition-transform hover:opacity-80 text-on-surface-variant">
+<span class="material-symbols-outlined">search</span>
+</button>
+<button class="active:scale-95 transition-transform hover:opacity-80 text-on-surface-variant">
+<span class="material-symbols-outlined" data-icon="settings">settings</span>
+</button>
+</div>
+</header>
+<main class="pt-24 pb-32 px-container-padding max-w-4xl mx-auto space-y-stack-lg">
+<!-- Welcome Section -->
+<section class="space-y-unit">
+<p class="font-label-sm text-label-sm text-on-primary-container tracking-wider uppercase">Welcome back</p>
+<h1 class="font-display-lg text-display-lg text-primary">Hello, Alex</h1>
+</section>
+<!-- Portfolio Summary Card -->
+<section class="relative overflow-hidden rounded-3xl bg-primary-container p-stack-md text-on-primary shadow-lg">
+<!-- Decorative Gradient Background -->
+<div class="absolute top-0 right-0 w-64 h-64 bg-gradient-to-bl from-secondary-container/20 to-transparent rounded-full -mr-20 -mt-20 blur-3xl"></div>
+<div class="relative z-10 flex flex-col md:flex-row justify-between gap-stack-md">
+<div class="space-y-stack-sm">
+<p class="font-label-sm text-label-sm text-primary-fixed-dim opacity-80">TOTAL PORTFOLIO VALUE</p>
+<div class="flex items-baseline gap-2">
+<span class="font-display-lg text-4xl font-extrabold text-white">$42,890.50</span>
+<span class="bg-secondary text-secondary-fixed text-[12px] px-2 py-0.5 rounded-full font-bold">+12.4%</span>
+</div>
+</div>
+<div class="bg-white/10 backdrop-blur-md rounded-2xl p-4 flex items-center gap-4 border border-white/10">
+<div class="relative w-14 h-14 flex items-center justify-center">
+<!-- Impact Meter Gauge -->
+<svg class="w-full h-full -rotate-90">
+<circle class="text-white/20" cx="28" cy="28" fill="transparent" r="24" stroke="currentColor" stroke-width="4"></circle>
+<circle class="text-secondary-fixed-dim" cx="28" cy="28" fill="transparent" r="24" stroke="currentColor" stroke-dasharray="150.7" stroke-dashoffset="30" stroke-width="4"></circle>
+</svg>
+<span class="absolute font-bold text-white text-sm">82</span>
+</div>
+<div>
+<p class="font-label-sm text-label-sm text-white/70">ESG IMPACT</p>
+<p class="font-headline-md text-white">Elite Class</p>
+</div>
+</div>
+</div>
+</section>
+<!-- Trending Credits -->
+<section class="space-y-stack-md">
+<div class="flex justify-between items-end">
+<h2 class="font-headline-md text-headline-md text-primary">Trending Credits</h2>
+<button class="text-secondary font-label-sm text-label-sm hover:underline">View All</button>
+</div>
+<div class="flex gap-4 overflow-x-auto hide-scrollbar -mx-container-padding px-container-padding">
+<!-- Card 1 -->
+<div class="min-w-[280px] bg-surface-container-lowest border border-outline-variant/30 rounded-2xl p-4 flex flex-col gap-3 shadow-sm hover:shadow-md transition-all">
+<div class="flex justify-between items-start">
+<div class="bg-surface-container-high p-2 rounded-xl">
+<span class="material-symbols-outlined text-secondary" data-icon="tsunami">tsunami</span>
+</div>
+<span class="bg-tertiary-fixed text-on-tertiary-fixed-variant text-[11px] px-2 py-0.5 rounded-full font-bold">VERIFIED</span>
+</div>
+<div>
+<h3 class="font-headline-md text-body-lg text-on-surface">Blue Carbon - Fiji</h3>
+<p class="text-label-sm text-on-surface-variant">Mangrove Restoration Project</p>
+</div>
+<div class="flex justify-between items-center mt-2">
+<span class="font-bold text-primary">$24.50 <span class="font-normal text-on-surface-variant text-xs">/ tCO2e</span></span>
+<span class="text-secondary text-xs font-bold">+4.2%</span>
+</div>
+</div>
+<!-- Card 2 -->
+<div class="min-w-[280px] bg-surface-container-lowest border border-outline-variant/30 rounded-2xl p-4 flex flex-col gap-3 shadow-sm hover:shadow-md transition-all">
+<div class="flex justify-between items-start">
+<div class="bg-surface-container-high p-2 rounded-xl">
+<span class="material-symbols-outlined text-secondary" data-icon="wind_power">wind_power</span>
+</div>
+<span class="bg-tertiary-fixed text-on-tertiary-fixed-variant text-[11px] px-2 py-0.5 rounded-full font-bold">VERIFIED</span>
+</div>
+<div>
+<h3 class="font-headline-md text-body-lg text-on-surface">Offshore Wind</h3>
+<p class="text-label-sm text-on-surface-variant">North Sea Energy Hub</p>
+</div>
+<div class="flex justify-between items-center mt-2">
+<span class="font-bold text-primary">$18.90 <span class="font-normal text-on-surface-variant text-xs">/ tCO2e</span></span>
+<span class="text-secondary text-xs font-bold">+2.8%</span>
+</div>
+</div>
+</div>
+</section>
+<!-- Featured Projects (Asymmetric/Bento style) -->
+<section class="space-y-stack-md">
+<h2 class="font-headline-md text-headline-md text-primary">Featured Projects</h2>
+<div class="grid grid-cols-2 grid-rows-2 gap-3 h-64">
+<div class="col-span-1 row-span-2 relative rounded-2xl overflow-hidden group">
+<img class="absolute inset-0 w-full h-full object-cover transition-transform duration-500 group-hover:scale-110" data-alt="A lush, vibrant emerald green rainforest canopy seen from a high aerial perspective during a bright sunny day. The lighting is brilliant and crisp, highlighting the dense texture of the tropical leaves. The aesthetic is pristine and environmental, conveying a sense of untouched natural beauty and carbon sequestration potential in a high-end financial context." src="https://lh3.googleusercontent.com/aida-public/AB6AXuBoQAXFZugQeD1gkSotkQ303u2DPrWgNyNARY47hRufWx5lsTUUr7Dno6__hESWXsFUBLozsTJb6TUJjRCGTlRuwQAkXqVWsvWyGe_q8tK47iObCh3lst-i0NK_Mc8tAzsMrBJhSKjoRXYTZ4LV4ycXz1t0tS1K7cGvdSAIrUjKw2MJe1OGoo38eGerxwO-ca_D4N4stzgY9V3F4PvTZfReEg4i8hR_nRJB-eZ_3x7VhSVw-pS5sQc8kYjY94tWIYhJU1Cb4OhSyGQ"/>
+<div class="absolute inset-0 bg-gradient-to-t from-primary/80 to-transparent"></div>
+<div class="absolute bottom-4 left-4 right-4">
+<p class="text-white font-bold text-sm">Amazon Basin VII</p>
+<p class="text-white/70 text-[10px] uppercase tracking-widest">Preservation</p>
+</div>
+</div>
+<div class="col-span-1 row-span-1 relative rounded-2xl overflow-hidden group">
+<img class="absolute inset-0 w-full h-full object-cover transition-transform duration-500 group-hover:scale-110" data-alt="Rows of modern, crystalline solar panels stretching across a desert landscape under a clear, vibrant cyan sky. The scene is bathed in intense, direct sunlight creating sharp shadows and highlighting the high-tech surfaces. The mood is visionary and institutional, emphasizing renewable energy growth and technological advancement." src="https://lh3.googleusercontent.com/aida-public/AB6AXuBwnFm5sHp1A-L7zjNEUSKI7gB9AcwFaTFEdq7kpDHlSyDZwKEOykfzvvMZADUgczetVQ9iRhexvgQ5PAtipayuW-FRFz5oSj92PdXE2ig24E0_SZTijR9wytJwbLdm4CUZCbS7GENh4mJPbF7GbF6SfSQMsd_v3jHxMS3VhOeacTA1xMHU5b6KKQ9dA5-6e87weBgTY_thm_ALw81L1tbi2oB0zYyoiM5tfKn8Sh8G-TNMYzhSM-0rInpTmQllZWWUlqCF0PtFSwc"/>
+<div class="absolute inset-0 bg-gradient-to-t from-primary/80 to-transparent"></div>
+<div class="absolute bottom-3 left-3">
+<p class="text-white font-bold text-xs">Solar Farm X</p>
+</div>
+</div>
+<div class="col-span-1 row-span-1 relative rounded-2xl overflow-hidden group">
+<img class="absolute inset-0 w-full h-full object-cover transition-transform duration-500 group-hover:scale-110" data-alt="A macro close-up of a young green seedling sprouting from rich dark soil, symbolizing sustainable growth and impact. The lighting is soft and diffused, creating a serene and hopeful atmosphere. The palette features earthy tones contrasted with vivid green, perfectly aligned with a luxury ESG investment platform style." src="https://lh3.googleusercontent.com/aida-public/AB6AXuC0yHGWCZhhkH_Ws-ZSPIaW9ckIBaZiWVH-QOSWnN4F1937yCHc1yRbhWW7qal6uhbeZ-Y_7BscefyWMejizN3ti4o1MMVObW7blJlyx0puinrDn4eMnnT20wqCU0MRhwcCl6XFSkeA4rukin7SB1H2UecXtZHT6KfpAXajF44Aj9Jp4XrzcI2CzEVLktB_M7qF9MSA8uCxEssKvCmAQszzzSddA2VDhkG-KE8aBBRN_PcfESugYdstzZNVSzw7ES7w5ddsOTVMdrI"/>
+<div class="absolute inset-0 bg-gradient-to-t from-primary/80 to-transparent"></div>
+<div class="absolute bottom-3 left-3">
+<p class="text-white font-bold text-xs">Reforest Africa</p>
+</div>
+</div>
+</div>
+</section>
+<!-- Recent Activity List -->
+<section class="space-y-stack-md">
+<h2 class="font-headline-md text-headline-md text-primary">Recent Activity</h2>
+<div class="space-y-3">
+<div class="flex items-center justify-between p-4 bg-white border border-outline-variant/10 rounded-2xl shadow-sm">
+<div class="flex items-center gap-4">
+<div class="bg-secondary-container/20 p-2 rounded-full text-secondary">
+<span class="material-symbols-outlined" style="font-variation-settings: 'FILL' 1;">add_circle</span>
+</div>
+<div>
+<p class="font-bold text-on-surface">Bought Blue Carbon</p>
+<p class="text-xs text-on-surface-variant">Today, 2:45 PM</p>
+</div>
+</div>
+<div class="text-right">
+<p class="font-bold text-primary">+$1,200.00</p>
+<p class="text-[10px] text-on-tertiary-container uppercase">50.2 Tons</p>
+</div>
+</div>
+<div class="flex items-center justify-between p-4 bg-white border border-outline-variant/10 rounded-2xl shadow-sm">
+<div class="flex items-center gap-4">
+<div class="bg-surface-container-high p-2 rounded-full text-on-surface-variant">
+<span class="material-symbols-outlined">trending_up</span>
+</div>
+<div>
+<p class="font-bold text-on-surface">Portfolio Rebalanced</p>
+<p class="text-xs text-on-surface-variant">Yesterday</p>
+</div>
+</div>
+<div class="text-right">
+<p class="font-bold text-secondary">View Details</p>
+</div>
+</div>
+</div>
+</section>
+</main>
+<!-- BottomNavBar -->
+<nav class="fixed bottom-0 w-full z-50 rounded-t-xl bg-surface/80 backdrop-blur-md border-t border-outline-variant/20 shadow-lg flex justify-around items-center h-20 pb-safe px-2">
+<!-- Active: Home -->
+<a class="flex flex-col items-center justify-center text-secondary bg-secondary-container/30 rounded-full px-4 py-1 active:scale-90 transition-all duration-200" href="#">
+<span class="material-symbols-outlined" style="font-variation-settings: 'FILL' 1;">home</span>
+<span class="font-body-md text-label-sm">Home</span>
+</a>
+<!-- Inactive: Market -->
+<a class="flex flex-col items-center justify-center text-on-primary-container hover:bg-surface-container-high rounded-full px-4 py-1 active:scale-90 transition-all duration-200" href="#">
+<span class="material-symbols-outlined">storefront</span>
+<span class="font-body-md text-label-sm">Market</span>
+</a>
+<!-- Inactive: Portfolio -->
+<a class="flex flex-col items-center justify-center text-on-primary-container hover:bg-surface-container-high rounded-full px-4 py-1 active:scale-90 transition-all duration-200" href="#">
+<span class="material-symbols-outlined">pie_chart</span>
+<span class="font-body-md text-label-sm">Portfolio</span>
+</a>
+<!-- Inactive: Alerts -->
+<a class="flex flex-col items-center justify-center text-on-primary-container hover:bg-surface-container-high rounded-full px-4 py-1 active:scale-90 transition-all duration-200 relative" href="#">
+<span class="material-symbols-outlined">notifications</span>
+<span class="font-body-md text-label-sm">Alerts</span>
+<div class="absolute top-1 right-5 w-2 h-2 bg-error rounded-full"></div>
+</a>
+<!-- Inactive: Profile -->
+<a class="flex flex-col items-center justify-center text-on-primary-container hover:bg-surface-container-high rounded-full px-4 py-1 active:scale-90 transition-all duration-200" href="#">
+<span class="material-symbols-outlined">person</span>
+<span class="font-body-md text-label-sm">Profile</span>
+</a>
+</nav>
+</body></html>

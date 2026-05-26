@@ -29,6 +29,7 @@ class UserModel {
   bool get canAudit  => permissions.contains(UserPermission.auditor)   && status == UserStatus.active;
   bool get canCertify => permissions.contains(UserPermission.certifier) && status == UserStatus.active;
   bool get canInsure => permissions.contains(UserPermission.insurer)   && status == UserStatus.active;
+  bool get isAdmin   => role == UserRole.admin && status == UserStatus.active;
   bool get isActive  => status == UserStatus.active;
   bool get isPending => status == UserStatus.pending;
 

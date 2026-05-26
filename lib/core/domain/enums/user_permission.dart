@@ -3,7 +3,8 @@ enum UserPermission {
   issuer,
   auditor,
   certifier,
-  insurer;
+  insurer,
+  admin;
 
   String get value {
     switch (this) {
@@ -12,6 +13,7 @@ enum UserPermission {
       case UserPermission.auditor:   return 'Auditor';
       case UserPermission.certifier: return 'Certifier';
       case UserPermission.insurer:   return 'Insurer';
+      case UserPermission.admin:     return 'Admin';
     }
   }
 

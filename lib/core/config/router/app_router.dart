@@ -7,6 +7,9 @@ import 'package:water_ledger/core/presentation/screens/auth/certifier_register_s
 import 'package:water_ledger/core/presentation/screens/auth/certifier_register_success_screen.dart';
 import 'package:water_ledger/core/presentation/screens/auth/insurance_register_screen.dart';
 import 'package:water_ledger/core/presentation/screens/auth/insurance_register_success_screen.dart';
+import 'package:water_ledger/core/presentation/screens/admin/admin_dashboard_screen.dart';
+import 'package:water_ledger/core/presentation/screens/admin/admin_seed_screen.dart';
+import 'package:water_ledger/core/presentation/screens/admin/pending_request_detail_screen.dart';
 import 'package:water_ledger/core/presentation/screens/auth/company_register_success_screen.dart';
 import 'package:water_ledger/core/presentation/screens/auth/corporate_onboarding_screen.dart';
 import 'package:water_ledger/core/presentation/screens/auth/retail_register_screen.dart';
@@ -18,6 +21,7 @@ import 'package:water_ledger/features/credit_issuance/presentation/screens/credi
 import 'package:water_ledger/features/credit_issuance/presentation/screens/roadmap_editor_screen.dart';
 import 'package:water_ledger/features/credit_issuance/presentation/screens/submission_confirmation_screen.dart';
 import 'package:water_ledger/features/credit_issuance/presentation/screens/request_tracking_screen.dart';
+import 'package:water_ledger/features/dashboards/presentation/screens/home_dispatcher.dart';
 import 'package:water_ledger/features/issuer/presentation/screen/issuing_company_screen.dart';
 import 'package:water_ledger/home_temporal.dart';
 
@@ -38,8 +42,23 @@ final GoRouter appRouter = GoRouter(
     GoRoute(path: '/certifier-register-success', builder: (context, state) => const CertifierRegisterSuccessScreen()),
     GoRoute(path: '/insurance-register', builder: (context, state) => const InsuranceRegisterScreen()),
     GoRoute(path: '/insurance-register-success', builder: (context, state) => const InsuranceRegisterSuccessScreen()),
+    // ---- Admin (4.6 Gestión del Administrador) ---- //
+    GoRoute(path: '/admin-seed', builder: (context, state) => const AdminSeedScreen()),
+    GoRoute(path: '/admin-dashboard', builder: (context, state) => const AdminDashboardScreen()),
+    GoRoute(
+      path: '/admin-pending-detail/:uid',
+      builder: (context, state) => PendingRequestDetailScreen(
+        uid: state.pathParameters['uid']!,
+      ),
+    ),
     GoRoute(path: '/retail-register-success', builder: (context, state) => const RetailRegisterSuccessScreen()),
-    GoRoute(path: '/home', builder: (context, state) => const HomeTemporal()),
+    // Versión anterior — apuntaba a HomeTemporal (pantalla de testing con botones):
+    // GoRoute(path: '/home', builder: (context, state) => const HomeTemporal()),
+    // Ahora /home despacha al dashboard correspondiente al rol del usuario logueado
+    // (módulo 4.1.6 + 4.1.4.6 — Dashboard inicial + Navegación dinámica por rol).
+    GoRoute(path: '/home', builder: (context, state) => const HomeDispatcher()),
+    // HomeTemporal queda accesible bajo /home-temporal para testing manual:
+    GoRoute(path: '/home-temporal', builder: (context, state) => const HomeTemporal()),
     GoRoute(
       path: '/issuing-company',
       builder: (context, state) => const IssuingCompanyScreen(),

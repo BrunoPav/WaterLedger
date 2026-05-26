@@ -182,6 +182,30 @@ class FirebaseAuthRepository implements AuthRepository {
   }
 
   @override
+  Future<UserModel> registerAdmin({
+    required String email,
+    required String password,
+    required String displayName,
+  }) async {
+    final credential = await _auth.createUserWithEmailAndPassword(
+      email: email,
+      password: password,
+    );
+    final uid = credential.user!.uid;
+    final user = UserModel(
+      uid: uid,
+      email: email,
+      displayName: displayName,
+      role: UserRole.admin,
+      status: UserStatus.active,
+      permissions: [UserPermission.admin],
+      createdAt: DateTime.now(),
+    );
+    await _db.collection('users').doc(uid).set(user.toFirestore());
+    return user;
+  }
+
+  @override
   Future<UserModel?> getCurrentUser() async {
     final user = _auth.currentUser;
     if (user == null) return null;

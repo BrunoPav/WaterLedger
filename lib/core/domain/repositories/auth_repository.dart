@@ -47,6 +47,13 @@ abstract class AuthRepository {
     required Map<String, dynamic> insurerRoleData,
   });
 
+  /// Crea un usuario Admin activo. Usado por la pantalla `/admin-seed` (dev).
+  Future<UserModel> registerAdmin({
+    required String email,
+    required String password,
+    required String displayName,
+  });
+
   Future<UserModel?> getCurrentUser();
 
   Future<void> logout();
