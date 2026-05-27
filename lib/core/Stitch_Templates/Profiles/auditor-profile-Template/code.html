@@ -1,0 +1,300 @@
+<!DOCTYPE html>
+
+<html class="light" lang="en"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>Auditor Profile - HydroWealth</title>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600&amp;family=Manrope:wght@600;700;800&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<style>
+        .material-symbols-outlined {
+            font-variation-settings: 'FILL' 0, 'wght' 200, 'GRAD' 0, 'opsz' 24;
+            font-size: 24px;
+        }
+        .glass-card {
+            background: rgba(255, 255, 255, 0.7);
+            backdrop-filter: blur(20px);
+            border: 1px solid rgba(226, 232, 240, 0.8);
+        }
+        .status-pill-positive {
+            background-color: #ecfdf5;
+            color: #065f46;
+        }
+        .status-pill-neutral {
+            background-color: #f0f9ff;
+            color: #0369a1;
+        }
+    </style>
+<script id="tailwind-config">
+        tailwind.config = {
+          darkMode: "class",
+          theme: {
+            extend: {
+              "colors": {
+                      "secondary-fixed-dim": "#00daf3",
+                      "primary-fixed": "#d6e3ff",
+                      "tertiary-container": "#002204",
+                      "on-tertiary-fixed-variant": "#005312",
+                      "inverse-primary": "#b9c7e4",
+                      "on-primary-fixed": "#0d1c32",
+                      "primary-container": "#0d1c32",
+                      "on-secondary": "#ffffff",
+                      "surface-container-high": "#e6e8ea",
+                      "secondary-fixed": "#9cf0ff",
+                      "inverse-on-surface": "#eff1f3",
+                      "tertiary-fixed-dim": "#88d982",
+                      "inverse-surface": "#2d3133",
+                      "primary": "#000000",
+                      "error-container": "#ffdad6",
+                      "on-tertiary": "#ffffff",
+                      "on-secondary-fixed": "#001f24",
+                      "on-surface": "#191c1e",
+                      "surface-container-highest": "#e0e3e5",
+                      "surface-container": "#eceef0",
+                      "on-background": "#191c1e",
+                      "surface-tint": "#515f78",
+                      "outline-variant": "#c5c6cd",
+                      "surface-container-low": "#f2f4f6",
+                      "on-primary": "#ffffff",
+                      "on-tertiary-container": "#469446",
+                      "error": "#ba1a1a",
+                      "surface-dim": "#d8dadc",
+                      "secondary-container": "#00e3fd",
+                      "on-tertiary-fixed": "#002204",
+                      "on-error": "#ffffff",
+                      "outline": "#75777e",
+                      "on-primary-container": "#76849f",
+                      "surface-variant": "#e0e3e5",
+                      "primary-fixed-dim": "#b9c7e4",
+                      "on-primary-fixed-variant": "#39475f"
+              },
+              "borderRadius": {
+                      "DEFAULT": "0.25rem",
+                      "lg": "0.5rem",
+                      "xl": "0.75rem",
+                      "full": "9999px"
+              },
+              "spacing": {
+                      "stack-sm": "8px",
+                      "stack-md": "16px",
+                      "gutter": "16px",
+                      "stack-lg": "32px",
+                      "unit": "4px",
+                      "container-padding": "20px"
+              },
+              "fontFamily": {
+                      "label-sm": ["Inter"],
+                      "body-md": ["Inter"],
+                      "headline-md": ["Manrope"],
+                      "display-lg": ["Manrope"],
+                      "body-lg": ["Inter"]
+              },
+              "fontSize": {
+                      "label-sm": ["13px", {"lineHeight": "16px", "letterSpacing": "0.05em", "fontWeight": "600"}],
+                      "body-md": ["16px", {"lineHeight": "24px", "fontWeight": "400"}],
+                      "headline-md": ["24px", {"lineHeight": "32px", "letterSpacing": "-0.01em", "fontWeight": "600"}],
+                      "headline-md-mobile": ["20px", {"lineHeight": "28px", "letterSpacing": "-0.01em", "fontWeight": "600"}],
+                      "display-lg": ["40px", {"lineHeight": "48px", "letterSpacing": "-0.02em", "fontWeight": "700"}],
+                      "body-lg": ["18px", {"lineHeight": "28px", "fontWeight": "400"}]
+              }
+            },
+          },
+        }
+    </script>
+<style>
+    body {
+      min-height: max(884px, 100dvh);
+    }
+  </style>
+  </head>
+<body class="bg-surface text-on-surface font-body-md min-h-screen pb-24">
+<!-- TopAppBar -->
+<header class="fixed top-0 w-full z-50 bg-surface/70 backdrop-blur-xl border-b border-white/10 shadow-sm flex justify-between items-center px-container-padding h-16 w-full max-w-md mx-auto left-0 right-0">
+<div class="flex items-center gap-3">
+<div class="w-8 h-8 rounded-full bg-primary-container flex items-center justify-center overflow-hidden">
+<img alt="Global Audit Partners Logo" class="w-full h-full object-cover" data-alt="A sophisticated corporate logo for an institutional auditing firm. The logo features minimalist geometric lines in deep navy and vibrant cyan, reflecting a fusion of high-finance stability and environmental technology. The background is a clean, bright white, maintaining a professional and trustworthy aesthetic consistent with premium ESG financial branding." src="https://lh3.googleusercontent.com/aida-public/AB6AXuB0JTspcH1RNjxdMbzdh4ih7g7CVJK7VM2srouMESy-bkMDz90DFReHpZkMSWkM0S5y0AcTXwq4R_lRMvoAEr9FNSxRCaWa910PTk-ymx4F0Wm1Cp9WAHAwsykzHrBV8BPjZYTNbl0k_H4d2UG6HqbND-ebbRDsVYWrGGG-n4FVZYoxxjcaUJVKuPrIfne0_rn0iMWHE7ZP6yhZiPUVZb77Ir5yig3n_3_fJ_C3CXc-Tlb_ODFj4A5DrRUOlV0vxwt38nTKwv7Dqe8"/>
+</div>
+<h1 class="font-headline-md text-headline-md-mobile font-bold text-primary">HydroWealth</h1>
+</div>
+<div class="flex items-center gap-4">
+<button class="active:scale-95 transition-transform duration-200 text-on-surface-variant">
+<span class="material-symbols-outlined" data-icon="notifications">notifications</span>
+</button>
+<div class="w-8 h-8 rounded-full border-2 border-secondary/20 overflow-hidden">
+<img alt="Auditor Avatar" class="w-full h-full object-cover" data-alt="A professional portrait of a senior auditor in a modern, sunlit office environment. The subject is a middle-aged man with a confident and trustworthy expression, wearing a sharp charcoal suit. The lighting is soft and high-key, creating a clean, professional atmosphere that aligns with the institutional and visionary brand identity of a high-end fintech platform." src="https://lh3.googleusercontent.com/aida-public/AB6AXuBz_OcJ7WN6wpZutKr16LSA82iTFaTufU1qtwmQa5lxb1ulOr0kliTIoQOg-eH9z6ORlo21MfhjdnSXWMKPGdnWaEV2G-BnNuZSmCWrzvNXu9thTXMbCNLDo-9i3IWdZIFT8GDSTQBJ6eUKLUGiTHwWVes-s2ph24nQzC5T2PPpLM1I2U-2lIVhreSOHyeDrcbls_EhJox4CQ7NQpJZBRSqtfTdzy82BYFAT8zifBoWujnZWevkoEr6nPUxr4VSe0FKoUv8lLNzcZE"/>
+</div>
+</div>
+</header>
+<main class="pt-20 px-container-padding max-w-md mx-auto space-y-stack-lg">
+<!-- Profile Header Section -->
+<section class="space-y-stack-md pt-4">
+<div class="flex flex-col items-center text-center">
+<div class="relative mb-4">
+<div class="w-24 h-24 rounded-full border-4 border-white shadow-lg overflow-hidden">
+<img alt="Corporate HQ" class="w-full h-full object-cover" data-alt="A wide-angle interior shot of a contemporary, high-end corporate headquarters in Europe. The architecture is minimalist with expansive glass walls, light oak wood accents, and lush indoor greenery. The space is flooded with natural daylight, conveying a sense of transparency, sustainability, and institutional power typical of a top-tier ESG auditing firm." src="https://lh3.googleusercontent.com/aida-public/AB6AXuDYJCLZPKA37EFXqE0p_ccN0T3sThz7Qyxc3-sHDYlXHtkh02URNaO20tfI_Ea5R9mazzZOeu4FSdHZRPiw0EkW0h2subcg5VLuUIMEWUsyOUQ5rF7IMjfqXfm_NF8hdpsDpO7aU0Ve2nxEBz23BGAfpSTV-NOeJXRXVJniq9qcPzeUzGKOLBF40RaRue9q9k-ryQXi8VVhmnRzW2orscWg7cF1glgG1Ule9-6wHpYjNmm8Ajr39GEpaMIS2MdnVUDbhpht2ZIet9M"/>
+</div>
+<div class="absolute bottom-0 right-0 bg-secondary text-white p-1 rounded-full border-2 border-white">
+<span class="material-symbols-outlined text-[16px] leading-none" data-icon="verified" data-weight="fill" style="font-variation-settings: 'FILL' 1;">verified</span>
+</div>
+</div>
+<h2 class="font-headline-md text-primary mb-1">Global Audit Partners</h2>
+<div class="flex flex-wrap justify-center gap-2 mb-4">
+<span class="px-3 py-1 rounded-full bg-primary-container text-white text-label-sm font-label-sm">Certified Auditor</span>
+<span class="px-3 py-1 rounded-full status-pill-neutral text-label-sm font-label-sm flex items-center gap-1">
+<span class="material-symbols-outlined text-[14px]" data-icon="public">public</span> European Union
+                    </span>
+<span class="px-3 py-1 rounded-full status-pill-positive text-label-sm font-label-sm">Verified</span>
+</div>
+<button class="w-full py-3 rounded-xl bg-primary text-white font-label-sm active:scale-95 transition-transform duration-200">
+                    Edit Profile
+                </button>
+</div>
+</section>
+<!-- Section 1: Basic Info -->
+<section class="glass-card rounded-xl p-stack-md space-y-stack-md">
+<h3 class="font-label-sm text-on-surface-variant uppercase tracking-wider">Account Information</h3>
+<div class="grid grid-cols-1 gap-stack-md">
+<div class="flex items-center gap-3">
+<div class="w-10 h-10 rounded-lg bg-surface-container flex items-center justify-center text-secondary">
+<span class="material-symbols-outlined" data-icon="mail">mail</span>
+</div>
+<div>
+<p class="text-label-sm text-on-surface-variant">Email</p>
+<p class="font-body-md text-on-surface font-semibold">compliance@globalaudit.eu</p>
+</div>
+</div>
+<div class="flex items-center gap-3">
+<div class="w-10 h-10 rounded-lg bg-surface-container flex items-center justify-center text-secondary">
+<span class="material-symbols-outlined" data-icon="call">call</span>
+</div>
+<div>
+<p class="text-label-sm text-on-surface-variant">Phone</p>
+<p class="font-body-md text-on-surface font-semibold">+49 30 123456</p>
+</div>
+</div>
+<div class="grid grid-cols-2 gap-4 pt-2 border-t border-outline-variant/30">
+<div>
+<p class="text-label-sm text-on-surface-variant">Reg Date</p>
+<p class="font-body-md text-on-surface">Oct 2022</p>
+</div>
+<div>
+<p class="text-label-sm text-on-surface-variant">Status</p>
+<p class="font-body-md text-on-surface flex items-center gap-1">
+<span class="w-2 h-2 rounded-full bg-tertiary-fixed-dim"></span> Operational
+                        </p>
+</div>
+</div>
+</div>
+</section>
+<!-- Section 2: Role-Specific -->
+<section class="space-y-stack-md">
+<h3 class="font-label-sm text-on-surface-variant uppercase tracking-wider px-2">Expertise &amp; Metrics</h3>
+<div class="grid grid-cols-2 gap-4">
+<div class="glass-card rounded-xl p-stack-md text-center">
+<span class="material-symbols-outlined text-secondary mb-2" data-icon="fact_check">fact_check</span>
+<p class="text-display-lg font-bold text-primary leading-tight">142</p>
+<p class="text-label-sm text-on-surface-variant mt-1">Completed Audits</p>
+</div>
+<div class="glass-card rounded-xl p-stack-md text-center">
+<span class="material-symbols-outlined text-secondary mb-2" data-icon="assignment">assignment</span>
+<p class="text-display-lg font-bold text-primary leading-tight">8</p>
+<p class="text-label-sm text-on-surface-variant mt-1">Assigned Projects</p>
+</div>
+</div>
+<div class="glass-card rounded-xl p-stack-md space-y-4">
+<div>
+<p class="text-label-sm text-on-surface-variant mb-2">Audit Specializations</p>
+<div class="flex flex-wrap gap-2">
+<span class="px-3 py-1 rounded-lg bg-surface-container-high text-on-surface text-label-sm border border-outline-variant/20">Env</span>
+<span class="px-3 py-1 rounded-lg bg-surface-container-high text-on-surface text-label-sm border border-outline-variant/20">Financial</span>
+</div>
+</div>
+<div>
+<p class="text-label-sm text-on-surface-variant mb-2">Certifications</p>
+<div class="flex flex-wrap gap-2">
+<span class="px-3 py-1 rounded-lg bg-tertiary-fixed text-on-tertiary-fixed text-label-sm font-bold">ISO 14001</span>
+<span class="px-3 py-1 rounded-lg bg-secondary-fixed text-on-secondary-fixed text-label-sm font-bold">AWS</span>
+</div>
+</div>
+</div>
+</section>
+<!-- Section 3: Recent Activity -->
+<section class="glass-card rounded-xl p-stack-md space-y-stack-md">
+<div class="flex justify-between items-center">
+<h3 class="font-label-sm text-on-surface-variant uppercase tracking-wider">Recent Activity</h3>
+<span class="material-symbols-outlined text-on-surface-variant" data-icon="history">history</span>
+</div>
+<div class="space-y-4">
+<div class="flex gap-4 relative">
+<div class="absolute left-[11px] top-6 bottom-[-20px] w-[2px] bg-outline-variant/30"></div>
+<div class="z-10 w-6 h-6 rounded-full bg-secondary flex items-center justify-center">
+<span class="material-symbols-outlined text-[14px] text-white" data-icon="login">login</span>
+</div>
+<div>
+<p class="text-body-md text-on-surface leading-snug">Logged in to Central Hub</p>
+<p class="text-label-sm text-on-surface-variant">45m ago</p>
+</div>
+</div>
+<div class="flex gap-4 relative">
+<div class="absolute left-[11px] top-6 bottom-[-20px] w-[2px] bg-outline-variant/30"></div>
+<div class="z-10 w-6 h-6 rounded-full bg-tertiary-fixed-dim flex items-center justify-center">
+<span class="material-symbols-outlined text-[14px] text-on-tertiary-container" data-icon="description" data-weight="fill" style="font-variation-settings: 'FILL' 1;">description</span>
+</div>
+<div>
+<p class="text-body-md text-on-surface leading-snug">Audit report submitted</p>
+<p class="text-label-sm text-on-surface-variant">3h ago</p>
+</div>
+</div>
+<div class="flex gap-4">
+<div class="z-10 w-6 h-6 rounded-full bg-secondary-fixed-dim flex items-center justify-center">
+<span class="material-symbols-outlined text-[14px] text-on-secondary-fixed-variant" data-icon="new_label">new_label</span>
+</div>
+<div>
+<p class="text-body-md text-on-surface leading-snug">New project assigned</p>
+<p class="text-label-sm text-on-surface-variant">Yesterday</p>
+</div>
+</div>
+</div>
+</section>
+</main>
+<!-- BottomNavBar -->
+<nav class="fixed bottom-0 left-0 w-full z-50 bg-surface/80 backdrop-blur-xl border-t border-white/10 shadow-lg flex justify-around items-center px-4 py-3 pb-safe max-w-md mx-auto right-0 rounded-t-xl">
+<a class="flex flex-col items-center justify-center text-on-surface-variant hover:bg-surface-container-low rounded-full transition-all duration-200 p-2" href="#">
+<span class="material-symbols-outlined" data-icon="dashboard">dashboard</span>
+<span class="font-label-sm text-label-sm">Home</span>
+</a>
+<a class="flex flex-col items-center justify-center text-on-surface-variant hover:bg-surface-container-low rounded-full transition-all duration-200 p-2" href="#">
+<span class="material-symbols-outlined" data-icon="water_drop">water_drop</span>
+<span class="font-label-sm text-label-sm">Projects</span>
+</a>
+<a class="flex flex-col items-center justify-center text-on-surface-variant hover:bg-surface-container-low rounded-full transition-all duration-200 p-2" href="#">
+<span class="material-symbols-outlined" data-icon="account_balance_wallet">account_balance_wallet</span>
+<span class="font-label-sm text-label-sm">Credits</span>
+</a>
+<a class="flex flex-col items-center justify-center text-on-surface-variant hover:bg-surface-container-low rounded-full transition-all duration-200 p-2" href="#">
+<span class="material-symbols-outlined" data-icon="storefront">storefront</span>
+<span class="font-label-sm text-label-sm">Market</span>
+</a>
+<a class="flex flex-col items-center justify-center text-secondary font-bold hover:bg-surface-container-low rounded-full transition-all duration-200 active:scale-90 p-2" href="#">
+<span class="material-symbols-outlined" data-icon="person" data-weight="fill" style="font-variation-settings: 'FILL' 1;">person</span>
+<span class="font-label-sm text-label-sm">Profile</span>
+</a>
+</nav>
+<script>
+        // Micro-interaction for cards
+        document.querySelectorAll('.glass-card').forEach(card => {
+            card.addEventListener('mousedown', () => {
+                card.style.transform = 'scale(0.98)';
+                card.style.transition = 'transform 0.2s cubic-bezier(0.4, 0, 0.2, 1)';
+            });
+            card.addEventListener('mouseup', () => {
+                card.style.transform = 'scale(1)';
+            });
+            card.addEventListener('mouseleave', () => {
+                card.style.transform = 'scale(1)';
+            });
+        });
+    </script>
+</body></html>

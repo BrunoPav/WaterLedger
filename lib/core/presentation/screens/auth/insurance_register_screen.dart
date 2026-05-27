@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 import 'package:water_ledger/core/presentation/providers/session_provider.dart';
+import 'package:water_ledger/core/presentation/widgets/date_picker_field.dart';
 
 class InsuranceRegisterScreen extends ConsumerStatefulWidget {
   const InsuranceRegisterScreen({super.key});
@@ -653,11 +654,11 @@ class _InsuranceRegisterScreenState extends ConsumerState<InsuranceRegisterScree
         const SizedBox(height: 16),
         _buildField(label: 'Domicilio legal completo', controller: _domicilioLegalController, hint: 'Calle, Nro, Localidad, CP', maxLines: 2),
         const SizedBox(height: 16),
-        _buildField(
+        DatePickerField(
           label: 'Fecha de constitución',
           controller: _fechaConstitucionController,
-          hint: 'DD/MM/AAAA',
-          suffix: const Icon(Icons.calendar_today_outlined, size: 18, color: _onSurfaceVariantColor),
+          // Constitución de empresa solo puede ser pasada.
+          lastDate: DateTime.now(),
         ),
         const SizedBox(height: 16),
         _buildField(label: 'Sitio web oficial', controller: _sitioWebController, hint: 'https://www.provider.com', keyboardType: TextInputType.url),
@@ -726,11 +727,10 @@ class _InsuranceRegisterScreenState extends ConsumerState<InsuranceRegisterScree
         const SizedBox(height: 16),
         _buildField(label: 'DNI, pasaporte o CUIL', controller: _dniCuilController, hint: '20-12345678-3', keyboardType: TextInputType.number),
         const SizedBox(height: 16),
-        _buildField(
+        DatePickerField(
           label: 'Fecha de nacimiento',
           controller: _fechaNacimientoController,
-          hint: 'DD/MM/AAAA',
-          suffix: const Icon(Icons.calendar_today_outlined, size: 18, color: _onSurfaceVariantColor),
+          lastDate: DateTime.now(),
         ),
         const SizedBox(height: 16),
         _buildField(label: 'Nacionalidad', controller: _nacionalidadController, hint: 'Argentina'),
@@ -782,11 +782,11 @@ class _InsuranceRegisterScreenState extends ConsumerState<InsuranceRegisterScree
               hint: 'Res. SSN N° 38.708',
             ),
             const SizedBox(height: 16),
-            _buildField(
+            DatePickerField(
               label: 'Vigencia de la resolución',
               controller: _vigenciaResolucionController,
-              hint: 'DD/MM/AAAA',
-              suffix: const Icon(Icons.calendar_today_outlined, size: 18, color: _onSurfaceVariantColor),
+              // Vigencia es a futuro
+              firstDate: DateTime.now(),
             ),
           ],
         ),

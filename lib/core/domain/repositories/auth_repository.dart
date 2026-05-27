@@ -57,4 +57,9 @@ abstract class AuthRepository {
   Future<UserModel?> getCurrentUser();
 
   Future<void> logout();
+
+  /// Envía un email con link de reset de contraseña al user indicado.
+  /// Si el email no existe igual completa exitosamente (Firebase no lo
+  /// expone por seguridad — anti-enumeration).
+  Future<void> sendPasswordResetEmail({required String email});
 }

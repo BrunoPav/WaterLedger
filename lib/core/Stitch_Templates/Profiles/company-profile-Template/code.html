@@ -1,0 +1,300 @@
+<!DOCTYPE html>
+
+<html class="light" lang="en"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600&amp;family=Manrope:wght@600;700;800&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<style>
+    .glass-card {
+      background: rgba(255, 255, 255, 0.7);
+      backdrop-filter: blur(20px);
+      border: 1px solid rgba(226, 232, 240, 0.8);
+    }
+    .material-symbols-outlined {
+      font-variation-settings: 'FILL' 0, 'wght' 200, 'GRAD' 0, 'opsz' 24;
+    }
+    .gradient-progress {
+      background: linear-gradient(90deg, #006875 0%, #00daf3 100%);
+    }
+  </style>
+<script id="tailwind-config">
+    tailwind.config = {
+      darkMode: "class",
+      theme: {
+        extend: {
+          "colors": {
+                  "secondary-fixed-dim": "#00daf3",
+                  "primary-fixed": "#d6e3ff",
+                  "tertiary-container": "#002204",
+                  "on-tertiary-fixed-variant": "#005312",
+                  "inverse-primary": "#b9c7e4",
+                  "on-primary-fixed": "#0d1c32",
+                  "primary-container": "#0d1c32",
+                  "on-secondary": "#ffffff",
+                  "surface-container-high": "#e6e8ea",
+                  "secondary-fixed": "#9cf0ff",
+                  "inverse-on-surface": "#eff1f3",
+                  "tertiary-fixed-dim": "#88d982",
+                  "inverse-surface": "#2d3133",
+                  "primary": "#000000",
+                  "error-container": "#ffdad6",
+                  "on-tertiary": "#ffffff",
+                  "on-secondary-fixed": "#001f24",
+                  "on-surface": "#191c1e",
+                  "surface-container-highest": "#e0e3e5",
+                  "surface-container": "#eceef0",
+                  "on-background": "#191c1e",
+                  "surface-tint": "#515f78",
+                  "outline-variant": "#c5c6cd",
+                  "surface-container-low": "#f2f4f6",
+                  "on-primary": "#ffffff",
+                  "on-tertiary-container": "#469446",
+                  "error": "#ba1a1a",
+                  "surface-dim": "#d8dadc",
+                  "secondary-container": "#00e3fd",
+                  "on-tertiary-fixed": "#002204",
+                  "on-error": "#ffffff",
+                  "outline": "#75777e",
+                  "on-primary-container": "#76849f",
+                  "surface-container-lowest": "#ffffff",
+                  "surface": "#f7f9fb",
+                  "surface-bright": "#f7f9fb",
+                  "background": "#f7f9fb",
+                  "on-secondary-container": "#00616d",
+                  "on-error-container": "#93000a",
+                  "tertiary-fixed": "#a3f69c",
+                  "tertiary": "#000000",
+                  "on-surface-variant": "#44474d",
+                  "on-secondary-fixed-variant": "#004f58",
+                  "secondary": "#006875",
+                  "surface-variant": "#e0e3e5",
+                  "primary-fixed-dim": "#b9c7e4",
+                  "on-primary-fixed-variant": "#39475f"
+          },
+          "borderRadius": {
+                  "DEFAULT": "0.25rem",
+                  "lg": "0.5rem",
+                  "xl": "0.75rem",
+                  "full": "9999px"
+          },
+          "spacing": {
+                  "stack-sm": "8px",
+                  "stack-md": "16px",
+                  "gutter": "16px",
+                  "stack-lg": "32px",
+                  "unit": "4px",
+                  "container-padding": "20px"
+          },
+          "fontFamily": {
+                  "label-sm": ["Inter"],
+                  "body-md": ["Inter"],
+                  "headline-md": ["Manrope"],
+                  "display-lg": ["Manrope"],
+                  "body-lg": ["Inter"]
+          },
+          "fontSize": {
+                  "label-sm": ["13px", {"lineHeight": "16px", "letterSpacing": "0.05em", "fontWeight": "600"}],
+                  "body-md": ["16px", {"lineHeight": "24px", "fontWeight": "400"}],
+                  "headline-md": ["24px", {"lineHeight": "32px", "letterSpacing": "-0.01em", "fontWeight": "600"}],
+                  "display-lg": ["40px", {"lineHeight": "48px", "letterSpacing": "-0.02em", "fontWeight": "700"}],
+                  "body-lg": ["18px", {"lineHeight": "28px", "fontWeight": "400"}]
+          }
+        },
+      },
+    }
+  </script>
+<style>
+    body {
+      min-height: max(884px, 100dvh);
+    }
+  </style>
+  </head>
+<body class="bg-surface text-on-surface font-body-md min-h-screen pb-32">
+<!-- TopAppBar -->
+<header class="fixed top-0 w-full z-50 bg-surface/70 backdrop-blur-xl border-b border-white/10 shadow-sm flex justify-between items-center px-container-padding h-16 max-w-md mx-auto left-0 right-0">
+<div class="flex items-center gap-3">
+<div class="w-8 h-8 rounded-full bg-primary-container flex items-center justify-center overflow-hidden">
+<img alt="AquaCorp" class="w-full h-full object-cover" data-alt="A minimalist logo for a high-end environmental tech corporation, featuring abstract water droplet shapes and geometric patterns in deep navy and vibrant cyan. The design is clean and professional, set against a crisp white background, reflecting trust, sustainability, and financial institution reliability." src="https://lh3.googleusercontent.com/aida-public/AB6AXuDnx0R9TQcOeuReTv4HtQ642ZXvspEmCwrW-Bwum8GV4_eNgzQPrg5VxPW9SrjXXVSfl-Dvhnzb2FR8Ab2xjvJnAvAc_TVd-f3vKJfAgBnTzxBM9BHLwPxpfFc-Kz_DSMinPD4JqeJ2zQhf6egU0VGqTI4f4WtVyIRxxglQeEQFyiQxsVv__1dP0JVA4ldhlfQe8c04qGs3-zd0T-73kjCHwgEEr1bLGoYURv91qo2oEoya_GyUcYACvBGK2qU0G37QmaHrbvMb4Yk"/>
+</div>
+<h1 class="font-headline-md text-headline-md-mobile font-bold text-primary">HydroWealth</h1>
+</div>
+<button class="active:scale-95 transition-transform duration-200">
+<span class="material-symbols-outlined text-on-surface-variant">notifications</span>
+</button>
+</header>
+<main class="pt-20 px-container-padding max-w-md mx-auto space-y-stack-lg">
+<!-- Hero Header -->
+<section class="space-y-stack-md">
+<div class="flex flex-col items-center text-center space-y-stack-sm">
+<div class="relative">
+<div class="w-24 h-24 rounded-full ring-4 ring-white shadow-lg overflow-hidden">
+<img alt="AquaCorp Industries" class="w-full h-full object-cover" data-alt="A professional corporate headquarters building with large glass windows reflecting a bright blue sky and lush green trees. The architecture is modern and minimalist, conveying a sense of transparency and environmental commitment. The lighting is natural and bright, reinforcing a clean, high-end institutional aesthetic." src="https://lh3.googleusercontent.com/aida-public/AB6AXuA3R2b93-Z9oQVBHRlf0k4Eki7bSUxUa8gGRqegsvE7MgNg0t9jUtSjPOlAJakbmuEA-MYArNX5NW_RMQeMBjfdspo7tpQqGV31VbSriY06wH7zLV1YCZ3dE96rL3FSkRXAvOD2XyH-MLdF-9bgRyVr1h6hchhv2wLZuYiICB9OPDkYYGsTS3vDHTS5CoGqVx-p_8lkIRy5to3k_J9pi0eTQnadLlnTbtOM89Lgrw_Egd7NgykH-MLqhCQ5tR9fnzBV2bKWh4AO18g"/>
+</div>
+<div class="absolute bottom-0 right-0 bg-on-tertiary-container text-white p-1 rounded-full shadow-md">
+<span class="material-symbols-outlined text-[16px]" style="font-variation-settings: 'FILL' 1;">verified</span>
+</div>
+</div>
+<div>
+<h2 class="font-headline-md text-headline-md font-bold text-primary">AquaCorp Industries</h2>
+<div class="flex flex-wrap justify-center gap-2 mt-2">
+<span class="bg-secondary-container/20 text-on-secondary-container px-3 py-1 rounded-full font-label-sm text-label-sm">Registered Company</span>
+<span class="bg-surface-container-high text-on-surface-variant px-3 py-1 rounded-full font-label-sm text-label-sm flex items-center gap-1">
+<span class="material-symbols-outlined text-[14px]">public</span> Global
+            </span>
+</div>
+</div>
+<div class="pt-2">
+<button class="bg-primary text-on-primary px-6 py-3 rounded-xl font-label-sm text-label-sm flex items-center gap-2 active:scale-95 transition-transform duration-200 shadow-sm">
+<span class="material-symbols-outlined text-[18px]">edit</span> Edit Profile
+          </button>
+</div>
+</div>
+</section>
+<!-- Section 1: Basic Info -->
+<section class="space-y-stack-sm">
+<h3 class="font-label-sm text-label-sm text-on-surface-variant px-1 uppercase tracking-widest">Basic Information</h3>
+<div class="glass-card rounded-xl p-stack-md space-y-stack-md">
+<div class="flex items-center gap-4">
+<div class="w-10 h-10 rounded-lg bg-surface-container flex items-center justify-center text-secondary">
+<span class="material-symbols-outlined">mail</span>
+</div>
+<div>
+<p class="font-label-sm text-label-sm text-on-surface-variant">Email Address</p>
+<p class="font-body-md text-body-md font-semibold">operations@aquacorp.com</p>
+</div>
+</div>
+<div class="flex items-center gap-4">
+<div class="w-10 h-10 rounded-lg bg-surface-container flex items-center justify-center text-secondary">
+<span class="material-symbols-outlined">call</span>
+</div>
+<div>
+<p class="font-label-sm text-label-sm text-on-surface-variant">Phone Number</p>
+<p class="font-body-md text-body-md font-semibold">+1 555-0123</p>
+</div>
+</div>
+<div class="grid grid-cols-2 gap-4 pt-2 border-t border-outline-variant/30">
+<div>
+<p class="font-label-sm text-label-sm text-on-surface-variant">Registration Date</p>
+<p class="font-body-md text-body-md font-semibold">Jan 2023</p>
+</div>
+<div>
+<p class="font-label-sm text-label-sm text-on-surface-variant">Account Status</p>
+<div class="flex items-center gap-1 text-on-tertiary-container">
+<div class="w-2 h-2 rounded-full bg-on-tertiary-container animate-pulse"></div>
+<p class="font-body-md text-body-md font-semibold">Active</p>
+</div>
+</div>
+</div>
+</div>
+</section>
+<!-- Section 2: Role-Specific Statistics (Bento Grid Style) -->
+<section class="space-y-stack-sm">
+<h3 class="font-label-sm text-label-sm text-on-surface-variant px-1 uppercase tracking-widest">Impact Statistics</h3>
+<div class="grid grid-cols-2 gap-4">
+<div class="glass-card rounded-xl p-stack-md flex flex-col justify-between aspect-square">
+<span class="material-symbols-outlined text-secondary text-[32px]">water_drop</span>
+<div>
+<p class="font-display-lg text-[32px] text-primary font-bold">4</p>
+<p class="font-label-sm text-label-sm text-on-surface-variant">Active Projects</p>
+</div>
+</div>
+<div class="glass-card rounded-xl p-stack-md flex flex-col justify-between aspect-square">
+<span class="material-symbols-outlined text-on-tertiary-container text-[32px]">verified_user</span>
+<div>
+<p class="font-display-lg text-[32px] text-primary font-bold">3</p>
+<p class="font-label-sm text-label-sm text-on-surface-variant">Certified Projects</p>
+</div>
+</div>
+<div class="col-span-2 glass-card rounded-xl p-stack-md">
+<div class="flex justify-between items-center mb-4">
+<div class="flex items-center gap-2">
+<span class="material-symbols-outlined text-secondary">account_balance_wallet</span>
+<p class="font-label-sm text-label-sm text-on-surface-variant">Total Issued Credits</p>
+</div>
+<p class="font-headline-md text-headline-md font-bold text-primary">1.2M</p>
+</div>
+<div class="w-full bg-surface-container rounded-full h-2 overflow-hidden">
+<div class="gradient-progress h-full w-[75%] rounded-full"></div>
+</div>
+</div>
+<div class="col-span-2 glass-card rounded-xl p-stack-md flex items-center justify-between">
+<div class="flex items-center gap-3">
+<div class="w-10 h-10 rounded-lg bg-tertiary-fixed/20 flex items-center justify-center">
+<span class="material-symbols-outlined text-on-tertiary-fixed-variant">shield</span>
+</div>
+<p class="font-body-md text-body-md font-semibold">Insurance Status</p>
+</div>
+<span class="bg-tertiary-fixed/30 text-on-tertiary-fixed-variant px-3 py-1 rounded-full font-label-sm text-label-sm">Fully Covered</span>
+</div>
+</div>
+</section>
+<!-- Section 3: Recent Activity -->
+<section class="space-y-stack-sm pb-8">
+<h3 class="font-label-sm text-label-sm text-on-surface-variant px-1 uppercase tracking-widest">Recent Activity</h3>
+<div class="space-y-2">
+<div class="flex items-start gap-4 p-3 rounded-xl hover:bg-surface-container-low transition-colors">
+<div class="w-1.5 h-1.5 rounded-full bg-secondary mt-2.5"></div>
+<div class="flex-1">
+<p class="font-body-md text-body-md text-on-surface">Last login</p>
+<p class="font-label-sm text-label-sm text-on-surface-variant">2h ago • New York, US</p>
+</div>
+</div>
+<div class="flex items-start gap-4 p-3 rounded-xl hover:bg-surface-container-low transition-colors">
+<div class="w-1.5 h-1.5 rounded-full bg-on-tertiary-container mt-2.5"></div>
+<div class="flex-1">
+<p class="font-body-md text-body-md text-on-surface">Profile verified</p>
+<p class="font-label-sm text-label-sm text-on-surface-variant">3d ago • Annual compliance check</p>
+</div>
+</div>
+<div class="flex items-start gap-4 p-3 rounded-xl hover:bg-surface-container-low transition-colors">
+<div class="w-1.5 h-1.5 rounded-full bg-secondary-fixed-dim mt-2.5"></div>
+<div class="flex-1">
+<p class="font-body-md text-body-md text-on-surface">New credit issuance</p>
+<p class="font-label-sm text-label-sm text-on-surface-variant">1w ago • 50,000 units Hydro-C</p>
+</div>
+</div>
+</div>
+</section>
+</main>
+<!-- BottomNavBar -->
+<nav class="fixed bottom-0 left-0 w-full z-50 bg-surface/80 backdrop-blur-xl border-t border-white/10 shadow-lg flex justify-around items-center px-4 py-3 pb-safe max-w-md mx-auto right-0 rounded-t-xl">
+<a class="flex flex-col items-center justify-center text-on-surface-variant hover:bg-surface-container-low rounded-full px-4 py-1 transition-all duration-200" href="#">
+<span class="material-symbols-outlined">dashboard</span>
+<span class="font-label-sm text-label-sm">Home</span>
+</a>
+<a class="flex flex-col items-center justify-center text-on-surface-variant hover:bg-surface-container-low rounded-full px-4 py-1 transition-all duration-200" href="#">
+<span class="material-symbols-outlined">water_drop</span>
+<span class="font-label-sm text-label-sm">Projects</span>
+</a>
+<a class="flex flex-col items-center justify-center text-on-surface-variant hover:bg-surface-container-low rounded-full px-4 py-1 transition-all duration-200" href="#">
+<span class="material-symbols-outlined">account_balance_wallet</span>
+<span class="font-label-sm text-label-sm">Credits</span>
+</a>
+<a class="flex flex-col items-center justify-center text-on-surface-variant hover:bg-surface-container-low rounded-full px-4 py-1 transition-all duration-200" href="#">
+<span class="material-symbols-outlined">storefront</span>
+<span class="font-label-sm text-label-sm">Market</span>
+</a>
+<a class="flex flex-col items-center justify-center text-secondary font-bold hover:bg-surface-container-low rounded-full px-4 py-1 transition-all duration-200 active:scale-90" href="#">
+<span class="material-symbols-outlined" style="font-variation-settings: 'FILL' 1;">person</span>
+<span class="font-label-sm text-label-sm">Profile</span>
+</a>
+</nav>
+<script>
+    // Micro-interaction for cards
+    document.querySelectorAll('.glass-card').forEach(card => {
+      card.addEventListener('mousedown', () => {
+        card.style.transform = 'scale(0.98)';
+        card.style.transition = 'transform 0.2s cubic-bezier(0.4, 0, 0.2, 1)';
+      });
+      card.addEventListener('mouseup', () => {
+        card.style.transform = 'scale(1)';
+      });
+      card.addEventListener('mouseleave', () => {
+        card.style.transform = 'scale(1)';
+      });
+    });
+  </script>
+</body></html>

@@ -2,6 +2,8 @@ import 'dart:ui';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
+import 'package:water_ledger/core/domain/exceptions/auth_exception.dart';
+import 'package:water_ledger/core/domain/validators/auth_validators.dart';
 import 'package:water_ledger/core/presentation/providers/session_provider.dart';
 
 class LoginScreen extends ConsumerStatefulWidget {
@@ -40,10 +42,14 @@ class _LoginScreenState extends ConsumerState<LoginScreen> {
   Future<void> _handleLogin() async {
     final email = _emailController.text.trim();
     final password = _passwordController.text;
-    if (email.isEmpty || password.isEmpty) {
-      ScaffoldMessenger.of(context).showSnackBar(
-        const SnackBar(content: Text('Completá email y contraseña')),
-      );
+    // Validación cliente: formato email + longitud mínima de password.
+    // Atrapa errores triviales antes de hacer round-trip a Firebase.
+    final error = AuthValidators.firstError([
+      () => AuthValidators.email(email),
+      () => AuthValidators.password(password),
+    ]);
+    if (error != null) {
+      ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text(error)));
       return;
     }
     setState(() => _isLoading = true);
@@ -51,10 +57,17 @@ class _LoginScreenState extends ConsumerState<LoginScreen> {
       await ref.read(authRepositoryProvider).login(email: email, password: password);
       if (!mounted) return;
       context.go('/home');
-    } catch (e) {
+    } on AuthException catch (e) {
+      // Mensaje user-friendly traducido del código de FirebaseAuthException
       if (!mounted) return;
       ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(content: Text('Error al iniciar sesión: $e')),
+        SnackBar(content: Text(e.message)),
+      );
+    } catch (e) {
+      // Cualquier otro error inesperado (ej: Firestore down)
+      if (!mounted) return;
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(content: Text('Error inesperado: $e')),
       );
     } finally {
       if (mounted) setState(() => _isLoading = false);
@@ -226,7 +239,7 @@ class _LoginScreenState extends ConsumerState<LoginScreen> {
                 children: [
                   _buildFieldLabel('PASSWORD'),
                   GestureDetector(
-                    onTap: () {},
+                    onTap: () => context.push('/forgot-password'),
                     child: const Text(
                       'Forgot password?',
                       style: TextStyle(

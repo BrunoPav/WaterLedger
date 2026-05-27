@@ -2,6 +2,8 @@ import 'dart:ui';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
+import 'package:water_ledger/core/domain/exceptions/auth_exception.dart';
+import 'package:water_ledger/core/domain/validators/auth_validators.dart';
 import 'package:water_ledger/core/presentation/providers/session_provider.dart';
 
 class RetailRegisterScreen extends ConsumerStatefulWidget {
@@ -66,29 +68,44 @@ class _RetailRegisterScreenState extends ConsumerState<RetailRegisterScreen> {
   }
 
   Future<void> _handleRegister() async {
+    final firstName = _firstNameController.text.trim();
+    final lastName = _lastNameController.text.trim();
     final email = _emailController.text.trim();
+    final phone = _phoneController.text.trim();
     final password = _passwordController.text;
-    final fullName = '${_firstNameController.text.trim()} ${_lastNameController.text.trim()}'.trim();
-    if (email.isEmpty || password.isEmpty || fullName.isEmpty) {
-      ScaffoldMessenger.of(context).showSnackBar(
-        const SnackBar(content: Text('Completá nombre, email y contraseña')),
-      );
+
+    // Validación cliente: corta antes del round-trip a Firebase.
+    final error = AuthValidators.firstError([
+      () => AuthValidators.required(firstName, 'el nombre'),
+      () => AuthValidators.required(lastName, 'el apellido'),
+      () => AuthValidators.email(email),
+      // El phone es opcional en el form actual: solo valida formato si fue cargado.
+      () => phone.isEmpty ? null : AuthValidators.phone(phone),
+      () => AuthValidators.password(password),
+    ]);
+    if (error != null) {
+      ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text(error)));
       return;
     }
+
     setState(() => _isLoading = true);
     try {
       await ref.read(authRepositoryProvider).registerRetail(
         email: email,
         password: password,
-        fullName: fullName,
+        fullName: '$firstName $lastName',
         dni: '',
       );
       if (!mounted) return;
       context.go('/retail-register-success');
+    } on AuthException catch (e) {
+      // Mensaje user-friendly traducido del código de Firebase
+      if (!mounted) return;
+      ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text(e.message)));
     } catch (e) {
       if (!mounted) return;
       ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(content: Text('Error al registrarse: $e')),
+        SnackBar(content: Text('Error inesperado: $e')),
       );
     } finally {
       if (mounted) setState(() => _isLoading = false);

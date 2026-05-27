@@ -8,14 +8,23 @@ class FirebaseAdminRepository implements AdminRepository {
 
   @override
   Stream<List<UserModel>> pendingUsersStream() {
+    // Antes ordenábamos por createdAt desde Firestore con .orderBy('createdAt', descending: true),
+    // pero la combinación where(status) + orderBy(createdAt) requiere un índice compuesto que
+    // tirador 'failed-precondition' hasta que se cree manualmente en Firebase Console.
+    // Para evitar ese paso de setup, ordenamos en cliente. Como las solicitudes pendientes son
+    // un set acotado (decenas, no miles), el cost de ordenar en memoria es despreciable.
+    // Si en el futuro el volumen crece, mover el orden al servidor y crear el índice.
     return _db
         .collection('users')
         .where('status', isEqualTo: UserStatus.pending.value)
-        .orderBy('createdAt', descending: true)
         .snapshots()
-        .map((snap) => snap.docs
-            .map((doc) => UserModel.fromFirestore(doc.data(), doc.id))
-            .toList());
+        .map((snap) {
+      final users = snap.docs
+          .map((doc) => UserModel.fromFirestore(doc.data(), doc.id))
+          .toList();
+      users.sort((a, b) => b.createdAt.compareTo(a.createdAt));
+      return users;
+    });
   }
 
   @override

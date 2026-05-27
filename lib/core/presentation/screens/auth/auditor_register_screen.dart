@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 import 'package:water_ledger/core/presentation/providers/session_provider.dart';
+import 'package:water_ledger/core/presentation/widgets/date_picker_field.dart';
 
 class AuditorRegisterScreen extends ConsumerStatefulWidget {
   const AuditorRegisterScreen({super.key});
@@ -629,11 +630,11 @@ class _AuditorRegisterScreenState extends ConsumerState<AuditorRegisterScreen> {
         const SizedBox(height: 16),
         _buildField(label: 'Domicilio legal completo', controller: _domicilioLegalController, hint: 'Calle, Nro, Localidad, CP', maxLines: 2),
         const SizedBox(height: 16),
-        _buildField(
+        DatePickerField(
           label: 'Fecha de constitución',
           controller: _fechaConstitucionController,
-          hint: 'DD/MM/AAAA',
-          suffix: const Icon(Icons.calendar_today_outlined, size: 18, color: _onSurfaceVariantColor),
+          // Solo fechas pasadas tienen sentido para constitución de empresa.
+          lastDate: DateTime.now(),
         ),
         const SizedBox(height: 16),
         _buildField(label: 'Sitio web oficial', controller: _sitioWebController, hint: 'https://www.empresa.com', keyboardType: TextInputType.url),
@@ -700,11 +701,11 @@ class _AuditorRegisterScreenState extends ConsumerState<AuditorRegisterScreen> {
         const SizedBox(height: 16),
         _buildField(label: 'DNI, pasaporte o CUIL', controller: _dniCuilController, hint: '20-12345678-3', keyboardType: TextInputType.number),
         const SizedBox(height: 16),
-        _buildField(
+        DatePickerField(
           label: 'Fecha de nacimiento',
           controller: _fechaNacimientoController,
-          hint: 'DD/MM/AAAA',
-          suffix: const Icon(Icons.calendar_today_outlined, size: 18, color: _onSurfaceVariantColor),
+          // Nadie nace en el futuro.
+          lastDate: DateTime.now(),
         ),
         const SizedBox(height: 16),
         _buildField(label: 'Nacionalidad', controller: _nacionalidadController, hint: 'Argentina'),
@@ -746,11 +747,11 @@ class _AuditorRegisterScreenState extends ConsumerState<AuditorRegisterScreen> {
             const SizedBox(height: 16),
             _buildField(label: 'Organismo regulador', controller: _organismoReguladorController, hint: 'FACPCE, IFAC-member, etc.'),
             const SizedBox(height: 16),
-            _buildField(
+            DatePickerField(
               label: 'Fecha de vigencia de la matrícula',
               controller: _vigenciaMatriculaController,
-              hint: 'DD/MM/AAAA',
-              suffix: const Icon(Icons.calendar_today_outlined, size: 18, color: _onSurfaceVariantColor),
+              // La vigencia es a futuro respecto al alta.
+              firstDate: DateTime.now(),
             ),
           ],
         ),
@@ -764,11 +765,10 @@ class _AuditorRegisterScreenState extends ConsumerState<AuditorRegisterScreen> {
                 Expanded(child: _buildField(label: 'Monto de cobertura', controller: _polizaMontoController, hint: 'USD 500.000', keyboardType: TextInputType.number)),
                 const SizedBox(width: 12),
                 Expanded(
-                  child: _buildField(
+                  child: DatePickerField(
                     label: 'Vigencia de la póliza',
                     controller: _polizaVigenciaController,
-                    hint: 'DD/MM/AAAA',
-                    suffix: const Icon(Icons.calendar_today_outlined, size: 18, color: _onSurfaceVariantColor),
+                    firstDate: DateTime.now(),
                   ),
                 ),
               ],

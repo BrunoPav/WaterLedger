@@ -85,7 +85,7 @@ class CompanyDashboardScreen extends ConsumerWidget {
           DashboardNavItem(
             icon: Icons.person_outline,
             label: 'Profile',
-            onTap: () => _comingSoon(context, 'Profile'),
+            onTap: () => context.go('/profile'),
           ),
         ],
       ),

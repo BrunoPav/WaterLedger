@@ -1,0 +1,307 @@
+<!DOCTYPE html>
+
+<html class="light" lang="en"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" name="viewport"/>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600&amp;family=Manrope:wght@600;700&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<style>
+        .material-symbols-outlined {
+            font-variation-settings: 'FILL' 0, 'wght' 300, 'GRAD' 0, 'opsz' 24;
+        }
+        .glass-card {
+            background: rgba(255, 255, 255, 0.7);
+            backdrop-filter: blur(20px);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+        }
+        .text-gradient-growth {
+            background: linear-gradient(90deg, #006875, #00daf3);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+        body {
+            -webkit-tap-highlight-color: transparent;
+            font-family: 'Inter', sans-serif;
+        }
+    </style>
+<script id="tailwind-config">
+        tailwind.config = {
+            darkMode: "class",
+            theme: {
+                extend: {
+                    "colors": {
+                        "secondary-fixed-dim": "#00daf3",
+                        "primary-fixed": "#d6e3ff",
+                        "tertiary-container": "#002204",
+                        "on-tertiary-fixed-variant": "#005312",
+                        "inverse-primary": "#b9c7e4",
+                        "on-primary-fixed": "#0d1c32",
+                        "primary-container": "#0d1c32",
+                        "on-secondary": "#ffffff",
+                        "surface-container-high": "#e6e8ea",
+                        "secondary-fixed": "#9cf0ff",
+                        "inverse-on-surface": "#eff1f3",
+                        "tertiary-fixed-dim": "#88d982",
+                        "inverse-surface": "#2d3133",
+                        "primary": "#000000",
+                        "error-container": "#ffdad6",
+                        "on-tertiary": "#ffffff",
+                        "on-secondary-fixed": "#001f24",
+                        "on-surface": "#191c1e",
+                        "surface-container-highest": "#e0e3e5",
+                        "surface-container": "#eceef0",
+                        "on-background": "#191c1e",
+                        "surface-tint": "#515f78",
+                        "outline-variant": "#c5c6cd",
+                        "surface-container-low": "#f2f4f6",
+                        "on-primary": "#ffffff",
+                        "on-tertiary-container": "#469446",
+                        "error": "#ba1a1a",
+                        "surface-dim": "#d8dadc",
+                        "secondary-container": "#00e3fd",
+                        "on-tertiary-fixed": "#002204",
+                        "on-error": "#ffffff",
+                        "outline": "#75777e",
+                        "on-primary-container": "#76849f",
+                        "surface-container-lowest": "#ffffff",
+                        "surface": "#f7f9fb",
+                        "surface-bright": "#f7f9fb",
+                        "background": "#f7f9fb",
+                        "on-secondary-container": "#00616d",
+                        "on-error-container": "#93000a",
+                        "tertiary-fixed": "#a3f69c",
+                        "tertiary": "#000000",
+                        "on-surface-variant": "#44474d",
+                        "on-secondary-fixed-variant": "#004f58",
+                        "secondary": "#006875",
+                        "surface-variant": "#e0e3e5",
+                        "primary-fixed-dim": "#b9c7e4",
+                        "on-primary-fixed-variant": "#39475f"
+                    },
+                    "borderRadius": {
+                        "DEFAULT": "0.25rem",
+                        "lg": "0.5rem",
+                        "xl": "0.75rem",
+                        "full": "9999px"
+                    },
+                    "spacing": {
+                        "stack-sm": "8px",
+                        "stack-md": "16px",
+                        "gutter": "16px",
+                        "stack-lg": "32px",
+                        "unit": "4px",
+                        "container-padding": "20px"
+                    },
+                    "fontFamily": {
+                        "label-sm": ["Inter"],
+                        "body-md": ["Inter"],
+                        "headline-md": ["Manrope"],
+                        "display-lg": ["Manrope"],
+                        "body-lg": ["Inter"]
+                    },
+                    "fontSize": {
+                        "label-sm": ["13px", {"lineHeight": "16px", "letterSpacing": "0.05em", "fontWeight": "600"}],
+                        "body-md": ["16px", {"lineHeight": "24px", "fontWeight": "400"}],
+                        "headline-md": ["24px", {"lineHeight": "32px", "letterSpacing": "-0.01em", "fontWeight": "600"}],
+                        "display-lg": ["40px", {"lineHeight": "48px", "letterSpacing": "-0.02em", "fontWeight": "700"}],
+                        "body-lg": ["18px", {"lineHeight": "28px", "fontWeight": "400"}]
+                    }
+                }
+            }
+        }
+    </script>
+<style>
+    body {
+      min-height: max(884px, 100dvh);
+    }
+  </style>
+  </head>
+<body class="bg-background text-on-surface min-h-screen pb-32">
+<!-- TopAppBar -->
+<header class="fixed top-0 w-full z-50 backdrop-blur-xl border-b border-white/10 bg-surface/70 shadow-sm">
+<div class="flex justify-between items-center px-container-padding h-16 w-full max-w-md mx-auto">
+<div class="flex items-center gap-3">
+<div class="w-8 h-8 rounded-full overflow-hidden bg-surface-container-high border border-outline-variant">
+<img alt="Jordan Smith" class="w-full h-full object-cover" data-alt="A professional headshot of a middle-aged man with a confident expression, wearing a tailored navy blue blazer. The background is a blurred, high-end office setting with soft sunlight streaming through large windows, maintaining a clean and institutional light-mode aesthetic. The lighting is soft and flattering, reflecting a sophisticated corporate fintech atmosphere." src="https://lh3.googleusercontent.com/aida-public/AB6AXuA9bA80f75nEHYW7-MOoPoP2ugRMZ1_aBWWJUVRCKporLxVw1oN__qQEvYT9JeAqthJDL7K_kAXyEMCfqNGS5gsh66IjKWTW2Kh3wUF89OFP13kQsk-oRuE-iwe2v5tkGCVxtHmfMoIhuLDRbGgKtL6gF8FsAkaBnT1u2lBnfUELsxL86DUYtJvvO4QE6whvhdkOwyCEJ3tHHplfYOEk0AOeXXtEmosSDgredUg7o9xn0b_4EjvpzDGia8dMU2RsXDutpdnT7nwhcA"/>
+</div>
+<h1 class="font-headline-md text-headline-md-mobile font-bold text-primary">HydroWealth</h1>
+</div>
+<button class="active:scale-95 transition-transform duration-200">
+<span class="material-symbols-outlined text-primary" data-icon="notifications">notifications</span>
+</button>
+</div>
+</header>
+<main class="pt-20 px-container-padding max-w-md mx-auto space-y-stack-lg">
+<!-- Header Profile Section -->
+<section class="flex flex-col items-center text-center space-y-stack-md pt-4">
+<div class="relative">
+<div class="w-24 h-24 rounded-full p-1 bg-gradient-to-tr from-secondary to-secondary-fixed-dim">
+<img alt="Jordan Smith" class="w-full h-full object-cover rounded-full border-4 border-surface" data-alt="A close-up portrait of a professional man with a friendly yet authoritative presence. He is set against a minimalist architectural background with clean lines and a soft gray color palette. The image conveys trustworthiness and institutional leadership, typical of a high-ranking system administrator in a sustainable finance tech firm. The lighting is bright and even." src="https://lh3.googleusercontent.com/aida-public/AB6AXuDoUVLxU8MqoIa81zW4eMT_mOw9dUEvVS2_QhMaHuY84Mt9drVcKaWfSuGQaS1qQWFGzSW-ChFFmc_eYgvIVdtmBapw22fKyHpL7PEwibXIvXzdOqgKv2RXlmPqjbUeqBSgN8T81UzUfK8ZFHYKlqJW4VXyjPIG3JVZiaYHdzTaeyT4DY05vpWiyA2A7SZEP5HQegOvx8p9MBODO0fvJNYBfRHEA5_jC4F3txYGDcUpF-XEjfBEK9xg3MltnmlR-QQU2hnUMmB1pPo"/>
+</div>
+<div class="absolute bottom-0 right-0 bg-on-tertiary-container text-white rounded-full p-1 border-2 border-surface flex items-center justify-center">
+<span class="material-symbols-outlined text-[16px]" data-icon="verified" style="font-variation-settings: 'FILL' 1;">verified</span>
+</div>
+</div>
+<div class="space-y-1">
+<h2 class="font-headline-md text-headline-md-mobile text-primary">Jordan Smith</h2>
+<div class="flex items-center justify-center gap-2">
+<span class="bg-primary-container text-on-primary-container font-label-sm text-label-sm px-3 py-1 rounded-full">System Administrator</span>
+<span class="bg-surface-container-high text-on-surface-variant font-label-sm text-label-sm px-3 py-1 rounded-full">HQ</span>
+</div>
+<p class="font-label-sm text-label-sm text-on-tertiary-container mt-2">Verified Status</p>
+</div>
+<button class="w-full py-3 px-6 bg-primary text-on-primary rounded-xl font-label-sm text-label-sm active:scale-[0.98] transition-transform shadow-md">
+                Edit Profile
+            </button>
+</section>
+<!-- Section 1: Basic Info (Bento Style) -->
+<section class="space-y-stack-md">
+<h3 class="font-label-sm text-label-sm text-outline px-1">BASIC INFORMATION</h3>
+<div class="grid grid-cols-2 gap-4">
+<div class="col-span-2 glass-card p-4 rounded-2xl border border-outline-variant/30 flex items-center gap-4">
+<div class="w-10 h-10 rounded-full bg-surface-container-low flex items-center justify-center text-secondary">
+<span class="material-symbols-outlined" data-icon="mail">mail</span>
+</div>
+<div>
+<p class="font-label-sm text-label-sm text-outline uppercase tracking-wider">Email</p>
+<p class="font-body-md text-body-md text-primary">j.smith@waterledger.com</p>
+</div>
+</div>
+<div class="glass-card p-4 rounded-2xl border border-outline-variant/30">
+<p class="font-label-sm text-label-sm text-outline uppercase tracking-wider mb-1">Phone</p>
+<p class="font-body-md text-body-md text-primary">+1 555-9876</p>
+</div>
+<div class="glass-card p-4 rounded-2xl border border-outline-variant/30">
+<p class="font-label-sm text-label-sm text-outline uppercase tracking-wider mb-1">Status</p>
+<span class="inline-block px-2 py-0.5 rounded-full bg-tertiary-fixed text-on-tertiary-fixed font-label-sm text-[11px]">Superuser</span>
+</div>
+<div class="col-span-2 glass-card p-4 rounded-2xl border border-outline-variant/30 flex justify-between items-center">
+<div>
+<p class="font-label-sm text-label-sm text-outline uppercase tracking-wider">Registration Date</p>
+<p class="font-body-md text-body-md text-primary">Jan 2022</p>
+</div>
+<span class="material-symbols-outlined text-outline" data-icon="calendar_today">calendar_today</span>
+</div>
+</div>
+</section>
+<!-- Section 2: Role-Specific Metrics (Impact Grid) -->
+<section class="space-y-stack-md">
+<h3 class="font-label-sm text-label-sm text-outline px-1">PLATFORM GOVERNANCE</h3>
+<div class="grid grid-cols-2 gap-4">
+<div class="glass-card p-4 rounded-2xl border border-outline-variant/30 bg-gradient-to-br from-white to-surface-container-low">
+<p class="font-label-sm text-label-sm text-outline mb-4">Active Projects</p>
+<div class="flex items-end justify-between">
+<span class="font-display-lg text-[32px] leading-tight text-primary">42</span>
+<div class="h-1 w-12 bg-secondary rounded-full mb-2"></div>
+</div>
+</div>
+<div class="glass-card p-4 rounded-2xl border border-outline-variant/30 bg-gradient-to-br from-white to-surface-container-low">
+<p class="font-label-sm text-label-sm text-outline mb-4">Pending Approvals</p>
+<div class="flex items-end justify-between">
+<span class="font-display-lg text-[32px] leading-tight text-error">14</span>
+<span class="material-symbols-outlined text-error mb-2" data-icon="pending_actions">pending_actions</span>
+</div>
+</div>
+<div class="col-span-2 glass-card p-5 rounded-2xl border border-outline-variant/30">
+<div class="flex justify-between items-start mb-4">
+<div>
+<p class="font-label-sm text-label-sm text-outline mb-1">Workflow Monitoring</p>
+<p class="font-body-md text-body-md font-semibold text-primary">All stages operational</p>
+</div>
+<div class="flex gap-1">
+<span class="w-1.5 h-1.5 rounded-full bg-on-tertiary-container animate-pulse"></span>
+<span class="w-1.5 h-1.5 rounded-full bg-on-tertiary-container"></span>
+<span class="w-1.5 h-1.5 rounded-full bg-on-tertiary-container"></span>
+</div>
+</div>
+<div class="w-full bg-surface-container-high h-1.5 rounded-full overflow-hidden">
+<div class="h-full bg-gradient-to-r from-secondary to-secondary-fixed-dim w-[100%]"></div>
+</div>
+<div class="flex justify-between mt-3">
+<span class="font-label-sm text-[11px] text-outline">Metrics: <span class="text-on-tertiary-container">Normal</span></span>
+<span class="font-label-sm text-[11px] text-outline">Uptime: 99.9%</span>
+</div>
+</div>
+</div>
+</section>
+<!-- Section 3: Recent Activity (Timeline Card) -->
+<section class="space-y-stack-md pb-8">
+<h3 class="font-label-sm text-label-sm text-outline px-1">RECENT AUDIT LOG</h3>
+<div class="glass-card rounded-2xl border border-outline-variant/30 overflow-hidden">
+<div class="divide-y divide-outline-variant/20">
+<!-- Activity 1 -->
+<div class="p-4 flex gap-4 hover:bg-surface-container-lowest transition-colors">
+<div class="w-10 h-10 rounded-xl bg-surface-container-high flex items-center justify-center shrink-0">
+<span class="material-symbols-outlined text-secondary text-[20px]" data-icon="login">login</span>
+</div>
+<div class="flex-1">
+<p class="font-body-md text-body-md text-primary">Last login</p>
+<p class="font-label-sm text-label-sm text-outline">15m ago • Session ID: 4920</p>
+</div>
+</div>
+<!-- Activity 2 -->
+<div class="p-4 flex gap-4 hover:bg-surface-container-lowest transition-colors">
+<div class="w-10 h-10 rounded-xl bg-tertiary-fixed/30 flex items-center justify-center shrink-0">
+<span class="material-symbols-outlined text-on-tertiary-fixed-variant text-[20px]" data-icon="rule">rule</span>
+</div>
+<div class="flex-1">
+<p class="font-body-md text-body-md text-primary">Auditor application approved</p>
+<p class="font-label-sm text-label-sm text-outline">1h ago • Entity: AquaTrust Ltd</p>
+</div>
+</div>
+<!-- Activity 3 -->
+<div class="p-4 flex gap-4 hover:bg-surface-container-lowest transition-colors">
+<div class="w-10 h-10 rounded-xl bg-error-container/30 flex items-center justify-center shrink-0">
+<span class="material-symbols-outlined text-error text-[20px]" data-icon="system_update">system_update</span>
+</div>
+<div class="flex-1">
+<p class="font-body-md text-body-md text-primary">System update initiated</p>
+<p class="font-label-sm text-label-sm text-outline">Yesterday • Version 2.4.1-rc</p>
+</div>
+</div>
+</div>
+</div>
+</section>
+</main>
+<!-- BottomNavBar -->
+<nav class="fixed bottom-0 left-0 w-full z-50 flex justify-around items-center px-4 py-3 pb-safe max-w-md mx-auto bg-surface/80 backdrop-blur-xl border-t border-white/10 shadow-lg rounded-t-xl">
+<!-- Home -->
+<a class="flex flex-col items-center justify-center text-on-surface-variant hover:bg-surface-container-low rounded-full px-2 py-1 transition-all active:scale-90" href="#">
+<span class="material-symbols-outlined" data-icon="dashboard">dashboard</span>
+<span class="font-label-sm text-label-sm">Home</span>
+</a>
+<!-- Projects -->
+<a class="flex flex-col items-center justify-center text-on-surface-variant hover:bg-surface-container-low rounded-full px-2 py-1 transition-all active:scale-90" href="#">
+<span class="material-symbols-outlined" data-icon="water_drop">water_drop</span>
+<span class="font-label-sm text-label-sm">Projects</span>
+</a>
+<!-- Credits -->
+<a class="flex flex-col items-center justify-center text-on-surface-variant hover:bg-surface-container-low rounded-full px-2 py-1 transition-all active:scale-90" href="#">
+<span class="material-symbols-outlined" data-icon="account_balance_wallet">account_balance_wallet</span>
+<span class="font-label-sm text-label-sm">Credits</span>
+</a>
+<!-- Market -->
+<a class="flex flex-col items-center justify-center text-on-surface-variant hover:bg-surface-container-low rounded-full px-2 py-1 transition-all active:scale-90" href="#">
+<span class="material-symbols-outlined" data-icon="storefront">storefront</span>
+<span class="font-label-sm text-label-sm">Market</span>
+</a>
+<!-- Profile (Active) -->
+<a class="flex flex-col items-center justify-center text-secondary dark:text-secondary-fixed-dim font-bold hover:bg-surface-container-low rounded-full px-2 py-1 transition-all active:scale-90" href="#">
+<span class="material-symbols-outlined" data-icon="person" style="font-variation-settings: 'FILL' 1;">person</span>
+<span class="font-label-sm text-label-sm">Profile</span>
+</a>
+</nav>
+<script>
+        // Micro-interaction for activity items
+        document.querySelectorAll('.glass-card div[class*="flex gap-4"]').forEach(item => {
+            item.addEventListener('touchstart', () => {
+                item.style.transform = 'scale(0.98)';
+            });
+            item.addEventListener('touchend', () => {
+                item.style.transform = 'scale(1)';
+            });
+        });
+    </script>
+</body></html>
