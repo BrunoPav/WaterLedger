@@ -20,7 +20,7 @@ import 'package:water_ledger/features/credit_issuance/presentation/screens/submi
 import 'package:water_ledger/features/credit_issuance/presentation/screens/request_tracking_screen.dart';
 import 'package:water_ledger/features/issuer/presentation/screen/issuing_company_screen.dart';
 import 'package:water_ledger/home_temporal.dart';
-
+import 'package:water_ledger/core/Stitch_Templates/Steps/step_4_project_objectives/project_objectives_step_screen.dart';
 import 'package:water_ledger/core/Stitch_Templates/Steps/step_3_project_info/project_info_step_screen.dart';
 
 final GoRouter appRouter = GoRouter(
@@ -71,6 +71,9 @@ final GoRouter appRouter = GoRouter(
     GoRoute(
       path: '/project-info-test',
       builder: (context, state) => const ProjectInfoStepScreen(),
+    ), 
+    GoRoute(  
+      path: '/project-objectives-test', builder: (context, state) => const ProjectObjectivesStepScreen(),
     ),
   ],
 );
