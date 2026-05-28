@@ -62,4 +62,12 @@ abstract class AuthRepository {
   /// Si el email no existe igual completa exitosamente (Firebase no lo
   /// expone por seguridad — anti-enumeration).
   Future<void> sendPasswordResetEmail({required String email});
+
+  /// Aplica un patch parcial al documento del usuario en Firestore.
+  /// Soporta paths con notación punto (ej: 'representativeData.phone').
+  /// El `displayName` se sincroniza también con FirebaseAuth si está incluido.
+  Future<void> updateProfile({
+    required String uid,
+    required Map<String, dynamic> updates,
+  });
 }

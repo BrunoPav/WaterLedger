@@ -332,6 +332,41 @@ class _ForgotPasswordScreenState extends ConsumerState<ForgotPasswordScreen> {
                   height: 1.5,
                 ),
               ),
+              const SizedBox(height: 14),
+              // Aviso de spam folder — Firebase manda desde un dominio noreply@<project>.firebaseapp.com
+              // que muchos providers (Gmail, Outlook) marcan como spam por default.
+              Container(
+                padding: const EdgeInsets.all(12),
+                decoration: BoxDecoration(
+                  color: _surfaceContainerLowColor,
+                  borderRadius: BorderRadius.circular(10),
+                  border: Border.all(
+                    color: _outlineVariantColor.withValues(alpha: 0.4),
+                  ),
+                ),
+                child: Row(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    const Icon(
+                      Icons.info_outline,
+                      size: 18,
+                      color: _onSurfaceVariantColor,
+                    ),
+                    const SizedBox(width: 8),
+                    const Expanded(
+                      child: Text(
+                        "Don't see it? Check your spam or promotions folder — the message is sent from a noreply@ address.",
+                        style: TextStyle(
+                          fontFamily: 'Inter',
+                          fontSize: 12,
+                          color: _onSurfaceVariantColor,
+                          height: 1.5,
+                        ),
+                      ),
+                    ),
+                  ],
+                ),
+              ),
               const SizedBox(height: 20),
               SizedBox(
                 width: double.infinity,

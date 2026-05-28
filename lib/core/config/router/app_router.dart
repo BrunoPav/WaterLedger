@@ -29,6 +29,7 @@ import 'package:water_ledger/features/credit_issuance/presentation/screens/submi
 import 'package:water_ledger/features/credit_issuance/presentation/screens/request_tracking_screen.dart';
 import 'package:water_ledger/features/dashboards/presentation/screens/home_dispatcher.dart';
 import 'package:water_ledger/features/profiles/presentation/screens/profile_dispatcher.dart';
+import 'package:water_ledger/features/profiles/presentation/screens/profile_edit_screen.dart';
 import 'package:water_ledger/features/issuer/presentation/screen/issuing_company_screen.dart';
 import 'package:water_ledger/home_temporal.dart';
 
@@ -113,6 +114,8 @@ final appRouterProvider = Provider<GoRouter>((ref) {
     // /profile despacha al perfil correspondiente según el rol del user logueado
     // (módulo 4.1.5 — Perfiles de usuario).
     GoRoute(path: '/profile', builder: (context, state) => const ProfileDispatcher()),
+    // Edición de perfil. Pantalla única que se adapta al rol del user logueado.
+    GoRoute(path: '/profile/edit', builder: (context, state) => const ProfileEditScreen()),
     // HomeTemporal queda accesible bajo /home-temporal para testing manual:
     GoRoute(path: '/home-temporal', builder: (context, state) => const HomeTemporal()),
     GoRoute(

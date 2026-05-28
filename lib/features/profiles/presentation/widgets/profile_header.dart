@@ -179,15 +179,7 @@ class _EditProfileButton extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return ElevatedButton.icon(
-      onPressed: () {
-        // TODO: navegar al editor de perfil cuando se implemente (módulo 4.1.5.7)
-        ScaffoldMessenger.of(context).showSnackBar(
-          const SnackBar(
-            content: Text('Edit Profile — pendiente de implementar'),
-            duration: Duration(seconds: 2),
-          ),
-        );
-      },
+      onPressed: () => context.push('/profile/edit'),
       style: ElevatedButton.styleFrom(
         backgroundColor: DashboardTokens.primaryColor,
         foregroundColor: DashboardTokens.onPrimaryColor,

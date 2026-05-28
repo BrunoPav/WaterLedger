@@ -237,10 +237,56 @@ class FirebaseAuthRepository implements AuthRepository {
     return _run(() => _auth.sendPasswordResetEmail(email: email));
   }
 
+  @override
+  Future<void> updateProfile({
+    required String uid,
+    required Map<String, dynamic> updates,
+  }) async {
+    // Si el caller incluye `displayName`, también lo sincronizamos con
+    // FirebaseAuth para mantener consistencia entre auth.currentUser y Firestore.
+    final newDisplayName = updates['displayName'];
+    if (newDisplayName is String && _auth.currentUser != null) {
+      await _auth.currentUser!.updateDisplayName(newDisplayName);
+    }
+    await _db.collection('users').doc(uid).update(updates);
+  }
+
   Future<UserModel> _fetchUserModel(String uid) async {
-    final doc = await _db.collection('users').doc(uid).get();
-    if (!doc.exists) throw Exception('Usuario no encontrado: $uid');
-    return UserModel.fromFirestore(doc.data()!, uid);
+    // Retry con backoff: cuando el user se acaba de registrar, FirebaseAuth
+    // emite el authStateChanges antes de que Firestore termine de escribir el doc.
+    // Sin reintento, _fetchUserModel falla y deja al user "colgado" sin sesión usable.
+    // 3 intentos × 400ms = hasta ~1.2s de tolerancia, suficiente para el race típico.
+    // Además cada get() tiene su propio timeout de 5s para no colgarse forever
+    // si Firestore queda esperando (red caída, reglas bloqueando, etc.).
+    const maxAttempts = 3;
+    for (var attempt = 1; attempt <= maxAttempts; attempt++) {
+      try {
+        final doc = await _db
+            .collection('users')
+            .doc(uid)
+            .get()
+            .timeout(const Duration(seconds: 5));
+        if (doc.exists) {
+          return UserModel.fromFirestore(doc.data()!, uid);
+        }
+      } on Exception catch (e) {
+        // Si fue timeout o un error transitorio, dejamos que el retry lo intente.
+        // En el último intento sí relanzamos como AuthException.
+        if (attempt == maxAttempts) {
+          throw AuthException(
+            'No se pudo leer tu perfil. Revisá tu conexión y reintentá. ($e)',
+            code: 'user-doc-fetch-failed',
+          );
+        }
+      }
+      if (attempt < maxAttempts) {
+        await Future.delayed(const Duration(milliseconds: 400));
+      }
+    }
+    throw AuthException(
+      'No se encontró el perfil del usuario. Si te acabás de registrar, esperá unos segundos y reintentá.',
+      code: 'user-doc-missing',
+    );
   }
 
   /// Helper que envuelve cualquier operación de FirebaseAuth y traduce
