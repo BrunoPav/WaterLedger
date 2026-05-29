@@ -29,9 +29,6 @@ class RoadmapEditorScreen extends ConsumerStatefulWidget {
 }
 
 class _RoadmapEditorScreenState extends ConsumerState<RoadmapEditorScreen> {
-  // Lista persistida de fases ya cargadas
-  final List<PhaseEntity> _phases = [];
-
   // Buffer de la fase que el usuario está completando ahora mismo
   final _phaseNameController = TextEditingController();
   DateTime? _startDate;
