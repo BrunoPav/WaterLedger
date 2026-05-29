@@ -14,6 +14,7 @@ import 'package:water_ledger/core/presentation/screens/auth/insurance_register_s
 import 'package:water_ledger/core/presentation/screens/admin/admin_dashboard_screen.dart';
 // Import de la pantalla de seed comentado al borrarse la vista — el usuario ya creó su admin en Firestore:
 // import 'package:water_ledger/core/presentation/screens/admin/admin_seed_screen.dart';
+import 'package:water_ledger/core/presentation/screens/admin/pending_approvals_list_screen.dart';
 import 'package:water_ledger/core/presentation/screens/admin/pending_request_detail_screen.dart';
 import 'package:water_ledger/core/presentation/screens/auth/company_register_success_screen.dart';
 import 'package:water_ledger/core/presentation/screens/auth/corporate_onboarding_screen.dart';
@@ -99,6 +100,10 @@ final appRouterProvider = Provider<GoRouter>((ref) {
     // habilitar creación de admins desde otra pantalla (ej. un panel super-admin).
     // GoRoute(path: '/admin-seed', builder: (context, state) => const AdminSeedScreen()),
     GoRoute(path: '/admin-dashboard', builder: (context, state) => const AdminDashboardScreen()),
+    GoRoute(
+      path: '/admin-pending-approvals',
+      builder: (context, state) => const PendingApprovalsListScreen(),
+    ),
     GoRoute(
       path: '/admin-pending-detail/:uid',
       builder: (context, state) => PendingRequestDetailScreen(

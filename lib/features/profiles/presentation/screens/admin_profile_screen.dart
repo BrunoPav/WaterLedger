@@ -7,6 +7,7 @@ import 'package:water_ledger/core/domain/enums/user_status.dart';
 import 'package:water_ledger/core/domain/repositories/admin_repository.dart';
 import 'package:water_ledger/core/presentation/providers/admin_provider.dart';
 import 'package:water_ledger/core/presentation/providers/session_provider.dart';
+import 'package:water_ledger/core/presentation/screens/admin/notifications_modal.dart';
 import 'package:water_ledger/features/dashboards/presentation/widgets/activity_tile.dart';
 import 'package:water_ledger/features/dashboards/presentation/widgets/dashboard_bottom_nav.dart';
 import 'package:water_ledger/features/dashboards/presentation/widgets/dashboard_tokens.dart';
@@ -40,8 +41,11 @@ class AdminProfileScreen extends ConsumerWidget {
               ? null
               : user.displayName.trim()[0].toUpperCase(),
         ),
-        actions: const [
-          TopBarIconButton(icon: Icons.notifications_outlined),
+        actions: [
+          TopBarIconButton(
+            icon: Icons.notifications_outlined,
+            onTap: () => showAdminNotificationsModal(context),
+          ),
         ],
       ),
       body: SingleChildScrollView(
@@ -217,7 +221,8 @@ class AdminProfileScreen extends ConsumerWidget {
                     ? '1 solicitud esperando revisión'
                     : '$pendingCount solicitudes esperando revisión',
             trailingBadge: pendingCount > 0 ? '$pendingCount' : null,
-            onTap: () => context.go('/admin-dashboard'),
+            // Va a la lista completa de pending approvals (no al dashboard).
+            onTap: () => context.push('/admin-pending-approvals'),
           ),
         ],
       ),

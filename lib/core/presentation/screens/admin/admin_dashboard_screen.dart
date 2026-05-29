@@ -7,6 +7,7 @@ import 'package:water_ledger/core/domain/entities/user_model.dart';
 import 'package:water_ledger/core/domain/enums/user_role.dart';
 import 'package:water_ledger/core/presentation/providers/admin_provider.dart';
 import 'package:water_ledger/core/presentation/providers/session_provider.dart';
+import 'package:water_ledger/core/presentation/screens/admin/notifications_modal.dart';
 
 class AdminDashboardScreen extends ConsumerWidget {
   const AdminDashboardScreen({super.key});
@@ -61,7 +62,7 @@ class AdminDashboardScreen extends ConsumerWidget {
             left: 0,
             right: 0,
             bottom: 0,
-            child: _buildBottomNav(),
+            child: _buildBottomNav(context),
           ),
         ],
       ),
@@ -102,7 +103,7 @@ class AdminDashboardScreen extends ConsumerWidget {
                 ),
               ),
               IconButton(
-                onPressed: () {},
+                onPressed: () => showAdminNotificationsModal(context),
                 icon: const Icon(Icons.notifications_outlined, color: _primaryColor, size: 26),
               ),
             ],
@@ -290,7 +291,11 @@ class AdminDashboardScreen extends ConsumerWidget {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-        _buildSectionTitle(title: 'Pending Approvals', trailing: 'View all'),
+        _buildSectionTitle(
+          title: 'Pending Approvals',
+          trailing: 'View all',
+          onTrailingTap: () => context.push('/admin-pending-approvals'),
+        ),
         const SizedBox(height: 14),
         pending.when(
           data: (users) {
@@ -447,7 +452,11 @@ class AdminDashboardScreen extends ConsumerWidget {
   // ------------------------------------------------------------------ //
   //  HELPERS DE PRESENTACIÓN
   // ------------------------------------------------------------------ //
-  Widget _buildSectionTitle({required String title, String? trailing}) {
+  Widget _buildSectionTitle({
+    required String title,
+    String? trailing,
+    VoidCallback? onTrailingTap,
+  }) {
     return Row(
       crossAxisAlignment: CrossAxisAlignment.end,
       children: [
@@ -464,13 +473,20 @@ class AdminDashboardScreen extends ConsumerWidget {
           ),
         ),
         if (trailing != null)
-          Text(
-            trailing,
-            style: const TextStyle(
-              fontFamily: 'Inter',
-              fontSize: 13,
-              fontWeight: FontWeight.w600,
-              color: _secondaryColor,
+          InkWell(
+            onTap: onTrailingTap,
+            borderRadius: BorderRadius.circular(6),
+            child: Padding(
+              padding: const EdgeInsets.symmetric(horizontal: 6, vertical: 2),
+              child: Text(
+                trailing,
+                style: const TextStyle(
+                  fontFamily: 'Inter',
+                  fontSize: 13,
+                  fontWeight: FontWeight.w600,
+                  color: _secondaryColor,
+                ),
+              ),
             ),
           ),
       ],
@@ -589,9 +605,11 @@ class AdminDashboardScreen extends ConsumerWidget {
   }
 
   // ------------------------------------------------------------------ //
-  //  BOTTOM NAV — placeholders mientras las otras pantallas no existen
+  //  BOTTOM NAV — Profile rutea a /profile (que dispatch a admin_profile via
+  //  ProfileDispatcher). Los demás items quedan con un snackbar "próximamente"
+  //  hasta que existan las pantallas correspondientes.
   // ------------------------------------------------------------------ //
-  Widget _buildBottomNav() {
+  Widget _buildBottomNav(BuildContext context) {
     return ClipRect(
       child: BackdropFilter(
         filter: ImageFilter.blur(sigmaX: 24, sigmaY: 24),
@@ -607,11 +625,32 @@ class AdminDashboardScreen extends ConsumerWidget {
           child: Row(
             mainAxisAlignment: MainAxisAlignment.spaceAround,
             children: [
-              _navItem(icon: Icons.home_rounded, label: 'Home', active: true),
-              _navItem(icon: Icons.pending_actions_outlined, label: 'Requests'),
-              _navItem(icon: Icons.water_drop_outlined, label: 'Credits'),
-              _navItem(icon: Icons.storefront_outlined, label: 'Market'),
-              _navItem(icon: Icons.person_outline, label: 'Profile'),
+              _navItem(
+                icon: Icons.home_rounded,
+                label: 'Home',
+                active: true,
+                onTap: () {}, // ya estamos en home
+              ),
+              _navItem(
+                icon: Icons.pending_actions_outlined,
+                label: 'Requests',
+                onTap: () => _comingSoon(context, 'Requests'),
+              ),
+              _navItem(
+                icon: Icons.water_drop_outlined,
+                label: 'Credits',
+                onTap: () => _comingSoon(context, 'Credits'),
+              ),
+              _navItem(
+                icon: Icons.storefront_outlined,
+                label: 'Market',
+                onTap: () => _comingSoon(context, 'Marketplace'),
+              ),
+              _navItem(
+                icon: Icons.person_outline,
+                label: 'Profile',
+                onTap: () => context.go('/profile'),
+              ),
             ],
           ),
         ),
@@ -619,31 +658,49 @@ class AdminDashboardScreen extends ConsumerWidget {
     );
   }
 
-  Widget _navItem({required IconData icon, required String label, bool active = false}) {
+  Widget _navItem({
+    required IconData icon,
+    required String label,
+    required VoidCallback onTap,
+    bool active = false,
+  }) {
     final color = active ? _secondaryColor : _onSurfaceVariantColor;
-    return Container(
-      padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 6),
-      decoration: active
-          ? BoxDecoration(
-              color: _cyanColor.withValues(alpha: 0.10),
-              borderRadius: BorderRadius.circular(12),
-            )
-          : null,
-      child: Column(
-        mainAxisSize: MainAxisSize.min,
-        children: [
-          Icon(icon, color: color, size: 24),
-          const SizedBox(height: 2),
-          Text(
-            label,
-            style: TextStyle(
-              fontFamily: 'Inter',
-              fontSize: 11,
-              fontWeight: FontWeight.w600,
-              color: color,
+    return InkWell(
+      onTap: onTap,
+      borderRadius: BorderRadius.circular(12),
+      child: Container(
+        padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 6),
+        decoration: active
+            ? BoxDecoration(
+                color: _cyanColor.withValues(alpha: 0.10),
+                borderRadius: BorderRadius.circular(12),
+              )
+            : null,
+        child: Column(
+          mainAxisSize: MainAxisSize.min,
+          children: [
+            Icon(icon, color: color, size: 24),
+            const SizedBox(height: 2),
+            Text(
+              label,
+              style: TextStyle(
+                fontFamily: 'Inter',
+                fontSize: 11,
+                fontWeight: FontWeight.w600,
+                color: color,
+              ),
             ),
-          ),
-        ],
+          ],
+        ),
+      ),
+    );
+  }
+
+  void _comingSoon(BuildContext context, String name) {
+    ScaffoldMessenger.of(context).showSnackBar(
+      SnackBar(
+        content: Text('$name — pendiente de implementar'),
+        duration: const Duration(seconds: 2),
       ),
     );
   }
