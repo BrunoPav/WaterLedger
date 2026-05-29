@@ -20,14 +20,7 @@ class _ProjectInfoStepScreenState extends State<ProjectInfoStepScreen> {
   String _category = 'Conservation';
 
   static const _background = Color(0xFFF7F9FB);
-  static const _surface = Color(0xFFFFFFFF);
-  static const _surfaceLow = Color(0xFFF2F4F6);
-  static const _text = Color(0xFF191C1E);
-  static const _textVariant = Color(0xFF44474D);
-  static const _outlineVariant = Color(0xFFC5C6CD);
-  static const _secondary = Color(0xFF006875);
-  static const _cyan = Color(0xFF00E3FD);
-  static const _mint = Color(0xFFA3F69C);
+  // Color tokens removed to avoid unused-field analysis errors
 
   @override
   void dispose() {

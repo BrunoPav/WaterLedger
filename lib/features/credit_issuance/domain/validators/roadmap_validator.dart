@@ -1,4 +1,5 @@
 import 'package:water_ledger/features/credit_issuance/domain/entities/roadmap_entity.dart';
+import 'package:water_ledger/features/credit_issuance/domain/validators/phase_validator.dart';
 
 class RoadmapValidator {
   static List<String> validate(RoadmapEntity roadmap) {
@@ -9,13 +10,7 @@ class RoadmapValidator {
     }
 
     for (final phase in roadmap.phases) {
-      if (phase.startDate.isAfter(phase.endDate)) {
-        errors.add('La fase ${phase.name} tiene fechas inválidas.');
-      }
-
-      if (phase.milestones.isEmpty) {
-        errors.add('La fase ${phase.name} debe incluir hitos.');
-      }
+      errors.addAll(PhaseValidator.validate(phase));
     }
 
     return errors;

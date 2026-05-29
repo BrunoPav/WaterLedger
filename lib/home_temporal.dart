@@ -17,9 +17,9 @@ class HomeTemporal extends ConsumerWidget {
             Text('Contenido para probar pantallas'),
             ElevatedButton(
               onPressed: () {
-                context.push('/auditor');
+                context.push('/register');
               },
-              child: Text('Ir a Auditor'),
+              child: Text('Ir a Registro'),
             ),
             ElevatedButton(
               onPressed: () {

@@ -1,17 +1,18 @@
 import 'dart:ui';
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
+import 'package:water_ledger/features/auth/presentation/widgets/register_form.dart';
 
-class InsuranceRegisterSuccessScreen extends StatefulWidget {
-  const InsuranceRegisterSuccessScreen({super.key});
+class RegisterSuccessScreen extends StatefulWidget {
+  const RegisterSuccessScreen({super.key});
 
   @override
-  State<InsuranceRegisterSuccessScreen> createState() =>
-      _InsuranceRegisterSuccessScreenState();
+  State<RegisterSuccessScreen> createState() =>
+      _RegisterSuccessScreenState();
 }
 
-class _InsuranceRegisterSuccessScreenState
-    extends State<InsuranceRegisterSuccessScreen>
+class _RegisterSuccessScreenState
+    extends State<RegisterSuccessScreen>
     with TickerProviderStateMixin {
   late AnimationController _entryController;
   late Animation<double> _fadeAnim;
@@ -19,17 +20,6 @@ class _InsuranceRegisterSuccessScreenState
 
   late AnimationController _pulseController;
   late Animation<double> _pulseAnim;
-
-  // -- Design tokens --
-  static const _bgColor = Color(0xFFF7F9FB);
-  static const _primaryColor = Color(0xFF000000);
-  static const _onPrimaryColor = Color(0xFFFFFFFF);
-  static const _secondaryColor = Color(0xFF006875);
-  static const _cyanColor = Color(0xFF00E3FD);
-  static const _cyanDimColor = Color(0xFF00DAF3);
-  static const _onSurfaceColor = Color(0xFF191C1E);
-  static const _onSurfaceVariantColor = Color(0xFF44474D);
-  static const _outlineVariantColor = Color(0xFFC5C6CD);
 
   @override
   void initState() {
@@ -39,7 +29,7 @@ class _InsuranceRegisterSuccessScreenState
       vsync: this,
       duration: const Duration(milliseconds: 700),
     );
-    _fadeAnim = CurvedAnimation(parent: _entryController, curve: Curves.easeOut);
+    _fadeAnim  = CurvedAnimation(parent: _entryController, curve: Curves.easeOut);
     _scaleAnim = Tween<double>(begin: 0.5, end: 1.0).animate(
       CurvedAnimation(parent: _entryController, curve: Curves.elasticOut),
     );
@@ -64,7 +54,7 @@ class _InsuranceRegisterSuccessScreenState
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: _bgColor,
+      backgroundColor: RegisterFormTokens.bgColor,
       body: Stack(
         children: [
           Positioned(
@@ -75,7 +65,7 @@ class _InsuranceRegisterSuccessScreenState
               height: 260,
               decoration: BoxDecoration(
                 shape: BoxShape.circle,
-                color: _cyanColor.withValues(alpha: 0.08),
+                color: RegisterFormTokens.cyanColor.withValues(alpha: 0.08),
               ),
             ),
           ),
@@ -87,7 +77,7 @@ class _InsuranceRegisterSuccessScreenState
               height: 260,
               decoration: BoxDecoration(
                 shape: BoxShape.circle,
-                color: _primaryColor.withValues(alpha: 0.03),
+                color: RegisterFormTokens.primaryColor.withValues(alpha: 0.03),
               ),
             ),
           ),
@@ -136,7 +126,7 @@ class _InsuranceRegisterSuccessScreenState
               height: 192,
               decoration: BoxDecoration(
                 shape: BoxShape.circle,
-                color: _cyanColor.withValues(alpha: 0.15),
+                color: RegisterFormTokens.cyanColor.withValues(alpha: 0.15),
               ),
             ),
             Container(
@@ -147,21 +137,20 @@ class _InsuranceRegisterSuccessScreenState
                 gradient: const LinearGradient(
                   begin: Alignment.topRight,
                   end: Alignment.bottomLeft,
-                  colors: [_secondaryColor, _cyanDimColor],
+                  colors: [
+                    RegisterFormTokens.secondaryColor,
+                    RegisterFormTokens.cyanDim,
+                  ],
                 ),
                 boxShadow: [
                   BoxShadow(
-                    color: _secondaryColor.withValues(alpha: 0.35),
+                    color: RegisterFormTokens.secondaryColor.withValues(alpha: 0.35),
                     blurRadius: 32,
                     spreadRadius: 4,
                   ),
                 ],
               ),
-              child: const Icon(
-                Icons.check_rounded,
-                color: Colors.white,
-                size: 64,
-              ),
+              child: const Icon(Icons.check_rounded, color: Colors.white, size: 64),
             ),
           ],
         ),
@@ -179,7 +168,7 @@ class _InsuranceRegisterSuccessScreenState
             fontFamily: 'Manrope',
             fontSize: 26,
             fontWeight: FontWeight.w700,
-            color: _primaryColor,
+            color: RegisterFormTokens.primaryColor,
             letterSpacing: -0.5,
             height: 1.25,
           ),
@@ -191,7 +180,7 @@ class _InsuranceRegisterSuccessScreenState
           style: TextStyle(
             fontFamily: 'Inter',
             fontSize: 16,
-            color: _onSurfaceVariantColor,
+            color: RegisterFormTokens.onSurfaceVariantColor,
             height: 1.5,
           ),
         ),
@@ -209,19 +198,24 @@ class _InsuranceRegisterSuccessScreenState
           decoration: BoxDecoration(
             color: Colors.white.withValues(alpha: 0.70),
             borderRadius: BorderRadius.circular(16),
-            border: Border.all(color: _outlineVariantColor.withValues(alpha: 0.2)),
+            border: Border.all(
+              color: RegisterFormTokens.outlineVariant.withValues(alpha: 0.2),
+            ),
           ),
           child: Row(
             children: [
-              // Ícono específico de Insurance Provider — shield para diferenciar del auditor/certifier.
               Container(
                 width: 40,
                 height: 40,
                 decoration: BoxDecoration(
                   shape: BoxShape.circle,
-                  color: _cyanColor.withValues(alpha: 0.18),
+                  color: RegisterFormTokens.cyanColor.withValues(alpha: 0.18),
                 ),
-                child: const Icon(Icons.shield_outlined, color: _secondaryColor, size: 20),
+                child: const Icon(
+                  Icons.verified_user_outlined,
+                  color: RegisterFormTokens.secondaryColor,
+                  size: 20,
+                ),
               ),
               const SizedBox(width: 14),
               const Expanded(
@@ -234,7 +228,7 @@ class _InsuranceRegisterSuccessScreenState
                         fontFamily: 'Inter',
                         fontSize: 11,
                         fontWeight: FontWeight.w600,
-                        color: _onSurfaceVariantColor,
+                        color: RegisterFormTokens.onSurfaceVariantColor,
                         letterSpacing: 0.8,
                       ),
                     ),
@@ -245,7 +239,7 @@ class _InsuranceRegisterSuccessScreenState
                         fontFamily: 'Manrope',
                         fontSize: 18,
                         fontWeight: FontWeight.w600,
-                        color: _onSurfaceColor,
+                        color: RegisterFormTokens.onSurfaceColor,
                         letterSpacing: -0.2,
                       ),
                     ),
@@ -261,7 +255,7 @@ class _InsuranceRegisterSuccessScreenState
                     height: 10,
                     decoration: const BoxDecoration(
                       shape: BoxShape.circle,
-                      color: _cyanDimColor,
+                      color: RegisterFormTokens.cyanDim,
                     ),
                   ),
                 ),
@@ -283,20 +277,28 @@ class _InsuranceRegisterSuccessScreenState
           decoration: BoxDecoration(
             color: Colors.white.withValues(alpha: 0.55),
             borderRadius: BorderRadius.circular(16),
-            border: Border.all(color: _outlineVariantColor.withValues(alpha: 0.15)),
+            border: Border.all(
+              color: RegisterFormTokens.outlineVariant.withValues(alpha: 0.15),
+            ),
           ),
           child: Row(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              Icon(Icons.info_outline_rounded, color: _onSurfaceVariantColor.withValues(alpha: 0.7), size: 20),
+              Icon(
+                Icons.info_outline_rounded,
+                color: RegisterFormTokens.onSurfaceVariantColor.withValues(alpha: 0.7),
+                size: 20,
+              ),
               const SizedBox(width: 12),
               const Expanded(
                 child: Text(
-                  'Our institutional verification team is reviewing your Insurance Provider credentials. This process typically takes 24–48 business hours. You will receive an email notification once your account is active.',
+                  'Our institutional verification team is reviewing your credentials. '
+                  'This process typically takes 24–48 business hours. You will receive '
+                  'an email notification once your account is active.',
                   style: TextStyle(
                     fontFamily: 'Inter',
                     fontSize: 14,
-                    color: _onSurfaceVariantColor,
+                    color: RegisterFormTokens.onSurfaceVariantColor,
                     height: 1.6,
                   ),
                 ),
@@ -319,9 +321,11 @@ class _InsuranceRegisterSuccessScreenState
             child: ElevatedButton(
               onPressed: () => context.go('/login'),
               style: ElevatedButton.styleFrom(
-                backgroundColor: _primaryColor,
-                foregroundColor: _onPrimaryColor,
-                shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
+                backgroundColor: RegisterFormTokens.primaryColor,
+                foregroundColor: RegisterFormTokens.onPrimaryColor,
+                shape: RoundedRectangleBorder(
+                  borderRadius: BorderRadius.circular(12),
+                ),
                 elevation: 1,
               ),
               child: const Text(
@@ -340,7 +344,11 @@ class _InsuranceRegisterSuccessScreenState
               Row(
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: [
-                  Icon(Icons.water_drop, size: 14, color: _onSurfaceVariantColor.withValues(alpha: 0.45)),
+                  Icon(
+                    Icons.water_drop,
+                    size: 14,
+                    color: RegisterFormTokens.onSurfaceVariantColor.withValues(alpha: 0.45),
+                  ),
                   const SizedBox(width: 6),
                   Text(
                     'WATER LEDGER INC.',
@@ -348,7 +356,7 @@ class _InsuranceRegisterSuccessScreenState
                       fontFamily: 'Inter',
                       fontSize: 11,
                       fontWeight: FontWeight.w600,
-                      color: _onSurfaceVariantColor.withValues(alpha: 0.45),
+                      color: RegisterFormTokens.onSurfaceVariantColor.withValues(alpha: 0.45),
                       letterSpacing: 1.2,
                     ),
                   ),
@@ -360,7 +368,7 @@ class _InsuranceRegisterSuccessScreenState
                 style: TextStyle(
                   fontFamily: 'Inter',
                   fontSize: 10,
-                  color: _onSurfaceVariantColor.withValues(alpha: 0.4),
+                  color: RegisterFormTokens.onSurfaceVariantColor.withValues(alpha: 0.4),
                 ),
               ),
             ],

@@ -1,18 +1,17 @@
 import 'package:go_router/go_router.dart';
+import 'package:water_ledger/core/Stitch_Templates/Steps/step_3_project_info/project_info_step_screen.dart';
 import 'package:water_ledger/features/auditor/presentation/screens/auditor_screen.dart';
 import 'package:water_ledger/features/auditor/presentation/screens/documentation_screen.dart';
-import 'package:water_ledger/core/presentation/screens/auth/auditor_register_screen.dart';
-import 'package:water_ledger/core/presentation/screens/auth/auditor_register_success_screen.dart';
-import 'package:water_ledger/core/presentation/screens/auth/certifier_register_screen.dart';
-import 'package:water_ledger/core/presentation/screens/auth/certifier_register_success_screen.dart';
-import 'package:water_ledger/core/presentation/screens/auth/insurance_register_screen.dart';
-import 'package:water_ledger/core/presentation/screens/auth/insurance_register_success_screen.dart';
-import 'package:water_ledger/core/presentation/screens/auth/company_register_success_screen.dart';
-import 'package:water_ledger/core/presentation/screens/auth/corporate_onboarding_screen.dart';
-import 'package:water_ledger/core/presentation/screens/auth/retail_register_screen.dart';
-import 'package:water_ledger/core/presentation/screens/auth/retail_register_success_screen.dart';
-import 'package:water_ledger/core/presentation/screens/auth/login_screen.dart';
-import 'package:water_ledger/core/presentation/screens/auth/register_screen.dart';
+import 'package:water_ledger/features/auth/presentation/screens/auditor_register_screen.dart';
+import 'package:water_ledger/features/auth/presentation/screens/certifier_register_screen.dart';
+import 'package:water_ledger/features/auth/presentation/screens/insurance_register_screen.dart';
+import 'package:water_ledger/features/auth/presentation/screens/register_success_screen.dart';
+import 'package:water_ledger/features/auth/presentation/screens/company_register_success_screen.dart';
+import 'package:water_ledger/features/auth/presentation/screens/corporate_onboarding_screen.dart';
+import 'package:water_ledger/features/auth/presentation/screens/retail_register_screen.dart';
+import 'package:water_ledger/features/auth/presentation/screens/retail_register_success_screen.dart';
+import 'package:water_ledger/features/auth/presentation/screens/login_screen.dart';
+import 'package:water_ledger/features/auth/presentation/screens/register_screen.dart';
 import 'package:water_ledger/core/presentation/screens/splash_screen.dart';
 import 'package:water_ledger/features/credit_issuance/presentation/screens/credit_issuance_screen.dart';
 import 'package:water_ledger/features/credit_issuance/presentation/screens/roadmap_editor_screen.dart';
@@ -21,7 +20,6 @@ import 'package:water_ledger/features/credit_issuance/presentation/screens/reque
 import 'package:water_ledger/features/issuer/presentation/screen/issuing_company_screen.dart';
 import 'package:water_ledger/home_temporal.dart';
 
-import 'package:water_ledger/core/Stitch_Templates/Steps/step_3_project_info/project_info_step_screen.dart';
 
 final GoRouter appRouter = GoRouter(
   initialLocation: '/home', //iba splash
@@ -33,11 +31,10 @@ final GoRouter appRouter = GoRouter(
     GoRoute(path: '/company-register-success', builder: (context, state) => const CompanyRegisterSuccessScreen()),
     GoRoute(path: '/retail-register', builder: (context, state) => const RetailRegisterScreen()),
     GoRoute(path: '/auditor-register', builder: (context, state) => const AuditorRegisterScreen()),
-    GoRoute(path: '/auditor-register-success', builder: (context, state) => const AuditorRegisterSuccessScreen()),
+    GoRoute(path: '/register-success', builder: (context, state) => const RegisterSuccessScreen()),
     GoRoute(path: '/certifier-register', builder: (context, state) => const CertifierRegisterScreen()),
-    GoRoute(path: '/certifier-register-success', builder: (context, state) => const CertifierRegisterSuccessScreen()),
     GoRoute(path: '/insurance-register', builder: (context, state) => const InsuranceRegisterScreen()),
-    GoRoute(path: '/insurance-register-success', builder: (context, state) => const InsuranceRegisterSuccessScreen()),
+    GoRoute(path: '/insurance-register-success', builder: (context, state) => const RegisterSuccessScreen()),
     GoRoute(path: '/retail-register-success', builder: (context, state) => const RetailRegisterSuccessScreen()),
     GoRoute(path: '/home', builder: (context, state) => const HomeTemporal()),
     GoRoute(
