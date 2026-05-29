@@ -57,9 +57,10 @@ class _PendingRequestDetailScreenState
       );
       context.pop();
     } catch (e) {
+      // R016 — no mostrar el texto crudo del exception al usuario.
       if (!mounted) return;
       ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(content: Text('Error al aprobar: $e')),
+        const SnackBar(content: Text('No se pudo aprobar la solicitud. Intentá nuevamente.')),
       );
     } finally {
       if (mounted) setState(() => _isProcessing = false);
@@ -83,9 +84,10 @@ class _PendingRequestDetailScreenState
       );
       context.pop();
     } catch (e) {
+      // R016 — no mostrar el texto crudo del exception al usuario.
       if (!mounted) return;
       ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(content: Text('Error al rechazar: $e')),
+        const SnackBar(content: Text('No se pudo rechazar la solicitud. Intentá nuevamente.')),
       );
     } finally {
       if (mounted) setState(() => _isProcessing = false);
@@ -466,6 +468,8 @@ class _PendingRequestDetailScreenState
         return (data['certifierRoleData'] as Map?)?.cast<String, dynamic>();
       case UserRole.insurer:
         return (data['insurerRoleData'] as Map?)?.cast<String, dynamic>();
+      case UserRole.issuer:
+        return (data['issuerRoleData'] as Map?)?.cast<String, dynamic>();
       case UserRole.retail:
       case UserRole.company:
       case UserRole.admin:
@@ -481,6 +485,8 @@ class _PendingRequestDetailScreenState
         return 'Acreditación de certificación';
       case UserRole.insurer:
         return 'Autorización y cobertura';
+      case UserRole.issuer:
+        return 'Datos de empresa emisora';
       default:
         return 'Datos del rol';
     }
@@ -494,6 +500,8 @@ class _PendingRequestDetailScreenState
         return 'Certificadora';
       case UserRole.insurer:
         return 'Aseguradora';
+      case UserRole.issuer:
+        return 'Empresa emisora';
       case UserRole.company:
         return 'Empresa';
       case UserRole.retail:

@@ -465,6 +465,7 @@ class _ProfileEditScreenState extends ConsumerState<ProfileEditScreen> {
     return switch (role) {
       UserRole.retail => 'Retail Investor',
       UserRole.company => 'Registered Company',
+      UserRole.issuer => 'Issuing Company',
       UserRole.auditor => 'Certified Auditor',
       UserRole.certifier => 'Certification Entity',
       UserRole.insurer => 'Insurance Provider',

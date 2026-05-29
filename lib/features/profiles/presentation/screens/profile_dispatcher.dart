@@ -33,6 +33,8 @@ class ProfileDispatcher extends ConsumerWidget {
         return switch (user.role) {
           UserRole.retail => const RetailProfileScreen(),
           UserRole.company => const CompanyProfileScreen(),
+          // Issuer comparte vista de perfil con Company hasta tener IssuerProfileScreen propio.
+          UserRole.issuer => const CompanyProfileScreen(),
           UserRole.auditor => const AuditorProfileScreen(),
           UserRole.certifier => const CertifierProfileScreen(),
           UserRole.insurer => const InsurerProfileScreen(),

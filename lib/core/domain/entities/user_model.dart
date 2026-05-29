@@ -2,6 +2,7 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:water_ledger/core/domain/enums/user_permission.dart';
 import 'package:water_ledger/core/domain/enums/user_role.dart';
 import 'package:water_ledger/core/domain/enums/user_status.dart';
+import 'package:water_ledger/core/domain/enums/user_type.dart';
 
 class UserModel {
   final String uid;
@@ -32,6 +33,10 @@ class UserModel {
   bool get isAdmin   => role == UserRole.admin && status == UserStatus.active;
   bool get isActive  => status == UserStatus.active;
   bool get isPending => status == UserStatus.pending;
+
+  /// 4.1.4.1 — distinción Persona vs Empresa derivada del rol.
+  /// Solo `retail` es persona física, el resto opera como empresa.
+  UserType get userType => role == UserRole.retail ? UserType.person : UserType.company;
 
   factory UserModel.fromFirestore(Map<String, dynamic> data, String uid) {
     return UserModel(

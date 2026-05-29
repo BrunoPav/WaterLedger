@@ -55,17 +55,39 @@ class FirebaseAdminRepository implements AdminRepository {
 
   @override
   Future<void> approveUser(String uid) async {
+    final now = FieldValue.serverTimestamp();
     await _db.collection('users').doc(uid).update({
       'status': UserStatus.active.value,
-      'approvedAt': FieldValue.serverTimestamp(),
+      'approvedAt': now,
+      // `decisionAt` es el timestamp unificado para approve/reject — se usa para
+      // ordenar el feed de "Recent Audit Log" del admin profile.
+      'decisionAt': now,
     });
   }
 
   @override
   Future<void> rejectUser(String uid) async {
+    final now = FieldValue.serverTimestamp();
     await _db.collection('users').doc(uid).update({
       'status': UserStatus.rejected.value,
-      'rejectedAt': FieldValue.serverTimestamp(),
+      'rejectedAt': now,
+      'decisionAt': now,
     });
+  }
+
+  @override
+  Stream<List<AdminDecisionRecord>> recentDecisionsStream({int limit = 5}) {
+    // orderBy con descending sobre decisionAt filtra automáticamente los docs
+    // que no tienen ese campo (usuarios no procesados aún). Para los registros
+    // procesados antes de que se introdujera `decisionAt`, no aparecerán acá —
+    // limitación aceptada porque el log se empieza a llenar desde ahora.
+    return _db
+        .collection('users')
+        .orderBy('decisionAt', descending: true)
+        .limit(limit)
+        .snapshots()
+        .map((snap) => snap.docs
+            .map((doc) => AdminDecisionRecord.fromFirestore(doc.data(), doc.id))
+            .toList());
   }
 }

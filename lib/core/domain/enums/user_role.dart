@@ -1,6 +1,7 @@
 enum UserRole {
   retail,
   company,
+  issuer,
   auditor,
   certifier,
   insurer,
@@ -10,6 +11,7 @@ enum UserRole {
     switch (this) {
       case UserRole.retail:    return 'Retail';
       case UserRole.company:   return 'Company';
+      case UserRole.issuer:    return 'Issuer';
       case UserRole.auditor:   return 'Auditor';
       case UserRole.certifier: return 'Certifier';
       case UserRole.insurer:   return 'Insurer';

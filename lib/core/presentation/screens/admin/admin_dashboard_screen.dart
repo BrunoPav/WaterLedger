@@ -577,6 +577,8 @@ class AdminDashboardScreen extends ConsumerWidget {
         return 'Certificadora';
       case UserRole.insurer:
         return 'Aseguradora';
+      case UserRole.issuer:
+        return 'Empresa emisora';
       case UserRole.company:
         return 'Empresa';
       case UserRole.retail:

@@ -64,10 +64,11 @@ class _LoginScreenState extends ConsumerState<LoginScreen> {
         SnackBar(content: Text(e.message)),
       );
     } catch (e) {
-      // Cualquier otro error inesperado (ej: Firestore down)
+      // Cualquier otro error inesperado (ej: Firestore down). NO mostramos `$e`
+      // para evitar information disclosure (R016) — el detalle queda solo en logs.
       if (!mounted) return;
       ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(content: Text('Error inesperado: $e')),
+        const SnackBar(content: Text('Ocurrió un error inesperado. Intentá nuevamente.')),
       );
     } finally {
       if (mounted) setState(() => _isLoading = false);

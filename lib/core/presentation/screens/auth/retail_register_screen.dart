@@ -103,9 +103,10 @@ class _RetailRegisterScreenState extends ConsumerState<RetailRegisterScreen> {
       if (!mounted) return;
       ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text(e.message)));
     } catch (e) {
+      // R016 — fallback sin leak del texto crudo del exception.
       if (!mounted) return;
       ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(content: Text('Error inesperado: $e')),
+        const SnackBar(content: Text('Ocurrió un error inesperado. Intentá nuevamente.')),
       );
     } finally {
       if (mounted) setState(() => _isLoading = false);

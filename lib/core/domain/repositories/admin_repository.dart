@@ -1,4 +1,38 @@
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:water_ledger/core/domain/entities/user_model.dart';
+import 'package:water_ledger/core/domain/enums/user_role.dart';
+import 'package:water_ledger/core/domain/enums/user_status.dart';
+
+/// Registro reducido para el feed "Recent Audit Log" del perfil admin.
+/// Combina el dato del usuario afectado con la decisión que tomó el admin.
+class AdminDecisionRecord {
+  final String uid;
+  final String displayName;
+  final String email;
+  final UserRole role;
+  final UserStatus decision;
+  final DateTime decidedAt;
+
+  const AdminDecisionRecord({
+    required this.uid,
+    required this.displayName,
+    required this.email,
+    required this.role,
+    required this.decision,
+    required this.decidedAt,
+  });
+
+  factory AdminDecisionRecord.fromFirestore(Map<String, dynamic> data, String uid) {
+    return AdminDecisionRecord(
+      uid: uid,
+      displayName: (data['displayName'] as String?) ?? '',
+      email: (data['email'] as String?) ?? '',
+      role: UserRole.fromString(data['role'] as String? ?? 'Retail'),
+      decision: UserStatus.fromString(data['status'] as String? ?? 'pending'),
+      decidedAt: (data['decisionAt'] as Timestamp).toDate(),
+    );
+  }
+}
 
 /// Operaciones que ejecuta un usuario con rol Admin sobre el resto de la plataforma.
 abstract class AdminRepository {
@@ -23,4 +57,8 @@ abstract class AdminRepository {
 
   /// Marca al usuario como rechazado: `status = 'rejected'`.
   Future<void> rejectUser(String uid);
+
+  /// Últimas N decisiones del admin (aprobaciones + rechazos) ordenadas por
+  /// `decisionAt` descendente. Alimenta el feed "Recent Audit Log" del perfil.
+  Stream<List<AdminDecisionRecord>> recentDecisionsStream({int limit});
 }

@@ -30,3 +30,10 @@ final userFullDataProvider =
     FutureProvider.family<Map<String, dynamic>, String>((ref, uid) {
   return ref.watch(adminRepositoryProvider).fetchUserFullData(uid);
 });
+
+/// Stream de las últimas decisiones admin (aprobaciones/rechazos).
+/// Alimenta el feed "Recent Audit Log" del perfil del admin.
+final recentAdminDecisionsProvider =
+    StreamProvider<List<AdminDecisionRecord>>((ref) {
+  return ref.watch(adminRepositoryProvider).recentDecisionsStream(limit: 5);
+});

@@ -1,0 +1,119 @@
+rules_version = '2';
+
+// Reglas de seguridad de Firestore para WaterLedger.
+// Implementa 4.1.4.5 (Validación de permisos backend) y mitiga R002 + R005.
+//
+// Modelo:
+//   - users/{uid}: doc de cada usuario. Lo crea el cliente al registrarse.
+//   - Solo el admin puede cambiar 'role', 'status' y 'permissions' después de creado.
+//   - Solo el admin puede leer documentos de otros usuarios (para el dashboard
+//     de pending approvals y para asignar auditor/certificador).
+service cloud.firestore {
+  match /databases/{database}/documents {
+
+    // ---------- helpers ----------
+    function isSignedIn() {
+      return request.auth != null;
+    }
+
+    function isSelf(uid) {
+      return isSignedIn() && request.auth.uid == uid;
+    }
+
+    function callerData() {
+      return get(/databases/$(database)/documents/users/$(request.auth.uid)).data;
+    }
+
+    function isAdmin() {
+      return isSignedIn()
+        && exists(/databases/$(database)/documents/users/$(request.auth.uid))
+        && callerData().role == 'Admin'
+        && callerData().status == 'active';
+    }
+
+    // Lista de campos cuyo cambio queda reservado al admin.
+    // El cliente NO puede tocarlos sobre su propio doc.
+    function touchesPrivileged(before, after) {
+      return before.role != after.role
+        || before.status != after.status
+        || before.permissions != after.permissions;
+    }
+
+    // Lista de roles válidos del enum UserRole.
+    function isValidRole(role) {
+      return role in ['Retail', 'Company', 'Issuer', 'Auditor', 'Certifier', 'Insurer'];
+    }
+
+    // Status inicial permitido al crear un usuario desde el cliente.
+    function isValidInitialStatus(role, status) {
+      // Retail y Company se activan al toque. B2B (Issuer/Auditor/Certifier/Insurer)
+      // quedan pending hasta que un admin los apruebe.
+      return (role in ['Retail', 'Company'] && status == 'active')
+          || (role in ['Issuer', 'Auditor', 'Certifier', 'Insurer'] && status == 'pending');
+    }
+
+    // ---------- users ----------
+    match /users/{uid} {
+
+      // Read:
+      //   - El usuario puede leer su propio doc.
+      //   - El admin puede leer cualquiera (dashboard de pending approvals).
+      allow read: if isSelf(uid) || isAdmin();
+
+      // Create: cualquiera signed-in puede crear SU propio doc, siempre que:
+      //   - El uid del doc coincida con su auth.uid
+      //   - El role sea uno válido y NO sea 'Admin' (admin solo se crea via consola
+      //     o via el método registerAdmin con tooling separado)
+      //   - El status inicial sea coherente con el role
+      allow create: if isSelf(uid)
+                    && request.resource.data.role != 'Admin'
+                    && isValidRole(request.resource.data.role)
+                    && isValidInitialStatus(
+                         request.resource.data.role,
+                         request.resource.data.status
+                       );
+
+      // Update:
+      //   - El admin puede actualizar cualquier doc, incluyendo role/status/permissions
+      //   - El usuario puede actualizar su propio doc PERO sin tocar campos privilegiados
+      allow update: if isAdmin()
+                    || (isSelf(uid) && !touchesPrivileged(resource.data, request.resource.data));
+
+      // Delete:
+      //   - Solo el admin puede borrar usuarios. Sin embargo, lo recomendado
+      //     es soft-delete cambiando status, así queda historial.
+      allow delete: if isAdmin();
+    }
+
+    // ---------- audit_log (preparado para R005 - LA005) ----------
+    // Append-only. Solo admins leen/escriben. Nadie puede modificar o borrar
+    // registros — son inmutables para auditoría.
+    match /audit_log/{logId} {
+      allow read:   if isAdmin();
+      allow create: if isAdmin()
+                    && request.resource.data.actorUid == request.auth.uid;
+      allow update, delete: if false;
+    }
+
+    // ---------- projects, certifications, valuations ----------
+    // Colecciones referenciadas en KPIs del admin dashboard.
+    // Por ahora: solo admin lee/escribe. Las reglas se irán afinando cuando
+    // se implementen los módulos 4.6.3 y 4.6.4.
+    match /projects/{projectId} {
+      allow read, write: if isAdmin();
+    }
+    match /certifications/{certId} {
+      allow read, write: if isAdmin();
+    }
+    match /valuations/{valId} {
+      allow read, write: if isAdmin();
+    }
+
+    // ---------- default deny ----------
+    // Cualquier otra colección queda cerrada hasta que se definan sus reglas
+    // explícitamente.
+    match /{document=**} {
+      allow read, write: if false;
+    }
+  }
+}

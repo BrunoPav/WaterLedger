@@ -40,6 +40,11 @@ class HomeDispatcher extends ConsumerWidget {
         return switch (user.role) {
           UserRole.retail => const RetailDashboardScreen(),
           UserRole.company => const CompanyDashboardScreen(),
+          // Issuer (Empresa emisora) comparte dashboard con Company por ahora —
+          // 4.1.4.2 lo marca como rol distinto pero la diferenciación de UI
+          // todavía no está implementada. Cuando exista IssuerDashboardScreen,
+          // reemplazar este case.
+          UserRole.issuer => const CompanyDashboardScreen(),
           UserRole.auditor => const AuditorDashboardScreen(),
           UserRole.certifier => const CertifierDashboardScreen(),
           UserRole.insurer => const InsurerDashboardScreen(),

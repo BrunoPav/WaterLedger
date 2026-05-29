@@ -2,6 +2,8 @@ import 'dart:ui';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
+import 'package:water_ledger/core/domain/exceptions/auth_exception.dart';
+import 'package:water_ledger/core/domain/validators/auth_validators.dart';
 import 'package:water_ledger/core/presentation/providers/session_provider.dart';
 
 class CorporateOnboardingScreen extends ConsumerStatefulWidget {
@@ -78,10 +80,15 @@ class _CorporateOnboardingScreenState
     final password = _passwordController.text;
     final companyName = _companyNameController.text.trim();
     final cuit = _taxIdController.text.trim();
-    if (email.isEmpty || password.isEmpty || companyName.isEmpty) {
-      ScaffoldMessenger.of(context).showSnackBar(
-        const SnackBar(content: Text('Completá todos los campos requeridos')),
-      );
+    // 4.1.2.6 + 4.1.2.7 — validación de email, password y CUIT antes de Firebase.
+    final error = AuthValidators.firstError([
+      () => AuthValidators.required(companyName, 'el nombre de la empresa'),
+      () => AuthValidators.cuit(cuit),
+      () => AuthValidators.email(email),
+      () => AuthValidators.password(password, requireStrong: true),
+    ]);
+    if (error != null) {
+      ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text(error)));
       return;
     }
     setState(() => _isLoading = true);
@@ -94,10 +101,15 @@ class _CorporateOnboardingScreenState
       );
       if (!mounted) return;
       context.go('/company-register-success');
+    } on AuthException catch (e) {
+      // 4.1.3.6 / R016 — mensaje seguro mapeado por el repo.
+      if (!mounted) return;
+      ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text(e.message)));
     } catch (e) {
+      // Fallback genérico para errores no-Firebase. NO mostramos `$e`.
       if (!mounted) return;
       ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(content: Text('Error al registrarse: $e')),
+        const SnackBar(content: Text('Ocurrió un error inesperado. Intentá nuevamente.')),
       );
     } finally {
       if (mounted) setState(() => _isLoading = false);

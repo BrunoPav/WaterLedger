@@ -2,6 +2,8 @@ import 'dart:ui';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
+import 'package:water_ledger/core/domain/exceptions/auth_exception.dart';
+import 'package:water_ledger/core/domain/validators/auth_validators.dart';
 import 'package:water_ledger/core/presentation/providers/session_provider.dart';
 import 'package:water_ledger/core/presentation/widgets/date_picker_field.dart';
 
@@ -130,16 +132,19 @@ class _CertifierRegisterScreenState extends ConsumerState<CertifierRegisterScree
     final email = _emailCuentaController.text.trim();
     final password = _passwordController.text;
     final confirmPassword = _confirmPasswordController.text;
-    if (email.isEmpty || password.isEmpty) {
-      ScaffoldMessenger.of(context).showSnackBar(
-        const SnackBar(content: Text('Completá email y contraseña')),
-      );
-      return;
-    }
-    if (password != confirmPassword) {
-      ScaffoldMessenger.of(context).showSnackBar(
-        const SnackBar(content: Text('Las contraseñas no coinciden')),
-      );
+    // 4.1.2.6 + 4.1.2.7 — validación de campos mínimos + formato email + fortaleza password.
+    final error = AuthValidators.firstError([
+      () => AuthValidators.email(email),
+      () => AuthValidators.password(password, requireStrong: true),
+      () => AuthValidators.passwordConfirm(confirmPassword, password),
+      () => AuthValidators.required(_nombreFantasiaController.text, 'el nombre de la empresa'),
+      () => AuthValidators.cuit(_cuitController.text),
+      () => AuthValidators.required(_nombreApellidoController.text, 'el nombre del representante'),
+      () => AuthValidators.required(_entidadAcreditadoraController.text, 'la entidad acreditadora'),
+      () => AuthValidators.required(_numeroAcreditacionController.text, 'el N° de acreditación'),
+    ]);
+    if (error != null) {
+      ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text(error)));
       return;
     }
     setState(() => _isLoading = true);
@@ -180,10 +185,15 @@ class _CertifierRegisterScreenState extends ConsumerState<CertifierRegisterScree
       );
       if (!mounted) return;
       context.go('/certifier-register-success');
+    } on AuthException catch (e) {
+      // 4.1.3.6 / R016 — mensaje seguro mapeado por el repo.
+      if (!mounted) return;
+      ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text(e.message)));
     } catch (e) {
+      // Fallback genérico para errores no-Firebase. NO mostramos `$e`.
       if (!mounted) return;
       ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(content: Text('Error al registrarse: $e')),
+        const SnackBar(content: Text('Ocurrió un error inesperado. Intentá nuevamente.')),
       );
     } finally {
       if (mounted) setState(() => _isLoading = false);
