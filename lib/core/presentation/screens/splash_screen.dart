@@ -287,7 +287,7 @@ class _SplashScreenState extends State<SplashScreen>
                 ),
                 SizedBox(width: 8),
                 Text(
-                  'Carbon Neutral Infrastructure',
+                  'Institutional Water Credit Excellence',
                   style: TextStyle(
                     fontFamily: 'Inter',
                     fontSize: 13,

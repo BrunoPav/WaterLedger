@@ -5,21 +5,12 @@ import 'package:go_router/go_router.dart';
 import 'package:water_ledger/features/credit_issuance/domain/entities/project_phase_entity.dart';
 import 'package:water_ledger/features/credit_issuance/domain/entities/roadmap_entity.dart';
 import 'package:water_ledger/features/credit_issuance/domain/enums/milestones.dart';
+// Phase validation is handled by the RoadmapEditorNotifier now.
 import 'package:water_ledger/features/credit_issuance/domain/validators/roadmap_validator.dart';
+import 'package:water_ledger/features/credit_issuance/presentation/constants/milestone_labels.dart';
+import 'package:water_ledger/features/credit_issuance/presentation/models/roadmap_phase_draft_model.dart';
 import 'package:water_ledger/features/credit_issuance/presentation/providers/credit_request_notifier.dart';
-
-// Labels legibles para cada hito del enum
-const Map<Milestones, String> _milestoneLabels = {
-  Milestones.initialAudit: 'Initial Audit',
-  Milestones.meterInstalation: 'Meter Installation',
-  Milestones.infrastructureValidation: 'Infrastructure Validation',
-  Milestones.operativeSistem: 'Operative System',
-  Milestones.firstWaterSavingRegistered: 'First Water Saving',
-  Milestones.ambientalReportGenerated: 'Environmental Report',
-  Milestones.proyectFinalized: 'Project Finalized',
-  Milestones.impactVerificated: 'Impact Verified',
-  Milestones.proyectReadyToInssue: 'Ready to Issue',
-};
+import 'package:water_ledger/features/credit_issuance/presentation/providers/roadmap_editor_notifier.dart';
 
 class RoadmapEditorScreen extends ConsumerStatefulWidget {
   const RoadmapEditorScreen({super.key});
@@ -29,14 +20,7 @@ class RoadmapEditorScreen extends ConsumerStatefulWidget {
 }
 
 class _RoadmapEditorScreenState extends ConsumerState<RoadmapEditorScreen> {
-  // Lista persistida de fases ya cargadas
-  final List<PhaseEntity> _phases = [];
-
-  // Buffer de la fase que el usuario está completando ahora mismo
-  final _phaseNameController = TextEditingController();
-  DateTime? _startDate;
-  DateTime? _endDate;
-  final Set<Milestones> _selectedMilestones = {};
+  final _phaseDraft = RoadmapPhaseDraftModel();
 
   // -- Design tokens (consistentes con resto de la app) --
   static const _bgColor = Color(0xFFF7F9FB);
@@ -53,7 +37,7 @@ class _RoadmapEditorScreenState extends ConsumerState<RoadmapEditorScreen> {
 
   @override
   void dispose() {
-    _phaseNameController.dispose();
+    _phaseDraft.dispose();
     super.dispose();
   }
 
@@ -61,42 +45,18 @@ class _RoadmapEditorScreenState extends ConsumerState<RoadmapEditorScreen> {
   //  BUFFER → PhaseEntity
   // ------------------------------------------------------------------ //
   void _addPhase() {
-    final name = _phaseNameController.text.trim();
-    if (name.isEmpty || _startDate == null || _endDate == null || _selectedMilestones.isEmpty) {
+    final errors = ref.read(roadmapEditorProvider.notifier).addPhaseFromDraft(_phaseDraft);
+    if (errors.isNotEmpty) {
       ScaffoldMessenger.of(context).showSnackBar(
-        const SnackBar(
-          content: Text('Completá nombre, fechas y al menos un hito.'),
-          duration: Duration(seconds: 2),
-        ),
-      );
-      return;
-    }
-    if (_startDate!.isAfter(_endDate!)) {
-      ScaffoldMessenger.of(context).showSnackBar(
-        const SnackBar(
-          content: Text('La fecha de inicio no puede ser posterior a la de fin.'),
-          duration: Duration(seconds: 2),
+        SnackBar(
+          content: Text(errors.first),
+          duration: const Duration(seconds: 2),
         ),
       );
       return;
     }
 
-    setState(() {
-      _phases.add(PhaseEntity(
-        name: name,
-        startDate: _startDate!,
-        endDate: _endDate!,
-        milestones: _selectedMilestones.toList(),
-      ));
-      _phaseNameController.clear();
-      _startDate = null;
-      _endDate = null;
-      _selectedMilestones.clear();
-    });
-  }
-
-  void _removePhase(int index) {
-    setState(() => _phases.removeAt(index));
+    _phaseDraft.reset();
   }
 
   Future<void> _pickDate({required bool isStart}) async {
@@ -115,19 +75,20 @@ class _RoadmapEditorScreenState extends ConsumerState<RoadmapEditorScreen> {
         child: child!,
       ),
     );
+
     if (picked != null) {
       setState(() {
         if (isStart) {
-          _startDate = picked;
+          _phaseDraft.startDate = picked;
         } else {
-          _endDate = picked;
+          _phaseDraft.endDate = picked;
         }
       });
     }
   }
 
   Future<void> _saveAndContinue() async {
-    final roadmap = RoadmapEntity(phases: _phases);
+    final roadmap = ref.read(roadmapEditorProvider);
     final errors = RoadmapValidator.validate(roadmap);
     if (errors.isNotEmpty) {
       ScaffoldMessenger.of(context).showSnackBar(
@@ -155,7 +116,7 @@ class _RoadmapEditorScreenState extends ConsumerState<RoadmapEditorScreen> {
   }
 
   Future<void> _submitRequest() async {
-    final roadmap = RoadmapEntity(phases: _phases);
+    final roadmap = ref.read(roadmapEditorProvider);
     final errors = RoadmapValidator.validate(roadmap);
     if (errors.isNotEmpty) {
       ScaffoldMessenger.of(context).showSnackBar(
@@ -186,6 +147,8 @@ class _RoadmapEditorScreenState extends ConsumerState<RoadmapEditorScreen> {
   // ------------------------------------------------------------------ //
   @override
   Widget build(BuildContext context) {
+    final roadmap = ref.watch(roadmapEditorProvider);
+
     return Scaffold(
       backgroundColor: _bgColor,
       body: Column(
@@ -205,7 +168,7 @@ class _RoadmapEditorScreenState extends ConsumerState<RoadmapEditorScreen> {
                   const SizedBox(height: 16),
                   _buildInstitutionalTipCard(),
                   const SizedBox(height: 16),
-                  _buildTimelineCard(),
+                  _buildTimelineCard(roadmap),
                 ],
               ),
             ),
@@ -400,7 +363,7 @@ class _RoadmapEditorScreenState extends ConsumerState<RoadmapEditorScreen> {
               _buildLabel('Project Phase Name'),
               const SizedBox(height: 6),
               _buildTextField(
-                controller: _phaseNameController,
+                controller: _phaseDraft.nameController,
                 hint: 'e.g., Infrastructure Development',
               ),
               const SizedBox(height: 18),
@@ -413,7 +376,7 @@ class _RoadmapEditorScreenState extends ConsumerState<RoadmapEditorScreen> {
                         _buildLabel('Start Date'),
                         const SizedBox(height: 6),
                         _buildDatePickerButton(
-                          date: _startDate,
+                          date: _phaseDraft.startDate,
                           onTap: () => _pickDate(isStart: true),
                         ),
                       ],
@@ -427,7 +390,7 @@ class _RoadmapEditorScreenState extends ConsumerState<RoadmapEditorScreen> {
                         _buildLabel('Estimated Completion'),
                         const SizedBox(height: 6),
                         _buildDatePickerButton(
-                          date: _endDate,
+                          date: _phaseDraft.endDate,
                           onTap: () => _pickDate(isStart: false),
                         ),
                       ],
@@ -442,13 +405,13 @@ class _RoadmapEditorScreenState extends ConsumerState<RoadmapEditorScreen> {
                 spacing: 8,
                 runSpacing: 8,
                 children: Milestones.values.map((m) {
-                  final selected = _selectedMilestones.contains(m);
+                  final selected = _phaseDraft.selectedMilestones.contains(m);
                   return GestureDetector(
                     onTap: () => setState(() {
                       if (selected) {
-                        _selectedMilestones.remove(m);
+                        _phaseDraft.selectedMilestones.remove(m);
                       } else {
-                        _selectedMilestones.add(m);
+                        _phaseDraft.selectedMilestones.add(m);
                       }
                     }),
                     child: AnimatedContainer(
@@ -466,7 +429,7 @@ class _RoadmapEditorScreenState extends ConsumerState<RoadmapEditorScreen> {
                         mainAxisSize: MainAxisSize.min,
                         children: [
                           Text(
-                            _milestoneLabels[m] ?? m.name,
+                            milestoneLabels[m] ?? m.name,
                             style: TextStyle(
                               fontFamily: 'Inter',
                               fontSize: 12,
@@ -565,7 +528,7 @@ class _RoadmapEditorScreenState extends ConsumerState<RoadmapEditorScreen> {
   // ------------------------------------------------------------------ //
   //  CARD — Visual Timeline
   // ------------------------------------------------------------------ //
-  Widget _buildTimelineCard() {
+  Widget _buildTimelineCard(RoadmapEntity roadmap) {
     return ClipRRect(
       borderRadius: BorderRadius.circular(16),
       child: BackdropFilter(
@@ -597,10 +560,10 @@ class _RoadmapEditorScreenState extends ConsumerState<RoadmapEditorScreen> {
                 ],
               ),
               const SizedBox(height: 20),
-              if (_phases.isEmpty)
+              if (roadmap.phases.isEmpty)
                 _buildEmptyTimeline()
               else
-                ..._buildTimelineItems(),
+                ..._buildTimelineItems(roadmap),
             ],
           ),
         ),
@@ -629,11 +592,11 @@ class _RoadmapEditorScreenState extends ConsumerState<RoadmapEditorScreen> {
     );
   }
 
-  List<Widget> _buildTimelineItems() {
+  List<Widget> _buildTimelineItems(RoadmapEntity roadmap) {
     final items = <Widget>[];
-    for (var i = 0; i < _phases.length; i++) {
-      final phase = _phases[i];
-      final isLast = i == _phases.length - 1;
+    for (var i = 0; i < roadmap.phases.length; i++) {
+      final phase = roadmap.phases[i];
+      final isLast = i == roadmap.phases.length - 1;
       final isCurrent = i == 0;
       items.add(_buildTimelineItem(
         phase: phase,
@@ -734,7 +697,7 @@ class _RoadmapEditorScreenState extends ConsumerState<RoadmapEditorScreen> {
                         ] else
                           const Spacer(),
                         GestureDetector(
-                          onTap: () => _removePhase(index),
+                          onTap: () => ref.read(roadmapEditorProvider.notifier).removePhase(index),
                           child: Icon(
                             Icons.close,
                             size: 18,
@@ -774,7 +737,7 @@ class _RoadmapEditorScreenState extends ConsumerState<RoadmapEditorScreen> {
                             borderRadius: BorderRadius.circular(99),
                           ),
                           child: Text(
-                            _milestoneLabels[m] ?? m.name,
+                            milestoneLabels[m] ?? m.name,
                             style: TextStyle(
                               fontFamily: 'Inter',
                               fontSize: 10,

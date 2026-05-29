@@ -25,9 +25,6 @@ class CreditRequestNotifier extends Notifier<CreditRequestEntity> {
       issuerCompanyId: '',
       proyectoId: '',
       creditAmount: 0.0,
-      // Versión anterior inicializaba con pending — corregido a draft
-      // ya que el estado inicial de una solicitud recién instanciada es borrador:
-      // status: RequestStatus.pending,
       status: RequestStatus.draft,
       createdAt: DateTime.now(),
     );
@@ -42,7 +39,6 @@ class CreditRequestNotifier extends Notifier<CreditRequestEntity> {
     await _updateRoadmapUseCase(state.id, roadmap);
     state.roadmap = roadmap;
     state.updatedAt = DateTime.now();
-    // Forzar rebuild del state mutando la referencia
     state = state;
   }
 
