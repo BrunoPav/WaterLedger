@@ -340,7 +340,11 @@ class _AuditorRegisterSuccessScreenState
             width: double.infinity,
             height: 56,
             child: ElevatedButton(
-              onPressed: () => context.go('/login'),
+              // Navegamos directo a /home en lugar de /login para evitar el rebote
+              // por el guard del router. El user ya está autenticado en Firebase;
+              // /home dispatch al dashboard del rol (status pending o no, el
+              // dashboard maneja ese estado en su UI).
+              onPressed: () => context.go('/home'),
               style: ElevatedButton.styleFrom(
                 backgroundColor: _primaryColor,
                 foregroundColor: _onPrimaryColor,
@@ -348,7 +352,7 @@ class _AuditorRegisterSuccessScreenState
                 elevation: 1,
               ),
               child: const Text(
-                'Back to Login',
+                'Continue',
                 style: TextStyle(
                   fontFamily: 'Manrope',
                   fontSize: 16,

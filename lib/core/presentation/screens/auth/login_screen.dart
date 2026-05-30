@@ -56,6 +56,19 @@ class _LoginScreenState extends ConsumerState<LoginScreen> {
     try {
       await ref.read(authRepositoryProvider).login(email: email, password: password);
       if (!mounted) return;
+      // Bug del race condition logout → login:
+      //   - Después del logout sessionProvider.value queda en data(null)
+      //   - La asyncMap (authStream → _fetchUserModel) NO vuelve a loading
+      //     cuando authStream emite el nuevo user — se queda con el data(null)
+      //     stale mientras procesa el snapshots
+      //   - El router guard lee session.value, ve null, patea a /login → loop
+      //
+      // Fix: invalidamos sessionProvider. Eso fuerza re-creación, dejándolo
+      // en AsyncValue.loading(). El redirect del router ya hace
+      // `if (session.isLoading) return null;` → no patea durante loading.
+      // /home renderiza, HomeDispatcher muestra spinner ~100ms hasta que la
+      // nueva asyncMap emita el UserModel real, y ahí dispatch al dashboard.
+      ref.invalidate(sessionProvider);
       context.go('/home');
     } on AuthException catch (e) {
       // Mensaje user-friendly traducido del código de FirebaseAuthException

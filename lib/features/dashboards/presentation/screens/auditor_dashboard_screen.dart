@@ -7,6 +7,7 @@ import 'package:water_ledger/features/dashboards/presentation/widgets/activity_t
 import 'package:water_ledger/features/dashboards/presentation/widgets/dashboard_bottom_nav.dart';
 import 'package:water_ledger/features/dashboards/presentation/widgets/dashboard_tokens.dart';
 import 'package:water_ledger/features/dashboards/presentation/widgets/dashboard_top_bar.dart';
+import 'package:water_ledger/features/dashboards/presentation/widgets/pending_approval_banner.dart';
 import 'package:water_ledger/features/dashboards/presentation/widgets/section_header.dart';
 import 'package:water_ledger/features/dashboards/presentation/widgets/stat_card.dart';
 
@@ -31,6 +32,11 @@ class AuditorDashboardScreen extends ConsumerWidget {
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
             _buildSubtitle(sessionAsync),
+            // Banner visible solo si la cuenta está pending de aprobación admin.
+            if (sessionAsync.value?.isPending ?? false) ...[
+              const SizedBox(height: 16),
+              const PendingApprovalBanner(),
+            ],
             const SizedBox(height: 20),
             _buildKpiGrid(),
             const SizedBox(height: 28),
@@ -79,10 +85,18 @@ class AuditorDashboardScreen extends ConsumerWidget {
       ),
       data: (user) {
         final name = user?.displayName ?? '';
+        final isPending = user?.isPending ?? false;
+        // Si está pending no mostramos el texto de acción ("Manage assigned ...")
+        // porque la cuenta no puede actuar aún — el banner ámbar amplifica el mensaje.
+        final text = isPending
+            ? (name.isEmpty
+                ? 'Your registration is currently under review.'
+                : 'Welcome, $name. Your registration is currently under review.')
+            : (name.isEmpty
+                ? 'Manage assigned project audits and verification processes.'
+                : 'Welcome, $name. Manage assigned project audits and verification processes.');
         return Text(
-          name.isEmpty
-              ? 'Manage assigned project audits and verification processes.'
-              : 'Welcome, $name. Manage assigned project audits and verification processes.',
+          text,
           style: const TextStyle(
             fontFamily: 'Inter',
             fontSize: 14,

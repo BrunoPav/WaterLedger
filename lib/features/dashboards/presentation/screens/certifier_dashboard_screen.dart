@@ -7,6 +7,7 @@ import 'package:water_ledger/features/dashboards/presentation/widgets/activity_t
 import 'package:water_ledger/features/dashboards/presentation/widgets/dashboard_bottom_nav.dart';
 import 'package:water_ledger/features/dashboards/presentation/widgets/dashboard_tokens.dart';
 import 'package:water_ledger/features/dashboards/presentation/widgets/dashboard_top_bar.dart';
+import 'package:water_ledger/features/dashboards/presentation/widgets/pending_approval_banner.dart';
 import 'package:water_ledger/features/dashboards/presentation/widgets/section_header.dart';
 import 'package:water_ledger/features/dashboards/presentation/widgets/stat_card.dart';
 
@@ -34,6 +35,12 @@ class CertifierDashboardScreen extends ConsumerWidget {
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
             _buildHeader(sessionAsync),
+            // Banner visible solo si la cuenta está pending de aprobación admin.
+            // Mantiene al usuario informado de que la cuenta está en revisión.
+            if (sessionAsync.value?.isPending ?? false) ...[
+              const SizedBox(height: 16),
+              const PendingApprovalBanner(),
+            ],
             const SizedBox(height: 22),
             _buildKpiGrid(),
             const SizedBox(height: 28),
@@ -83,12 +90,23 @@ class CertifierDashboardScreen extends ConsumerWidget {
       ),
       data: (user) {
         final name = user?.displayName ?? '';
+        final isPending = user?.isPending ?? false;
+        // Cambiamos el subtítulo según el status: si está pending, no mostramos
+        // texto de acción (porque la cuenta todavía no puede actuar) — el banner
+        // amber se encarga del mensaje principal.
+        final subtitle = isPending
+            ? (name.isEmpty
+                ? 'Your registration is currently under review.'
+                : 'Welcome, $name. Your registration is currently under review.')
+            : (name.isEmpty
+                ? 'Review approved audit projects and manage certification decisions.'
+                : 'Welcome, $name. Review approved audit projects and manage certification decisions.');
         return Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            Text(
-              name.isEmpty ? 'Certification Dashboard' : 'Certification Dashboard',
-              style: const TextStyle(
+            const Text(
+              'Certification Dashboard',
+              style: TextStyle(
                 fontFamily: 'Manrope',
                 fontSize: 30,
                 fontWeight: FontWeight.w700,
@@ -99,9 +117,7 @@ class CertifierDashboardScreen extends ConsumerWidget {
             ),
             const SizedBox(height: 6),
             Text(
-              name.isEmpty
-                  ? 'Review approved audit projects and manage certification decisions.'
-                  : 'Welcome, $name. Review approved audit projects and manage certification decisions.',
+              subtitle,
               style: const TextStyle(
                 fontFamily: 'Inter',
                 fontSize: 14,

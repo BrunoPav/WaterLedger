@@ -340,7 +340,10 @@ class _CertifierRegisterSuccessScreenState
             width: double.infinity,
             height: 56,
             child: ElevatedButton(
-              onPressed: () => context.go('/login'),
+              // Navegamos directo a /home en lugar de /login para evitar el rebote
+              // por el guard del router (el user ya está autenticado en Firebase;
+              // /home dispatch al dashboard del rol que le corresponde).
+              onPressed: () => context.go('/home'),
               style: ElevatedButton.styleFrom(
                 backgroundColor: _primaryColor,
                 foregroundColor: _onPrimaryColor,
@@ -348,7 +351,7 @@ class _CertifierRegisterSuccessScreenState
                 elevation: 1,
               ),
               child: const Text(
-                'Back to Login',
+                'Continue',
                 style: TextStyle(
                   fontFamily: 'Manrope',
                   fontSize: 16,
