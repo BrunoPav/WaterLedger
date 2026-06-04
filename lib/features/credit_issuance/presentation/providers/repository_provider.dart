@@ -1,5 +1,5 @@
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:water_ledger/features/credit_issuance/data/repositories/test_credit_issuance_repository.dart';
+import 'package:water_ledger/features/credit_issuance/data/repositories/firebase_credit_issuance_repository.dart';
 import 'package:water_ledger/features/credit_issuance/domain/repositories/credit_issuance_repository.dart';
 import 'package:water_ledger/features/credit_issuance/domain/use_cases/create_credit_request_use_case.dart';
 import 'package:water_ledger/features/credit_issuance/domain/use_cases/get_credit_request_status_use_case.dart';
@@ -8,7 +8,7 @@ import 'package:water_ledger/features/credit_issuance/domain/use_cases/update_ro
 
 final creditIssuanceRepositoryProvider =
     Provider<CreditIssuanceRepository>((ref) {
-  return TestCreditIssuanceRepository();
+  return FirebaseCreditIssuanceRepository();
 });
 
 final createCreditRequestUseCaseProvider = Provider<CreateCreditRequestUseCase>((ref) {

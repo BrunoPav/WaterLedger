@@ -8,7 +8,7 @@ class WaterProjectValidator {
       errors.add('El nombre del proyecto es obligatorio.');
     }
 
-    if (project.ubication.trim().isEmpty) {
+    if (project.location.trim().isEmpty) {
       errors.add('La ubicación del proyecto es obligatoria.');
     }
 
@@ -18,7 +18,7 @@ class WaterProjectValidator {
       );
     }
 
-    if (project.sumary.trim().isEmpty) {
+    if (project.summary.trim().isEmpty) {
       errors.add('El resumen del proyecto es obligatorio.');
     }
 

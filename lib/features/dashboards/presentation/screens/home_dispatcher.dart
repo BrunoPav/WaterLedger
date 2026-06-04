@@ -3,10 +3,10 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 import 'package:water_ledger/core/domain/enums/user_role.dart';
 import 'package:water_ledger/core/presentation/providers/session_provider.dart';
-import 'package:water_ledger/features/dashboards/presentation/screens/auditor_dashboard_screen.dart';
-import 'package:water_ledger/features/dashboards/presentation/screens/certifier_dashboard_screen.dart';
+import 'package:water_ledger/features/auditor/presentation/screens/auditor_dashboard_screen.dart';
+import 'package:water_ledger/features/certifier/presentation/screens/certifier_dashboard_screen.dart';
 import 'package:water_ledger/features/dashboards/presentation/screens/company_dashboard_screen.dart';
-import 'package:water_ledger/features/dashboards/presentation/screens/insurer_dashboard_screen.dart';
+import 'package:water_ledger/features/insurer/presentation/screens/insurer_dashboard_screen.dart';
 import 'package:water_ledger/features/dashboards/presentation/screens/retail_dashboard_screen.dart';
 import 'package:water_ledger/features/dashboards/presentation/widgets/dashboard_tokens.dart';
 
@@ -22,11 +22,33 @@ Widget _redirect(BuildContext context, String path) {
 /// Punto de entrada de `/home`: mira el sessionProvider y muestra el dashboard
 /// correcto según el UserModel.role del usuario logueado.
 /// Si no hay sesión activa redirige a /login.
-class HomeDispatcher extends ConsumerWidget {
+///
+/// Usa StatefulWidget + addPostFrameCallback para diferir el render del
+/// dashboard un frame: evita el error "Cannot hit test a render box that has
+/// never been laid out" en Windows desktop cuando GoRouter hace la transición
+/// a esta ruta y el mouse tracker dispara antes del primer layout.
+class HomeDispatcher extends ConsumerStatefulWidget {
   const HomeDispatcher({super.key});
 
   @override
-  Widget build(BuildContext context, WidgetRef ref) {
+  ConsumerState<HomeDispatcher> createState() => _HomeDispatcherState();
+}
+
+class _HomeDispatcherState extends ConsumerState<HomeDispatcher> {
+  bool _ready = false;
+
+  @override
+  void initState() {
+    super.initState();
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      if (mounted) setState(() => _ready = true);
+    });
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    if (!_ready) return const _LoadingScreen();
+
     final sessionAsync = ref.watch(sessionProvider);
 
     return sessionAsync.when(
@@ -38,18 +60,14 @@ class HomeDispatcher extends ConsumerWidget {
         }
 
         return switch (user.role) {
-          UserRole.retail => const RetailDashboardScreen(),
-          UserRole.company => const CompanyDashboardScreen(),
-          // Issuer (Empresa emisora) comparte dashboard con Company por ahora —
-          // 4.1.4.2 lo marca como rol distinto pero la diferenciación de UI
-          // todavía no está implementada. Cuando exista IssuerDashboardScreen,
-          // reemplazar este case.
-          UserRole.issuer => const CompanyDashboardScreen(),
-          UserRole.auditor => const AuditorDashboardScreen(),
+          UserRole.retail    => const RetailDashboardScreen(),
+          UserRole.company   => const CompanyDashboardScreen(),
+          // Issuer comparte dashboard con Company hasta que exista IssuerDashboardScreen
+          UserRole.issuer    => const CompanyDashboardScreen(),
+          UserRole.auditor   => const AuditorDashboardScreen(),
           UserRole.certifier => const CertifierDashboardScreen(),
-          UserRole.insurer => const InsurerDashboardScreen(),
-          // Admin tiene su propio módulo en /admin-dashboard (módulo 4.6).
-          UserRole.admin => _redirect(context, '/admin-dashboard'),
+          UserRole.insurer   => const InsurerDashboardScreen(),
+          UserRole.admin     => _redirect(context, '/admin-dashboard'),
         };
       },
     );

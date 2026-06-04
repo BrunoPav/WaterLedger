@@ -6,8 +6,9 @@ import 'package:water_ledger/core/domain/entities/user_model.dart';
 import 'package:water_ledger/core/presentation/providers/session_provider.dart';
 import 'package:water_ledger/features/credit_issuance/domain/entities/credit_request_entity.dart';
 import 'package:water_ledger/features/credit_issuance/domain/enums/request_status.dart';
+import 'package:intl/intl.dart';
 import 'package:water_ledger/features/credit_issuance/presentation/providers/company_requests_provider.dart';
-import 'package:water_ledger/features/credit_issuance/presentation/providers/credit_request_notifier.dart';
+import 'package:water_ledger/features/dashboards/presentation/providers/activity_providers.dart';
 import 'package:water_ledger/features/dashboards/presentation/widgets/activity_tile.dart';
 import 'package:water_ledger/features/dashboards/presentation/widgets/dashboard_bottom_nav.dart';
 import 'package:water_ledger/features/dashboards/presentation/widgets/dashboard_tokens.dart';
@@ -56,7 +57,7 @@ class CompanyDashboardScreen extends ConsumerWidget {
                   // TODO: pantalla de actividad completa cuando exista el módulo de Activity Log
                 },
               ),
-              _buildRecentActivity(),
+              _buildRecentActivity(ref, sessionAsync.value?.uid ?? ''),
               const SizedBox(height: 24),
               _buildMarketplaceEmptyState(),
             ],
@@ -190,22 +191,7 @@ class CompanyDashboardScreen extends ConsumerWidget {
   // ------------------------------------------------------------------ //
   Widget _buildPrimaryCta(BuildContext context, WidgetRef ref) {
     return GestureDetector(
-      onTap: () async {
-        // 4.2.1.3 — Inicio de nueva solicitud:
-        // crea un draft real contra el repository usando el uid de la sesión.
-        final user = ref.read(sessionProvider).value;
-        if (user == null) {
-          ScaffoldMessenger.of(context).showSnackBar(
-            const SnackBar(content: Text('Sesión no disponible')),
-          );
-          return;
-        }
-        await ref.read(creditRequestProvider.notifier).createDraft(user.uid);
-        if (!context.mounted) return;
-        // TODO: cuando exista el wizard completo (4.2.2 → 4.2.7), navegar al paso 1.
-        // Por ahora se entra directamente al editor de roadmap (paso 4 implementado).
-        context.push('/roadmap-editor');
-      },
+      onTap: () => context.push('/credit-issuance'),
       child: ClipRRect(
         borderRadius: BorderRadius.circular(16),
         child: BackdropFilter(
@@ -444,9 +430,10 @@ class CompanyDashboardScreen extends ConsumerWidget {
   }
 
   // ------------------------------------------------------------------ //
-  //  RECENT ACTIVITY — empty state honesto
+  //  RECENT ACTIVITY — datos reales desde creditRequests
   // ------------------------------------------------------------------ //
-  Widget _buildRecentActivity() {
+  Widget _buildRecentActivity(WidgetRef ref, String uid) {
+    final activityAsync = ref.watch(companyActivityProvider(uid));
     return Container(
       padding: const EdgeInsets.symmetric(horizontal: 16),
       decoration: BoxDecoration(
@@ -456,12 +443,54 @@ class CompanyDashboardScreen extends ConsumerWidget {
           color: DashboardTokens.outlineVariantColor.withValues(alpha: 0.3),
         ),
       ),
-      // TODO: reemplazar empty state cuando exista el módulo de Activity Log
-      // (colección Firestore "activities" con eventos por user/company).
-      child: const ActivityEmptyState(
-        message: 'No activity yet — events will appear as you interact.',
+      child: activityAsync.when(
+        loading: () => const Padding(
+          padding: EdgeInsets.symmetric(vertical: 28),
+          child: Center(
+            child: SizedBox(
+              width: 22,
+              height: 22,
+              child: CircularProgressIndicator(
+                strokeWidth: 2,
+                color: DashboardTokens.secondaryColor,
+              ),
+            ),
+          ),
+        ),
+        error: (_, _) => const ActivityEmptyState(
+          message: 'No activity yet.',
+        ),
+        data: (items) {
+          if (items.isEmpty) {
+            return const ActivityEmptyState(
+              message: 'No activity yet — events will appear as you interact.',
+            );
+          }
+          return Column(
+            children: [
+              for (var i = 0; i < items.length; i++)
+                ActivityTile(
+                  icon: items[i].icon,
+                  title: items[i].title,
+                  subtitle: items[i].subtitle,
+                  timestamp: _timeAgo(items[i].timestamp),
+                  isLast: i == items.length - 1,
+                ),
+            ],
+          );
+        },
       ),
     );
+  }
+
+  String _timeAgo(DateTime when) {
+    final diff = DateTime.now().difference(when);
+    if (diff.inSeconds < 60) return 'hace instantes';
+    if (diff.inMinutes < 60) return 'hace ${diff.inMinutes} min';
+    if (diff.inHours < 24) return 'hace ${diff.inHours} h';
+    if (diff.inDays == 1) return 'ayer';
+    if (diff.inDays < 7) return 'hace ${diff.inDays} d';
+    return DateFormat('d MMM', 'es').format(when);
   }
 
   // ------------------------------------------------------------------ //

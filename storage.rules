@@ -1,0 +1,41 @@
+rules_version = '2';
+
+// Reglas de seguridad de Firebase Storage para WaterLedger.
+// Convención de paths acordada:
+//   creditRequests/{requestId}/documents/{type}/{filename}  → docs de solicitud
+//   registrations/{uid}/{documentType}/{filename}            → docs de onboarding institucional
+//   audits/{auditId}/reports/{filename}                     → reportes de auditoría
+
+service firebase.storage {
+  match /b/{bucket}/o {
+
+    // ── Documentos de solicitudes de crédito (módulo 4.2) ──────────────────
+    // Cualquier usuario autenticado puede subir/leer.
+    // La restricción real se maneja en Firestore (solo la empresa dueña crea el draft).
+    match /creditRequests/{requestId}/documents/{type}/{filename} {
+      allow write: if request.auth != null
+                   && request.resource.size < 20 * 1024 * 1024  // máx 20 MB
+                   && request.resource.contentType.matches('(application/pdf|image/jpeg|image/png)');
+      allow read:  if request.auth != null;
+    }
+
+    // ── Documentación de onboarding institucional (módulo 4.1.2) ──────────
+    // Solo el propio usuario puede subir sus documentos de registro.
+    match /registrations/{uid}/{allPaths=**} {
+      allow write: if request.auth != null
+                   && request.auth.uid == uid
+                   && request.resource.size < 20 * 1024 * 1024;
+      allow read:  if request.auth != null;
+    }
+
+    // ── Reportes de auditoría (módulo 4.3) ────────────────────────────────
+    match /audits/{auditId}/reports/{filename} {
+      allow read, write: if request.auth != null;
+    }
+
+    // ── Default deny ──────────────────────────────────────────────────────
+    match /{allPaths=**} {
+      allow read, write: if false;
+    }
+  }
+}

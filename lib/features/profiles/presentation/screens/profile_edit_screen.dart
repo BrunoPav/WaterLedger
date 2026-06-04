@@ -84,7 +84,7 @@ class _ProfileEditScreenState extends ConsumerState<ProfileEditScreen> {
     } catch (e) {
       if (!mounted) return;
       ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(content: Text('Error al guardar: $e')),
+        const SnackBar(content: Text('No se pudo guardar el perfil. Verificá tu conexión e intentá nuevamente.')),
       );
     } finally {
       if (mounted) setState(() => _isSaving = false);

@@ -1,4 +1,3 @@
-import 'dart:ui';
 import 'package:flutter/material.dart';
 import 'package:water_ledger/features/dashboards/presentation/widgets/dashboard_tokens.dart';
 
@@ -28,39 +27,34 @@ class DashboardBottomNav extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return ClipRect(
-      child: BackdropFilter(
-        filter: ImageFilter.blur(sigmaX: 16, sigmaY: 16),
-        child: Container(
-          decoration: BoxDecoration(
-            color: DashboardTokens.bgColor.withValues(alpha: 0.85),
-            border: Border(
-              top: BorderSide(
-                color: DashboardTokens.outlineVariantColor.withValues(alpha: 0.25),
-              ),
-            ),
-            boxShadow: [
-              BoxShadow(
-                color: Colors.black.withValues(alpha: 0.04),
-                blurRadius: 12,
-                offset: const Offset(0, -4),
-              ),
-            ],
+    return Container(
+      decoration: BoxDecoration(
+        color: DashboardTokens.bgColor,
+        border: Border(
+          top: BorderSide(
+            color: DashboardTokens.outlineVariantColor.withValues(alpha: 0.25),
           ),
-          child: SafeArea(
-            top: false,
-            child: SizedBox(
-              height: 64,
-              child: Row(
-                mainAxisAlignment: MainAxisAlignment.spaceAround,
-                children: List.generate(items.length, (i) {
-                  return _NavItemWidget(
-                    item: items[i],
-                    selected: i == selectedIndex,
-                  );
-                }),
-              ),
-            ),
+        ),
+        boxShadow: [
+          BoxShadow(
+            color: Colors.black.withValues(alpha: 0.04),
+            blurRadius: 12,
+            offset: const Offset(0, -4),
+          ),
+        ],
+      ),
+      child: SafeArea(
+        top: false,
+        child: SizedBox(
+          height: 64,
+          child: Row(
+            mainAxisAlignment: MainAxisAlignment.spaceAround,
+            children: List.generate(items.length, (i) {
+              return _NavItemWidget(
+                item: items[i],
+                selected: i == selectedIndex,
+              );
+            }),
           ),
         ),
       ),

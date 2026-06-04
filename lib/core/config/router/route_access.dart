@@ -41,12 +41,21 @@ const Map<String, Set<UserRole>> _roleAccessMap = {
   '/credit-issuance': {UserRole.company},
   '/roadmap-editor': {UserRole.company},
   '/submission-confirmation': {UserRole.company},
-  '/request-tracking': {UserRole.company},
+  '/request-tracking': {UserRole.company},   // fallback (sin param)
   '/issuing-company': {UserRole.company},
 
   // Módulo de auditoría — solo auditor
   '/auditor': {UserRole.auditor},
   '/documentation': {UserRole.auditor},
+  '/auditor-request-detail': {UserRole.auditor},
+
+  // Módulo de certificación — solo certifier
+  '/certifier': {UserRole.certifier},
+  '/certifier-request-detail': {UserRole.certifier},
+
+  // Módulo de seguros — solo insurer
+  '/insurer': {UserRole.insurer},
+  '/insurer-request-detail': {UserRole.insurer},
 
   // Módulo admin (4.6) — solo admin
   '/admin-dashboard': {UserRole.admin},
@@ -63,6 +72,26 @@ bool roleHasAccess(UserRole role, String path) {
   if (path.startsWith('/admin-pending-detail/') ||
       path.startsWith('/admin-')) {
     return role == UserRole.admin;
+  }
+
+  // Sub-rutas de auditor con parámetros
+  if (path.startsWith('/auditor-request-detail/')) {
+    return role == UserRole.auditor;
+  }
+
+  // Sub-rutas de certifier con parámetros
+  if (path.startsWith('/certifier-request-detail/')) {
+    return role == UserRole.certifier;
+  }
+
+  // Sub-rutas de insurer con parámetros
+  if (path.startsWith('/insurer-request-detail/')) {
+    return role == UserRole.insurer;
+  }
+
+  // Sub-rutas de company con parámetros
+  if (path.startsWith('/request-tracking/')) {
+    return role == UserRole.company || role == UserRole.issuer;
   }
 
   final allowed = _roleAccessMap[path];

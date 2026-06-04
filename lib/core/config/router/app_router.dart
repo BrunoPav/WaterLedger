@@ -4,7 +4,12 @@ import 'package:water_ledger/core/config/router/go_router_refresh_stream.dart';
 import 'package:water_ledger/core/config/router/route_access.dart';
 import 'package:water_ledger/core/presentation/providers/session_provider.dart';
 import 'package:water_ledger/features/auditor/presentation/screens/auditor_screen.dart';
+import 'package:water_ledger/features/auditor/presentation/screens/auditor_request_detail_screen.dart';
 import 'package:water_ledger/features/auditor/presentation/screens/documentation_screen.dart';
+import 'package:water_ledger/features/certifier/presentation/screens/certifier_requests_screen.dart';
+import 'package:water_ledger/features/certifier/presentation/screens/certifier_request_detail_screen.dart';
+import 'package:water_ledger/features/insurer/presentation/screens/insurer_requests_screen.dart';
+import 'package:water_ledger/features/insurer/presentation/screens/insurer_request_detail_screen.dart';
 import 'package:water_ledger/core/presentation/screens/auth/auditor_register_screen.dart';
 import 'package:water_ledger/core/presentation/screens/auth/auditor_register_success_screen.dart';
 import 'package:water_ledger/core/presentation/screens/auth/certifier_register_screen.dart';
@@ -16,6 +21,10 @@ import 'package:water_ledger/core/presentation/screens/admin/admin_dashboard_scr
 // import 'package:water_ledger/core/presentation/screens/admin/admin_seed_screen.dart';
 import 'package:water_ledger/core/presentation/screens/admin/pending_approvals_list_screen.dart';
 import 'package:water_ledger/core/presentation/screens/admin/pending_request_detail_screen.dart';
+import 'package:water_ledger/core/presentation/screens/admin/admin_requests_list_screen.dart';
+import 'package:water_ledger/core/presentation/screens/admin/admin_request_detail_screen.dart';
+import 'package:water_ledger/core/presentation/screens/admin/admin_valuations_list_screen.dart';
+import 'package:water_ledger/core/presentation/screens/admin/admin_valuation_detail_screen.dart';
 import 'package:water_ledger/core/presentation/screens/auth/company_register_success_screen.dart';
 import 'package:water_ledger/core/presentation/screens/auth/corporate_onboarding_screen.dart';
 import 'package:water_ledger/core/presentation/screens/auth/retail_register_screen.dart';
@@ -32,9 +41,6 @@ import 'package:water_ledger/features/dashboards/presentation/screens/home_dispa
 import 'package:water_ledger/features/profiles/presentation/screens/profile_dispatcher.dart';
 import 'package:water_ledger/features/profiles/presentation/screens/profile_edit_screen.dart';
 import 'package:water_ledger/features/issuer/presentation/screen/issuing_company_screen.dart';
-import 'package:water_ledger/home_temporal.dart';
-
-import 'package:water_ledger/core/Stitch_Templates/Steps/step_3_project_info/project_info_step_screen.dart';
 
 /// Provider del router con guard de auth y rol.
 /// El guard:
@@ -47,7 +53,7 @@ final appRouterProvider = Provider<GoRouter>((ref) {
   final authStream = ref.watch(authRepositoryProvider).authStateChanges;
 
   return GoRouter(
-    initialLocation: '/splash',
+    initialLocation: '/login',
     refreshListenable: GoRouterRefreshStream(authStream),
     redirect: (context, state) {
       final session = ref.read(sessionProvider);
@@ -110,19 +116,30 @@ final appRouterProvider = Provider<GoRouter>((ref) {
         uid: state.pathParameters['uid']!,
       ),
     ),
+    GoRoute(
+      path: '/admin-credit-requests',
+      builder: (context, state) => const AdminRequestsListScreen(),
+    ),
+    GoRoute(
+      path: '/admin-request-detail/:requestId',
+      builder: (context, state) => AdminRequestDetailScreen(
+        requestId: state.pathParameters['requestId']!,
+      ),
+    ),
+    GoRoute(
+      path: '/admin-valuations',
+      builder: (context, state) => const AdminValuationsListScreen(),
+    ),
+    GoRoute(
+      path: '/admin-valuation-detail/:requestId',
+      builder: (context, state) => AdminValuationDetailScreen(
+        requestId: state.pathParameters['requestId']!,
+      ),
+    ),
     GoRoute(path: '/retail-register-success', builder: (context, state) => const RetailRegisterSuccessScreen()),
-    // Versión anterior — apuntaba a HomeTemporal (pantalla de testing con botones):
-    // GoRoute(path: '/home', builder: (context, state) => const HomeTemporal()),
-    // Ahora /home despacha al dashboard correspondiente al rol del usuario logueado
-    // (módulo 4.1.6 + 4.1.4.6 — Dashboard inicial + Navegación dinámica por rol).
     GoRoute(path: '/home', builder: (context, state) => const HomeDispatcher()),
-    // /profile despacha al perfil correspondiente según el rol del user logueado
-    // (módulo 4.1.5 — Perfiles de usuario).
     GoRoute(path: '/profile', builder: (context, state) => const ProfileDispatcher()),
-    // Edición de perfil. Pantalla única que se adapta al rol del user logueado.
     GoRoute(path: '/profile/edit', builder: (context, state) => const ProfileEditScreen()),
-    // HomeTemporal queda accesible bajo /home-temporal para testing manual:
-    GoRoute(path: '/home-temporal', builder: (context, state) => const HomeTemporal()),
     GoRoute(
       path: '/issuing-company',
       builder: (context, state) => const IssuingCompanyScreen(),
@@ -134,6 +151,32 @@ final appRouterProvider = Provider<GoRouter>((ref) {
     GoRoute(
       path: '/auditor',
       builder: (context, state) => const AuditorScreen(),
+    ),
+    GoRoute(
+      path: '/auditor-request-detail/:requestId',
+      builder: (context, state) => AuditorRequestDetailScreen(
+        requestId: state.pathParameters['requestId']!,
+      ),
+    ),
+    GoRoute(
+      path: '/certifier',
+      builder: (context, state) => const CertifierRequestsScreen(),
+    ),
+    GoRoute(
+      path: '/certifier-request-detail/:requestId',
+      builder: (context, state) => CertifierRequestDetailScreen(
+        requestId: state.pathParameters['requestId']!,
+      ),
+    ),
+    GoRoute(
+      path: '/insurer',
+      builder: (context, state) => const InsurerRequestsScreen(),
+    ),
+    GoRoute(
+      path: '/insurer-request-detail/:requestId',
+      builder: (context, state) => InsurerRequestDetailScreen(
+        requestId: state.pathParameters['requestId']!,
+      ),
     ),
     GoRoute(
       path: '/credit-issuance',
@@ -148,12 +191,10 @@ final appRouterProvider = Provider<GoRouter>((ref) {
       builder: (context, state) => const SubmissionConfirmationScreen(),
     ),
     GoRoute(
-      path: '/request-tracking',
-      builder: (context, state) => const RequestTrackingScreen(),
-    ),
-    GoRoute(
-      path: '/project-info-test',
-      builder: (context, state) => const ProjectInfoStepScreen(),
+      path: '/request-tracking/:requestId',
+      builder: (context, state) => RequestTrackingScreen(
+        requestId: state.pathParameters['requestId']!,
+      ),
     ),
   ],
   );

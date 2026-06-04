@@ -14,3 +14,9 @@ final companyRequestsProvider = FutureProvider<List<CreditRequestEntity>>((ref) 
   final repository = ref.read(creditIssuanceRepositoryProvider);
   return repository.getCompanyRequests(user.uid);
 });
+
+/// Carga una solicitud específica por ID — usado por RequestTrackingScreen.
+final requestTrackingProvider =
+    FutureProvider.family<CreditRequestEntity, String>((ref, requestId) {
+  return ref.read(creditIssuanceRepositoryProvider).getRequestById(requestId);
+});

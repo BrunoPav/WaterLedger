@@ -37,3 +37,15 @@ final recentAdminDecisionsProvider =
     StreamProvider<List<AdminDecisionRecord>>((ref) {
   return ref.watch(adminRepositoryProvider).recentDecisionsStream(limit: 5);
 });
+
+/// Stream de todas las solicitudes de crédito (4.6.3 Supervisión).
+final allCreditRequestsProvider =
+    StreamProvider<List<Map<String, dynamic>>>((ref) {
+  return ref.watch(adminRepositoryProvider).creditRequestsStream();
+});
+
+/// Stream de auditores activos disponibles para asignación (4.6.2).
+final activeAuditorsProvider =
+    StreamProvider<List<UserModel>>((ref) {
+  return ref.watch(adminRepositoryProvider).activeAuditorsStream();
+});

@@ -95,6 +95,83 @@ service cloud.firestore {
       allow update, delete: if false;
     }
 
+    // ---------- creditRequests (módulo 4.2) ----------
+    // Convención de paths Storage: creditRequests/{requestId}/documents/{type}/{filename}
+    match /creditRequests/{requestId} {
+
+      function isOwner() {
+        return isSignedIn()
+          && resource.data.issuerCompanyId == request.auth.uid;
+      }
+
+      function isCompany() {
+        return isSignedIn()
+          && callerData().role == 'Company'
+          && callerData().status == 'active';
+      }
+
+      function isAssignedAuditor() {
+        return isSignedIn()
+          && callerData().role == 'Auditor'
+          && callerData().status == 'active'
+          && resource.data.get('assignedAuditorId', '') == request.auth.uid;
+      }
+
+      // Read: dueño de la solicitud, admin, o auditor asignado
+      allow read: if isOwner() || isAdmin() || isAssignedAuditor();
+
+      // Create: solo empresa activa creando su propio draft
+      allow create: if isCompany()
+                    && request.resource.data.issuerCompanyId == request.auth.uid
+                    && request.resource.data.status == 'draft';
+
+      // Update: dueño puede editar en draft; admin siempre; auditor asignado
+      //   puede actualizar mientras la solicitud está en underAudit (para
+      //   que FirebaseAuditRepository.submitConclusion pueda transicionar
+      //   el status a certified / rejected via batch write).
+      allow update: if isAdmin()
+                    || (isOwner() && resource.data.status == 'draft')
+                    || (isAssignedAuditor() && resource.data.status == 'underAudit');
+
+      // Delete: solo admin (o dueño si está en draft, para borrar borradores)
+      allow delete: if isAdmin()
+                    || (isOwner() && resource.data.status == 'draft');
+    }
+
+    // ---------- audits (módulo 4.3) ----------
+    // Un documento por creditRequest (mismo ID). El auditor asignado lo crea
+    // al iniciar la auditoría y lo actualiza hasta enviarlo. Solo admin puede
+    // leer/escribir desde la consola o herramientas de admin.
+    match /audits/{requestId} {
+
+      function isCreditRequestAuditor() {
+        return isSignedIn()
+          && callerData().role == 'Auditor'
+          && callerData().status == 'active'
+          && get(/databases/$(database)/documents/creditRequests/$(requestId))
+               .data.get('assignedAuditorId', '') == request.auth.uid;
+      }
+
+      function isAuditOwner() {
+        return isSignedIn() && resource.data.auditorId == request.auth.uid;
+      }
+
+      // Read: auditor asignado a esa creditRequest o admin
+      allow read: if isCreditRequestAuditor() || isAdmin();
+
+      // Create: solo el auditor asignado; status inicial debe ser inProgress
+      allow create: if isCreditRequestAuditor()
+                    && request.resource.data.auditorId == request.auth.uid
+                    && request.resource.data.status == 'inProgress';
+
+      // Update: dueño del audit si todavía está inProgress, o admin
+      allow update: if isAdmin()
+                    || (isAuditOwner() && resource.data.status == 'inProgress');
+
+      // Delete: solo admin (auditorías no se borran normalmente)
+      allow delete: if isAdmin();
+    }
+
     // ---------- projects, certifications, valuations ----------
     // Colecciones referenciadas en KPIs del admin dashboard.
     // Por ahora: solo admin lee/escribe. Las reglas se irán afinando cuando

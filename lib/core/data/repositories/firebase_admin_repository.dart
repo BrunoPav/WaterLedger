@@ -1,5 +1,6 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:water_ledger/core/domain/entities/user_model.dart';
+import 'package:water_ledger/core/domain/enums/user_role.dart';
 import 'package:water_ledger/core/domain/enums/user_status.dart';
 import 'package:water_ledger/core/domain/repositories/admin_repository.dart';
 
@@ -72,6 +73,63 @@ class FirebaseAdminRepository implements AdminRepository {
       'status': UserStatus.rejected.value,
       'rejectedAt': now,
       'decisionAt': now,
+    });
+  }
+
+  // ── 4.6.3 Supervisión ─────────────────────────────────────────────────────
+
+  @override
+  Stream<List<Map<String, dynamic>>> creditRequestsStream() {
+    return _db
+        .collection('creditRequests')
+        .snapshots()
+        .map((snap) {
+      final docs = snap.docs.map((d) {
+        final data = Map<String, dynamic>.from(d.data());
+        // Normalizar Timestamps a DateTime para consistencia en la UI
+        for (final key in ['createdAt', 'updatedAt', 'submittedAt']) {
+          if (data[key] is Timestamp) {
+            data[key] = (data[key] as Timestamp).toDate();
+          }
+        }
+        data['id'] = d.id;
+        return data;
+      }).toList();
+      docs.sort((a, b) {
+        final ta = a['createdAt'];
+        final tb = b['createdAt'];
+        if (ta is DateTime && tb is DateTime) return tb.compareTo(ta);
+        return 0;
+      });
+      return docs;
+    });
+  }
+
+  // ── 4.6.2 Asignación operativa ────────────────────────────────────────────
+
+  @override
+  Stream<List<UserModel>> activeAuditorsStream() {
+    return _db
+        .collection('users')
+        .where('role', isEqualTo: UserRole.auditor.value)
+        .where('status', isEqualTo: UserStatus.active.value)
+        .snapshots()
+        .map((snap) => snap.docs
+            .map((d) => UserModel.fromFirestore(d.data(), d.id))
+            .toList());
+  }
+
+  @override
+  Future<void> assignAuditor({
+    required String requestId,
+    required String auditorId,
+    required String auditorName,
+  }) async {
+    await _db.collection('creditRequests').doc(requestId).update({
+      'assignedAuditorId': auditorId,
+      'assignedAuditorName': auditorName,
+      'status': 'underAudit',
+      'updatedAt': FieldValue.serverTimestamp(),
     });
   }
 

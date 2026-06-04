@@ -61,4 +61,22 @@ abstract class AdminRepository {
   /// Últimas N decisiones del admin (aprobaciones + rechazos) ordenadas por
   /// `decisionAt` descendente. Alimenta el feed "Recent Audit Log" del perfil.
   Stream<List<AdminDecisionRecord>> recentDecisionsStream({int limit});
+
+  // ── 4.6.3 Supervisión ─────────────────────────────────────────────────────
+
+  /// Stream de todas las solicitudes de crédito. Ordenadas por `createdAt` desc.
+  /// Devuelve los documentos como Map para no acoplar core con features/credit_issuance.
+  Stream<List<Map<String, dynamic>>> creditRequestsStream();
+
+  // ── 4.6.2 Asignación operativa ────────────────────────────────────────────
+
+  /// Stream de auditores activos disponibles para asignación.
+  Stream<List<UserModel>> activeAuditorsStream();
+
+  /// Asigna un auditor a una solicitud y cambia el estado a `underAudit`.
+  Future<void> assignAuditor({
+    required String requestId,
+    required String auditorId,
+    required String auditorName,
+  });
 }
