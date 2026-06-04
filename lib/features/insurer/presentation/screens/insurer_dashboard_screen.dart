@@ -54,21 +54,16 @@ class InsurerDashboardScreen extends ConsumerWidget {
       bottomNavigationBar: DashboardBottomNav(
         selectedIndex: 0,
         items: [
-          DashboardNavItem(icon: Icons.home_filled, label: 'Home', onTap: () {}),
+          DashboardNavItem(icon: Icons.dashboard, label: 'Dashboard', onTap: () {}),
           DashboardNavItem(
-            icon: Icons.pending_actions_outlined,
+            icon: Icons.security_outlined,
             label: 'Requests',
             onTap: () => context.push('/insurer'),
           ),
           DashboardNavItem(
-            icon: Icons.water_drop_outlined,
-            label: 'Credits',
-            onTap: () => _comingSoon(context, 'Credits'),
-          ),
-          DashboardNavItem(
-            icon: Icons.storefront_outlined,
-            label: 'Market',
-            onTap: () => _comingSoon(context, 'Marketplace'),
+            icon: Icons.notifications_outlined,
+            label: 'Alerts',
+            onTap: () => _comingSoon(context, 'Alerts'),
           ),
           DashboardNavItem(
             icon: Icons.person_outline,

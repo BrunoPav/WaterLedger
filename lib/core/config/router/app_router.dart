@@ -10,12 +10,12 @@ import 'package:water_ledger/features/certifier/presentation/screens/certifier_r
 import 'package:water_ledger/features/certifier/presentation/screens/certifier_request_detail_screen.dart';
 import 'package:water_ledger/features/insurer/presentation/screens/insurer_requests_screen.dart';
 import 'package:water_ledger/features/insurer/presentation/screens/insurer_request_detail_screen.dart';
-import 'package:water_ledger/core/presentation/screens/auth/auditor_register_screen.dart';
+import 'package:water_ledger/features/auth/presentation/screens/auditor_register_screen.dart';
 import 'package:water_ledger/core/presentation/screens/auth/auditor_register_success_screen.dart';
-import 'package:water_ledger/core/presentation/screens/auth/certifier_register_screen.dart';
+import 'package:water_ledger/features/auth/presentation/screens/certifier_register_screen.dart';
 import 'package:water_ledger/core/presentation/screens/auth/certifier_register_success_screen.dart';
-import 'package:water_ledger/core/presentation/screens/auth/insurance_register_screen.dart';
-import 'package:water_ledger/core/presentation/screens/auth/insurance_register_success_screen.dart';
+import 'package:water_ledger/features/auth/presentation/screens/insurance_register_screen.dart';
+import 'package:water_ledger/features/auth/presentation/screens/register_success_screen.dart';
 import 'package:water_ledger/core/presentation/screens/admin/admin_dashboard_screen.dart';
 // Import de la pantalla de seed comentado al borrarse la vista — el usuario ya creó su admin en Firestore:
 // import 'package:water_ledger/core/presentation/screens/admin/admin_seed_screen.dart';
@@ -25,13 +25,13 @@ import 'package:water_ledger/core/presentation/screens/admin/admin_requests_list
 import 'package:water_ledger/core/presentation/screens/admin/admin_request_detail_screen.dart';
 import 'package:water_ledger/core/presentation/screens/admin/admin_valuations_list_screen.dart';
 import 'package:water_ledger/core/presentation/screens/admin/admin_valuation_detail_screen.dart';
-import 'package:water_ledger/core/presentation/screens/auth/company_register_success_screen.dart';
-import 'package:water_ledger/core/presentation/screens/auth/corporate_onboarding_screen.dart';
-import 'package:water_ledger/core/presentation/screens/auth/retail_register_screen.dart';
-import 'package:water_ledger/core/presentation/screens/auth/retail_register_success_screen.dart';
-import 'package:water_ledger/core/presentation/screens/auth/forgot_password_screen.dart';
-import 'package:water_ledger/core/presentation/screens/auth/login_screen.dart';
-import 'package:water_ledger/core/presentation/screens/auth/register_screen.dart';
+import 'package:water_ledger/features/auth/presentation/screens/company_register_success_screen.dart';
+import 'package:water_ledger/features/auth/presentation/screens/corporate_onboarding_screen.dart';
+import 'package:water_ledger/features/auth/presentation/screens/retail_register_screen.dart';
+import 'package:water_ledger/features/auth/presentation/screens/retail_register_success_screen.dart';
+import 'package:water_ledger/features/auth/presentation/screens/forgot_password_screen.dart';
+import 'package:water_ledger/features/auth/presentation/screens/login_screen.dart';
+import 'package:water_ledger/features/auth/presentation/screens/register_screen.dart';
 import 'package:water_ledger/core/presentation/screens/splash_screen.dart';
 import 'package:water_ledger/features/credit_issuance/presentation/screens/credit_issuance_screen.dart';
 import 'package:water_ledger/features/credit_issuance/presentation/screens/roadmap_editor_screen.dart';
@@ -99,7 +99,7 @@ final appRouterProvider = Provider<GoRouter>((ref) {
     GoRoute(path: '/certifier-register', builder: (context, state) => const CertifierRegisterScreen()),
     GoRoute(path: '/certifier-register-success', builder: (context, state) => const CertifierRegisterSuccessScreen()),
     GoRoute(path: '/insurance-register', builder: (context, state) => const InsuranceRegisterScreen()),
-    GoRoute(path: '/insurance-register-success', builder: (context, state) => const InsuranceRegisterSuccessScreen()),
+    GoRoute(path: '/insurance-register-success', builder: (context, state) => const RegisterSuccessScreen()),
     // ---- Admin (4.6 Gestión del Administrador) ---- //
     // Ruta /admin-seed comentada al borrarse la pantalla de seed — el usuario ya creó su admin.
     // El método registerAdmin sigue disponible en AuthRepository por si más adelante se necesita
