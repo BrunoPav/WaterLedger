@@ -1,0 +1,331 @@
+<!DOCTYPE html>
+
+<html lang="en"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>Water Ledger | Insurance Provider Dashboard</title>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600&amp;family=Manrope:wght@600;700&amp;family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<style>
+        .material-symbols-outlined {
+            font-variation-settings: 'wght' 200, 'opsz' 24;
+        }
+        .glass-card {
+            background: rgba(255, 255, 255, 0.7);
+            backdrop-filter: blur(20px);
+            border: 1px solid rgba(226, 232, 240, 0.4);
+        }
+        .thin-border {
+            border-width: 0.5px;
+        }
+    </style>
+<script id="tailwind-config">
+        tailwind.config = {
+            darkMode: "class",
+            theme: {
+                extend: {
+                    "colors": {
+                        "surface-dim": "#d8dadc",
+                        "surface-container-high": "#e6e8ea",
+                        "surface-bright": "#f7f9fb",
+                        "secondary-fixed-dim": "#00daf3",
+                        "on-error-container": "#93000a",
+                        "inverse-surface": "#2d3133",
+                        "inverse-primary": "#b9c7e4",
+                        "tertiary-fixed": "#a3f69c",
+                        "tertiary": "#000000",
+                        "on-secondary": "#ffffff",
+                        "surface-tint": "#515f78",
+                        "on-tertiary-fixed-variant": "#005312",
+                        "on-surface-variant": "#44474d",
+                        "surface": "#f7f9fb",
+                        "primary-fixed": "#d6e3ff",
+                        "primary-fixed-dim": "#b9c7e4",
+                        "on-surface": "#191c1e",
+                        "primary-container": "#0d1c32",
+                        "on-tertiary": "#ffffff",
+                        "on-primary-fixed": "#0d1c32",
+                        "secondary": "#006875",
+                        "outline": "#75777e",
+                        "on-tertiary-container": "#469446",
+                        "surface-container-low": "#f2f4f6",
+                        "secondary-container": "#00e3fd",
+                        "on-secondary-fixed-variant": "#004f58",
+                        "on-secondary-fixed": "#001f24",
+                        "on-error": "#ffffff",
+                        "error-container": "#ffdad6",
+                        "on-secondary-container": "#00616d",
+                        "outline-variant": "#c5c6cd",
+                        "on-tertiary-fixed": "#002204",
+                        "inverse-on-surface": "#eff1f3",
+                        "surface-variant": "#e0e3e5",
+                        "on-primary-container": "#76849f",
+                        "on-background": "#191c1e",
+                        "on-primary-fixed-variant": "#39475f",
+                        "secondary-fixed": "#9cf0ff",
+                        "surface-container": "#eceef0",
+                        "on-primary": "#ffffff",
+                        "background": "#f7f9fb",
+                        "tertiary-container": "#002204",
+                        "primary": "#000000",
+                        "error": "#ba1a1a",
+                        "surface-container-lowest": "#ffffff",
+                        "surface-container-highest": "#e0e3e5",
+                        "tertiary-fixed-dim": "#88d982"
+                    },
+                    "borderRadius": {
+                        "DEFAULT": "0.25rem",
+                        "lg": "0.5rem",
+                        "xl": "0.75rem",
+                        "full": "9999px"
+                    },
+                    "spacing": {
+                        "stack-md": "16px",
+                        "stack-sm": "8px",
+                        "container-padding": "20px",
+                        "unit": "4px",
+                        "stack-lg": "32px",
+                        "gutter": "16px"
+                    },
+                    "fontFamily": {
+                        "label-sm": ["Inter"],
+                        "headline-md": ["Manrope"],
+                        "display-lg": ["Manrope"],
+                        "body-md": ["Inter"],
+                        "body-lg": ["Inter"]
+                    },
+                    "fontSize": {
+                        "label-sm": ["13px", {"lineHeight": "16px", "letterSpacing": "0.05em", "fontWeight": "600"}],
+                        "headline-md": ["24px", {"lineHeight": "32px", "letterSpacing": "-0.01em", "fontWeight": "600"}],
+                        "display-lg": ["40px", {"lineHeight": "48px", "letterSpacing": "-0.02em", "fontWeight": "700"}],
+                        "body-md": ["16px", {"lineHeight": "24px", "fontWeight": "400"}],
+                        "body-lg": ["18px", {"lineHeight": "28px", "fontWeight": "400"}]
+                    }
+                },
+            },
+        }
+    </script>
+<style>
+    body {
+      min-height: max(884px, 100dvh);
+    }
+  </style>
+  </head>
+<body class="bg-background text-on-surface font-body-md min-h-screen pb-24">
+<!-- Top App Bar (Shared Component Implementation) -->
+<header class="fixed top-0 left-0 w-full z-50 bg-surface/70 backdrop-blur-md border-b border-outline-variant/10 shadow-sm">
+<div class="flex justify-between items-center px-gutter h-16 w-full max-w-7xl mx-auto">
+<div class="flex items-center gap-3">
+<span class="font-display-lg text-headline-md text-primary tracking-tight">Water Ledger</span>
+</div>
+<div class="flex items-center gap-4">
+<span class="material-symbols-outlined text-on-surface-variant hover:opacity-80 active:scale-95 transition-all cursor-pointer">notifications</span>
+<div class="w-8 h-8 rounded-full bg-surface-container-high border border-outline-variant/20 overflow-hidden">
+<img alt="User Profile" class="w-full h-auto" data-alt="A professional headshot of a senior insurance executive in a sharp navy blue suit. The background is a blurred, high-end corporate office with soft, neutral lighting and floor-to-ceiling windows. The image has a clean, institutional quality with a muted color palette that complements a premium fintech dashboard." src="https://lh3.googleusercontent.com/aida-public/AB6AXuDKQYAvRrxAZuv4r6kBkzo26QAVimgsnIYWAaAgqxm2DBjw8Db3l2-weh790aHbihz3X0G-9rY0BlaKrk1LTgRmV7H-rpiK1-hIFyErcQ3uHG-afC1tShRjSuL9rEF7OUv8CM6AUTYcGlu5NgZtkKXkXKTVhG_mYkd0sMSTnpJ8U-LFDGq5ansinSSgL77CVWA0POcATty7eWtCdOUQoTKsgs2VGiyawd4CFDuhEHQS88PmwyNYSjbfO2xZ7e6HT-jT3IBkLob53Jc"/>
+</div>
+</div>
+</div>
+</header>
+<main class="max-w-7xl mx-auto px-gutter pt-24 space-y-stack-lg">
+<!-- Header Section -->
+<section class="space-y-unit">
+<h1 class="font-headline-md text-headline-md text-primary">Insurance Dashboard</h1>
+<p class="text-on-surface-variant text-body-md opacity-80">Manage insurance plans and review eligible sustainability projects.</p>
+</section>
+<!-- KPI Summary Grid -->
+<section class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-gutter">
+<!-- Card 1 -->
+<div class="bg-surface-container-lowest p-stack-md rounded-xl thin-border shadow-[0_4px_12px_rgba(0,0,0,0.04)] flex flex-col justify-between h-32">
+<div class="flex justify-between items-start">
+<span class="text-label-sm font-label-sm text-on-surface-variant uppercase tracking-wider">Eligible Projects</span>
+<span class="material-symbols-outlined text-secondary opacity-60">eco</span>
+</div>
+<div class="text-headline-md font-headline-md text-primary">24</div>
+</div>
+<!-- Card 2 -->
+<div class="bg-surface-container-lowest p-stack-md rounded-xl thin-border shadow-[0_4px_12px_rgba(0,0,0,0.04)] flex flex-col justify-between h-32">
+<div class="flex justify-between items-start">
+<span class="text-label-sm font-label-sm text-on-surface-variant uppercase tracking-wider">Active Insurance Plans</span>
+<span class="material-symbols-outlined text-secondary opacity-60">verified_user</span>
+</div>
+<div class="text-headline-md font-headline-md text-primary">12</div>
+</div>
+<!-- Card 3 -->
+<div class="bg-surface-container-lowest p-stack-md rounded-xl thin-border shadow-[0_4px_12px_rgba(0,0,0,0.04)] flex flex-col justify-between h-32">
+<div class="flex justify-between items-start">
+<span class="text-label-sm font-label-sm text-on-surface-variant uppercase tracking-wider">Selected Coverages</span>
+<span class="material-symbols-outlined text-secondary opacity-60">account_balance_wallet</span>
+</div>
+<div class="text-headline-md font-headline-md text-primary">$4.2M</div>
+</div>
+<!-- Card 4 -->
+<div class="bg-surface-container-lowest p-stack-md rounded-xl thin-border shadow-[0_4px_12px_rgba(0,0,0,0.04)] flex flex-col justify-between h-32">
+<div class="flex justify-between items-start">
+<span class="text-label-sm font-label-sm text-on-surface-variant uppercase tracking-wider">Recent Activity</span>
+<span class="material-symbols-outlined text-secondary opacity-60">history</span>
+</div>
+<div class="text-headline-md font-headline-md text-primary">8 <span class="text-body-md font-normal text-on-tertiary-container">+2</span></div>
+</div>
+</section>
+<!-- Main Content Area: Projects & Activity -->
+<div class="grid grid-cols-1 lg:grid-cols-3 gap-stack-lg">
+<!-- Projects Eligible for Coverage -->
+<section class="lg:col-span-2 space-y-stack-md">
+<div class="flex justify-between items-center">
+<h2 class="font-headline-md text-headline-md text-primary">Projects Eligible for Coverage</h2>
+<button class="text-secondary font-label-sm text-label-sm flex items-center gap-1 hover:opacity-70 transition-all">
+                        View All <span class="material-symbols-outlined text-[18px]">chevron_right</span>
+</button>
+</div>
+<div class="space-y-stack-md">
+<!-- Project Card 1 -->
+<div class="glass-card rounded-xl p-stack-md thin-border shadow-sm group hover:border-secondary/40 transition-all">
+<div class="flex flex-col md:flex-row gap-gutter">
+<div class="w-full md:w-48 h-32 rounded-lg overflow-hidden bg-surface-container">
+<img alt="Project Image" class="w-full h-full object-cover" data-alt="A wide-angle landscape shot of a sustainable water management project featuring rows of lush greenery and sophisticated irrigation canals. The lighting is early morning golden hour, casting long soft shadows. The visual style is serene and high-end, emphasizing the intersection of natural beauty and institutional engineering precision." src="https://lh3.googleusercontent.com/aida-public/AB6AXuD684fgb2WBktMCiQVIBIGiZFWU06gH3IDEuPvY7CsJmvftyJzVpppprJUTmXQhY7gpTU22PmeFbpG8hQLTE4nGk-kZmpvrI6e0m4SCyW9J56L9JR5tYAtLweNlP_VFOKCCXFUZ09BY6ySjz7guS7QuBq1ar-scoXBECbVyY_qcPdY3jPuwrTFk6L9dVPArJYoL7HTJEL-sGR0hgCKVPJ1q7kwrKI1Zzs5B7P157JoPhBdBQCUvwLEL4jXV7zaKoMIracy-CkXubFg"/>
+</div>
+<div class="flex-1 space-y-unit">
+<div class="flex justify-between items-start">
+<div>
+<h3 class="font-headline-md text-body-lg text-primary">Murray-Darling Basin Recovery</h3>
+<p class="text-on-surface-variant text-body-md opacity-80">EcoRestoration Holdings</p>
+</div>
+<span class="bg-on-tertiary-container/10 text-on-tertiary-container px-2 py-1 rounded-full text-[11px] font-bold uppercase tracking-widest flex items-center gap-1">
+<span class="material-symbols-outlined text-[14px]" style="font-variation-settings: 'FILL' 1;">check_circle</span> Approved
+                                    </span>
+</div>
+<div class="flex flex-wrap gap-2 py-2">
+<span class="bg-secondary-fixed/30 text-on-secondary-container px-3 py-1 rounded-full text-label-sm font-label-sm">Water Conservation</span>
+<span class="bg-surface-container text-on-surface-variant px-3 py-1 rounded-full text-label-sm font-label-sm">High Impact</span>
+</div>
+<div class="flex items-center justify-between mt-4">
+<div class="space-y-1">
+<p class="text-on-surface-variant text-[11px] uppercase tracking-wider font-semibold">Requested Date</p>
+<p class="text-body-md text-primary">Oct 24, 2023</p>
+</div>
+<button class="bg-primary text-on-primary font-label-sm text-label-sm px-6 py-3 rounded-lg active:scale-95 transition-all shadow-sm hover:opacity-90">
+                                        Create Insurance Plan
+                                    </button>
+</div>
+</div>
+</div>
+</div>
+<!-- Project Card 2 -->
+<div class="glass-card rounded-xl p-stack-md thin-border shadow-sm group hover:border-secondary/40 transition-all">
+<div class="flex flex-col md:flex-row gap-gutter">
+<div class="w-full md:w-48 h-32 rounded-lg overflow-hidden bg-surface-container">
+<img alt="Project Image" class="w-full h-full object-cover" data-alt="An artistic high-angle view of a modern urban wetlands filter system. Geometric water paths filled with aquatic plants contrast with clean concrete walkways. The lighting is bright and clear, highlighting the pristine nature of the sustainable infrastructure. The palette is dominated by fresh greens and cool water blues against neutral grays." src="https://lh3.googleusercontent.com/aida-public/AB6AXuDTMiXBQJPCHbtUsF4amhYcerjKN0xekETEmQYjxk8csMlY0ZgNX_5fPOg4ZkmQPDViZtopPCMAlYRAP9jFzD7-Qk5p2uEGRXyqF43AtZ2pjxaaNn7erWcVKV0Vzl8t7gpAkKi-n38S-eTRhBLX7jO-hwdWgZpLJuER3hkj9w0jA9cuQdthcIHGP5Y-Av0beKvWcLWBa3GzgaUSXHSLsGhlyyTaFxLN34F_C4UnlfRGWY4XGEmxHW-SUqE4BkNL2CNwan-Shf6o0S4"/>
+</div>
+<div class="flex-1 space-y-unit">
+<div class="flex justify-between items-start">
+<div>
+<h3 class="font-headline-md text-body-lg text-primary">Urban Wetland Purification</h3>
+<p class="text-on-surface-variant text-body-md opacity-80">City Infrastructure Group</p>
+</div>
+<span class="bg-on-tertiary-container/10 text-on-tertiary-container px-2 py-1 rounded-full text-[11px] font-bold uppercase tracking-widest flex items-center gap-1">
+<span class="material-symbols-outlined text-[14px]" style="font-variation-settings: 'FILL' 1;">check_circle</span> Approved
+                                    </span>
+</div>
+<div class="flex flex-wrap gap-2 py-2">
+<span class="bg-secondary-fixed/30 text-on-secondary-container px-3 py-1 rounded-full text-label-sm font-label-sm">Urban Ecology</span>
+<span class="bg-surface-container text-on-surface-variant px-3 py-1 rounded-full text-label-sm font-label-sm">Medium Yield</span>
+</div>
+<div class="flex items-center justify-between mt-4">
+<div class="space-y-1">
+<p class="text-on-surface-variant text-[11px] uppercase tracking-wider font-semibold">Requested Date</p>
+<p class="text-body-md text-primary">Nov 02, 2023</p>
+</div>
+<button class="bg-primary text-on-primary font-label-sm text-label-sm px-6 py-3 rounded-lg active:scale-95 transition-all shadow-sm hover:opacity-90">
+                                        Create Insurance Plan
+                                    </button>
+</div>
+</div>
+</div>
+</div>
+</div>
+</section>
+<!-- Recent Activity Sidebar -->
+<aside class="space-y-stack-md">
+<h2 class="font-headline-md text-headline-md text-primary">Recent Activity</h2>
+<div class="bg-surface-container-low/50 rounded-xl p-stack-md space-y-6 thin-border">
+<!-- Activity Item 1 -->
+<div class="flex gap-4">
+<div class="relative">
+<div class="w-8 h-8 rounded-full bg-secondary-fixed/40 flex items-center justify-center">
+<span class="material-symbols-outlined text-on-secondary-container text-[18px]">publish</span>
+</div>
+<div class="absolute top-10 left-4 w-[1px] h-10 bg-outline-variant/30"></div>
+</div>
+<div class="flex-1 pt-1">
+<p class="text-body-md text-primary font-semibold">Insurance plan published</p>
+<p class="text-on-surface-variant text-label-sm opacity-70">Murray-Darling Basin Recovery</p>
+<span class="text-[11px] text-on-surface-variant/60 block mt-1">2 hours ago</span>
+</div>
+</div>
+<!-- Activity Item 2 -->
+<div class="flex gap-4">
+<div class="relative">
+<div class="w-8 h-8 rounded-full bg-on-tertiary-container/10 flex items-center justify-center">
+<span class="material-symbols-outlined text-on-tertiary-container text-[18px]">verified</span>
+</div>
+<div class="absolute top-10 left-4 w-[1px] h-10 bg-outline-variant/30"></div>
+</div>
+<div class="flex-1 pt-1">
+<p class="text-body-md text-primary font-semibold">Coverage selected by issuer</p>
+<p class="text-on-surface-variant text-label-sm opacity-70">Aquifer Recharge Unit 4</p>
+<span class="text-[11px] text-on-surface-variant/60 block mt-1">5 hours ago</span>
+</div>
+</div>
+<!-- Activity Item 3 -->
+<div class="flex gap-4">
+<div class="w-8 h-8 rounded-full bg-primary-container/10 flex items-center justify-center">
+<span class="material-symbols-outlined text-on-primary-container text-[18px]">description</span>
+</div>
+<div class="flex-1 pt-1">
+<p class="text-body-md text-primary font-semibold">New certification approved</p>
+<p class="text-on-surface-variant text-label-sm opacity-70">Tasmanian Water Preserve</p>
+<span class="text-[11px] text-on-surface-variant/60 block mt-1">Yesterday</span>
+</div>
+</div>
+</div>
+<!-- Secondary Impact Mini-Card -->
+<div class="bg-primary-container text-on-primary-fixed-dim rounded-xl p-stack-md space-y-4">
+<div class="flex items-center gap-3">
+<span class="material-symbols-outlined text-secondary-fixed">shield_with_heart</span>
+<p class="font-headline-md text-body-lg text-white">Security Rating</p>
+</div>
+<p class="text-label-sm opacity-80 leading-relaxed">Your current provider security score is AAA. This enables preferred pricing on reinsurance markets.</p>
+<div class="w-full bg-white/10 h-1.5 rounded-full overflow-hidden">
+<div class="h-full bg-gradient-to-r from-secondary-fixed to-secondary-container" style="width: 92%"></div>
+</div>
+</div>
+</aside>
+</div>
+</main>
+<!-- Bottom Navigation Bar (Shared Component Implementation) -->
+<nav class="fixed bottom-0 left-0 w-full z-50 bg-surface/80 backdrop-blur-xl border-t border-outline-variant/20 shadow-[0_-4px_12px_rgba(0,0,0,0.04)] rounded-t-xl">
+<div class="flex justify-around items-center h-20 px-2 pb-safe w-full max-w-7xl mx-auto">
+<button class="flex flex-col items-center gap-1 text-secondary bg-secondary-container/10 rounded-xl px-3 py-1.5 transition-colors">
+<span class="material-symbols-outlined" style="font-variation-settings: 'FILL' 1;">home</span>
+<span class="font-label-sm text-label-sm">Home</span>
+</button>
+<button class="flex flex-col items-center gap-1 text-on-surface-variant hover:text-primary transition-colors active:scale-90 duration-200">
+<span class="material-symbols-outlined">pending_actions</span>
+<span class="font-label-sm text-label-sm">Requests</span>
+</button>
+<button class="flex flex-col items-center gap-1 text-on-surface-variant hover:text-primary transition-colors active:scale-90 duration-200">
+<span class="material-symbols-outlined">water_drop</span>
+<span class="font-label-sm text-label-sm">Credits</span>
+</button>
+<button class="flex flex-col items-center gap-1 text-on-surface-variant hover:text-primary transition-colors active:scale-90 duration-200">
+<span class="material-symbols-outlined">storefront</span>
+<span class="font-label-sm text-label-sm">Market</span>
+</button>
+<button class="flex flex-col items-center gap-1 text-on-surface-variant hover:text-primary transition-colors active:scale-90 duration-200">
+<span class="material-symbols-outlined">person</span>
+<span class="font-label-sm text-label-sm">Profile</span>
+</button>
+</div>
+</nav>
+</body></html>

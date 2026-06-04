@@ -1,0 +1,275 @@
+<!DOCTYPE html>
+
+<html class="light" lang="en"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600&amp;family=Manrope:wght@600;700;800&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<script id="tailwind-config">
+      tailwind.config = {
+        darkMode: "class",
+        theme: {
+          extend: {
+            "colors": {
+                    "surface-container-low": "#f2f4f6",
+                    "on-primary-container": "#76849f",
+                    "error": "#ba1a1a",
+                    "primary-fixed-dim": "#b9c7e4",
+                    "on-surface": "#191c1e",
+                    "surface-dim": "#d8dadc",
+                    "on-background": "#191c1e",
+                    "background": "#f7f9fb",
+                    "primary": "#000000",
+                    "on-secondary-fixed": "#001f24",
+                    "inverse-primary": "#b9c7e4",
+                    "tertiary": "#000000",
+                    "outline-variant": "#c5c6cd",
+                    "on-secondary-container": "#00616d",
+                    "secondary-fixed": "#9cf0ff",
+                    "on-primary-fixed-variant": "#39475f",
+                    "surface-container-lowest": "#ffffff",
+                    "on-error-container": "#93000a",
+                    "on-tertiary": "#ffffff",
+                    "surface-tint": "#515f78",
+                    "on-tertiary-fixed": "#002204",
+                    "on-error": "#ffffff",
+                    "primary-container": "#0d1c32",
+                    "surface": "#f7f9fb",
+                    "secondary-container": "#00e3fd",
+                    "error-container": "#ffdad6",
+                    "tertiary-fixed": "#a3f69c",
+                    "secondary": "#006875",
+                    "surface-container-high": "#e6e8ea",
+                    "inverse-surface": "#2d3133",
+                    "on-secondary": "#ffffff",
+                    "on-secondary-fixed-variant": "#004f58",
+                    "surface-bright": "#f7f9fb",
+                    "on-tertiary-fixed-variant": "#005312",
+                    "inverse-on-surface": "#eff1f3",
+                    "tertiary-container": "#002204",
+                    "on-primary-fixed": "#0d1c32",
+                    "secondary-fixed-dim": "#00daf3",
+                    "primary-fixed": "#d6e3ff",
+                    "on-surface-variant": "#44474d",
+                    "tertiary-fixed-dim": "#88d982",
+                    "surface-container": "#eceef0",
+                    "on-tertiary-container": "#469446",
+                    "outline": "#75777e",
+                    "on-primary": "#ffffff",
+                    "surface-container-highest": "#e0e3e5",
+                    "surface-variant": "#e0e3e5"
+            },
+            "borderRadius": {
+                    "DEFAULT": "0.25rem",
+                    "lg": "0.5rem",
+                    "xl": "0.75rem",
+                    "full": "9999px"
+            },
+            "spacing": {
+                    "stack-lg": "32px",
+                    "unit": "4px",
+                    "stack-sm": "8px",
+                    "stack-md": "16px",
+                    "gutter": "16px",
+                    "container-padding": "20px"
+            },
+            "fontFamily": {
+                    "display-lg": ["Manrope"],
+                    "label-sm": ["Inter"],
+                    "body-md": ["Inter"],
+                    "headline-md": ["Manrope"],
+                    "body-lg": ["Inter"]
+            },
+            "fontSize": {
+                    "display-lg": ["40px", {"lineHeight": "48px", "letterSpacing": "-0.02em", "fontWeight": "700"}],
+                    "label-sm": ["13px", {"lineHeight": "16px", "letterSpacing": "0.05em", "fontWeight": "600"}],
+                    "body-md": ["16px", {"lineHeight": "24px", "fontWeight": "400"}],
+                    "headline-md": ["24px", {"lineHeight": "32px", "letterSpacing": "-0.01em", "fontWeight": "600"}],
+                    "body-lg": ["18px", {"lineHeight": "28px", "fontWeight": "400"}]
+            }
+          },
+        },
+      }
+    </script>
+<style>
+        .glass-card {
+            background: rgba(255, 255, 255, 0.7);
+            backdrop-filter: blur(20px);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+        }
+        .progress-gradient {
+            background: linear-gradient(90deg, #0d1c32 0%, #00daf3 100%);
+        }
+    </style>
+<style>
+    body {
+      min-height: max(884px, 100dvh);
+    }
+  </style>
+  </head>
+<body class="bg-surface text-on-surface font-body-md min-h-screen pb-24">
+<!-- TopAppBar -->
+<header class="fixed top-0 left-0 w-full z-50 bg-surface/70 dark:bg-surface-container-lowest/70 backdrop-blur-md shadow-sm border-b border-outline-variant/10">
+<div class="flex justify-between items-center px-gutter h-16 w-full max-w-7xl mx-auto">
+<div class="flex items-center gap-3">
+<div class="w-10 h-10 rounded-full bg-primary-fixed flex items-center justify-center overflow-hidden border border-outline-variant/20">
+<img alt="User Profile" class="w-full h-full object-cover" data-alt="A professional profile portrait of a corporate executive in a modern, brightly lit office environment. The lighting is soft and natural, emphasizing a high-key, institutional aesthetic. The color palette is composed of clean whites and soft grays, matching a premium financial technology interface style. The mood is trustworthy and visionary." src="https://lh3.googleusercontent.com/aida-public/AB6AXuCd9n6u3-S5zQm9eGywoMnr4GP9RNjxOOVwUe5A3cyK_2xTP7IlSKfCdNcGhq3mqkNvnPEMG2eoHDZDGacxIY0zzI6KSgpsVF5XNsjiablmjoPBlE1jIAzspCZd60yABJkmloG3kBBpKsfxFpX_37kbFXtkBxrRP3YPe0VbPCVbf_0xyI8USjnT9ZW1uXkpyylNp2bw4DmDfV2Ek6Unt7oBri9sfpAl0rnMsrsGMdRIu--D_8u4ooOoCPN0qED28QmGhVPMliwFoc8"/>
+</div>
+<h1 class="font-display-lg text-headline-md text-primary dark:text-primary-fixed-dim tracking-tight">Water Ledger</h1>
+</div>
+<button class="w-10 h-10 flex items-center justify-center rounded-full text-on-surface-variant hover:opacity-80 active:scale-95 transition-all">
+<span class="material-symbols-outlined" data-icon="notifications">notifications</span>
+</button>
+</div>
+</header>
+<main class="pt-24 px-container-padding max-w-7xl mx-auto">
+<!-- Welcome Section -->
+<section class="mb-stack-lg">
+<div class="flex flex-col gap-1">
+<div class="flex items-center gap-2">
+<h2 class="font-headline-md text-headline-md text-primary">Welcome, AquaCorp Industries</h2>
+<span class="px-3 py-1 rounded-full bg-tertiary-fixed text-on-tertiary-fixed font-label-sm text-label-sm flex items-center gap-1">
+<span class="material-symbols-outlined text-[14px]" data-icon="verified" style="font-variation-settings: 'FILL' 1;">verified</span>
+                        Registered company
+                    </span>
+</div>
+<p class="text-on-surface-variant font-body-md">Your water stewardship dashboard is up to date.</p>
+</div>
+</section>
+<!-- Bento Grid Main Content -->
+<div class="grid grid-cols-1 md:grid-cols-12 gap-stack-md">
+<!-- Primary CTA Card -->
+<div class="md:col-span-8 glass-card rounded-xl p-stack-md flex flex-col justify-between min-h-[240px] relative overflow-hidden group border border-outline-variant/30 shadow-sm active:scale-[0.98] transition-all cursor-pointer">
+<div class="absolute inset-0 z-0 opacity-10">
+<img class="w-full h-full object-cover" data-alt="A macro photograph of pristine water ripples interacting with a sophisticated digital grid overlay. The lighting is cool and professional, featuring vibrant cyan and deep navy tones. The visual style is institutional yet visionary, suggesting high-tech water management and transparent ledger systems. The composition is expansive and minimalist." src="https://lh3.googleusercontent.com/aida-public/AB6AXuAG7no88RXUNplrvK9eUuc8zAoyIqDlW0Z_vSU02904ZhnVJ0NjwUCo_m-yEqrznddFzgmLAisE60s5GYZQynBIsKtPenX1bQdM8cWQmYGP8ZNaZgm3YhjNANNKYwmYZfbrcq-vUf6WvLSWwZtJxyrPLblnjrMGlvp1BhaUqDUIoHgefpJNIZ7udKFHOu8HtyVSNpCOTGIxzkr3_KAw8f-cb2qWstbz68epmr2bPWz9Bpk1XehZCVYBQ9ykCym1Fbs81NbnPBIG_co"/>
+</div>
+<div class="relative z-10">
+<span class="material-symbols-outlined text-secondary mb-stack-sm" data-icon="add_chart" style="font-variation-settings: 'FILL' 0;">add_chart</span>
+<h3 class="font-headline-md text-headline-md text-primary mb-2">Request Water Credit Issuance</h3>
+<p class="text-on-surface-variant max-w-md">Initiate a new certification cycle for your verified water conservation projects. Ensure all documentation is ready for audit.</p>
+</div>
+<div class="relative z-10 flex items-center gap-2 text-primary font-label-sm mt-stack-md group-hover:gap-4 transition-all">
+                    Get Started <span class="material-symbols-outlined" data-icon="arrow_forward">arrow_forward</span>
+</div>
+</div>
+<!-- Summary Stats Stack -->
+<div class="md:col-span-4 flex flex-col gap-stack-md">
+<!-- Active Requests -->
+<div class="bg-surface-container-lowest rounded-xl p-stack-md border border-outline-variant/30 shadow-sm">
+<div class="flex justify-between items-start mb-2">
+<p class="text-on-surface-variant font-label-sm uppercase tracking-wider">Active requests</p>
+<span class="material-symbols-outlined text-on-primary-container" data-icon="pending">pending</span>
+</div>
+<p class="font-display-lg text-display-lg text-primary">1</p>
+<div class="mt-4 flex flex-col gap-1">
+<div class="flex justify-between text-label-sm font-label-sm">
+<span class="text-on-surface-variant">Current stage</span>
+<span class="text-secondary">Under audit</span>
+</div>
+<div class="h-1.5 w-full bg-surface-container rounded-full overflow-hidden">
+<div class="h-full w-2/3 progress-gradient"></div>
+</div>
+</div>
+</div>
+<!-- Issued Credits -->
+<div class="bg-surface-container-lowest rounded-xl p-stack-md border border-outline-variant/30 shadow-sm">
+<div class="flex justify-between items-start mb-2">
+<p class="text-on-surface-variant font-label-sm uppercase tracking-wider">Issued credits</p>
+<span class="material-symbols-outlined text-secondary" data-icon="water_drop">water_drop</span>
+</div>
+<p class="font-display-lg text-display-lg text-primary">0</p>
+<p class="text-label-sm font-label-sm text-on-surface-variant mt-2 flex items-center gap-1">
+<span class="material-symbols-outlined text-[14px]" data-icon="history">history</span>
+                        Cycle starts next quarter
+                    </p>
+</div>
+</div>
+<!-- Pending Action Card -->
+<div class="md:col-span-5 bg-primary-container rounded-xl p-stack-md text-on-primary flex flex-col justify-between border border-primary shadow-sm">
+<div>
+<div class="flex items-center gap-2 mb-stack-md">
+<span class="material-symbols-outlined text-secondary-fixed" data-icon="assignment_late">assignment_late</span>
+<h4 class="font-label-sm text-label-sm text-secondary-fixed uppercase">Pending action</h4>
+</div>
+<h3 class="font-headline-md text-headline-md text-white mb-2">Upload documentation</h3>
+<p class="text-on-primary-container font-body-md">Required for Request #WTR-8829. Missing hydrological impact report for Q3.</p>
+</div>
+<button class="mt-stack-lg bg-secondary-fixed text-on-secondary-fixed font-label-sm py-3 px-6 rounded-lg text-center hover:opacity-90 transition-all active:scale-95">
+                    Resolve Now
+                </button>
+</div>
+<!-- Activity List -->
+<div class="md:col-span-7 bg-surface-container-lowest rounded-xl p-stack-md border border-outline-variant/30 shadow-sm">
+<div class="flex justify-between items-center mb-stack-md">
+<h4 class="font-headline-md text-headline-md text-primary">Recent activity</h4>
+<button class="text-secondary font-label-sm">View all</button>
+</div>
+<div class="flex flex-col gap-4">
+<div class="flex items-center gap-4 py-2 border-b border-outline-variant/10">
+<div class="w-10 h-10 rounded-full bg-surface-container flex items-center justify-center">
+<span class="material-symbols-outlined text-on-surface-variant" data-icon="description">description</span>
+</div>
+<div class="flex-1">
+<p class="font-label-sm text-primary">Verification report received</p>
+<p class="text-label-sm text-on-surface-variant">Project: Alpha Wetlands Regeneration</p>
+</div>
+<p class="text-label-sm text-on-surface-variant">2h ago</p>
+</div>
+<div class="flex items-center gap-4 py-2 border-b border-outline-variant/10">
+<div class="w-10 h-10 rounded-full bg-surface-container flex items-center justify-center">
+<span class="material-symbols-outlined text-on-surface-variant" data-icon="account_balance">account_balance</span>
+</div>
+<div class="flex-1">
+<p class="font-label-sm text-primary">New request #WTR-8829 created</p>
+<p class="text-label-sm text-on-surface-variant">Status: Initial Review</p>
+</div>
+<p class="text-label-sm text-on-surface-variant">Yesterday</p>
+</div>
+<div class="flex items-center gap-4 py-2">
+<div class="w-10 h-10 rounded-full bg-surface-container flex items-center justify-center">
+<span class="material-symbols-outlined text-on-surface-variant" data-icon="security">security</span>
+</div>
+<div class="flex-1">
+<p class="font-label-sm text-primary">Company profile verified</p>
+<p class="text-label-sm text-on-surface-variant">Compliance check completed</p>
+</div>
+<p class="text-label-sm text-on-surface-variant">3 days ago</p>
+</div>
+</div>
+</div>
+<!-- Empty Marketplace State (Subtle) -->
+<div class="md:col-span-12 glass-card rounded-xl p-stack-lg border border-dashed border-outline-variant text-center">
+<span class="material-symbols-outlined text-outline-variant text-4xl mb-stack-sm" data-icon="storefront">storefront</span>
+<h4 class="font-headline-md text-headline-md text-on-surface-variant">No marketplace listings</h4>
+<p class="text-on-surface-variant font-body-md max-w-sm mx-auto mt-2">You haven't listed any credits for sale yet. Once your credits are issued, you can list them here.</p>
+</div>
+</div>
+</main>
+<!-- BottomNavBar -->
+<nav class="fixed bottom-0 left-0 w-full z-50 bg-surface/80 dark:bg-surface-container-lowest/80 backdrop-blur-xl rounded-t-xl border-t border-outline-variant/20 shadow-[0_-4px_12px_rgba(0,0,0,0.04)]">
+<div class="flex justify-around items-center h-20 px-2 pb-safe w-full">
+<a class="flex flex-col items-center gap-1 text-secondary dark:text-secondary-fixed-dim bg-secondary-container/10 rounded-xl px-3 py-1.5 transition-colors" href="#">
+<span class="material-symbols-outlined" data-icon="home" style="font-variation-settings: 'FILL' 1;">home</span>
+<span class="font-label-sm text-label-sm">Home</span>
+</a>
+<a class="flex flex-col items-center gap-1 text-on-surface-variant hover:text-primary transition-colors active:scale-90 duration-200" href="#">
+<span class="material-symbols-outlined" data-icon="pending_actions">pending_actions</span>
+<span class="font-label-sm text-label-sm">Requests</span>
+</a>
+<a class="flex flex-col items-center gap-1 text-on-surface-variant hover:text-primary transition-colors active:scale-90 duration-200" href="#">
+<span class="material-symbols-outlined" data-icon="water_drop">water_drop</span>
+<span class="font-label-sm text-label-sm">Credits</span>
+</a>
+<a class="flex flex-col items-center gap-1 text-on-surface-variant hover:text-primary transition-colors active:scale-90 duration-200" href="#">
+<span class="material-symbols-outlined" data-icon="storefront">storefront</span>
+<span class="font-label-sm text-label-sm">Market</span>
+</a>
+<a class="flex flex-col items-center gap-1 text-on-surface-variant hover:text-primary transition-colors active:scale-90 duration-200" href="#">
+<span class="material-symbols-outlined" data-icon="person">person</span>
+<span class="font-label-sm text-label-sm">Profile</span>
+</a>
+</div>
+</nav>
+</body></html>

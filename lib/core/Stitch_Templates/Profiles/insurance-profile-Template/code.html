@@ -1,0 +1,286 @@
+<!DOCTYPE html>
+
+<html class="light" lang="en"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600&amp;family=Manrope:wght@600;700&amp;family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<style>
+        .material-symbols-outlined {
+            font-variation-settings: 'FILL' 0, 'wght' 200, 'GRAD' 0, 'opsz' 24;
+        }
+        .glass-card {
+            background: rgba(255, 255, 255, 0.7);
+            backdrop-filter: blur(20px);
+            border: 1px solid rgba(255, 255, 255, 0.5);
+        }
+        .text-gradient {
+            background: linear-gradient(135deg, #000000 0%, #006875 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+    </style>
+<script id="tailwind-config">
+      tailwind.config = {
+        darkMode: "class",
+        theme: {
+          extend: {
+            "colors": {
+                    "secondary-fixed-dim": "#00daf3",
+                    "primary-fixed": "#d6e3ff",
+                    "tertiary-container": "#002204",
+                    "on-tertiary-fixed-variant": "#005312",
+                    "inverse-primary": "#b9c7e4",
+                    "on-primary-fixed": "#0d1c32",
+                    "primary-container": "#0d1c32",
+                    "on-secondary": "#ffffff",
+                    "surface-container-high": "#e6e8ea",
+                    "secondary-fixed": "#9cf0ff",
+                    "inverse-on-surface": "#eff1f3",
+                    "tertiary-fixed-dim": "#88d982",
+                    "inverse-surface": "#2d3133",
+                    "primary": "#000000",
+                    "error-container": "#ffdad6",
+                    "on-tertiary": "#ffffff",
+                    "on-secondary-fixed": "#001f24",
+                    "on-surface": "#191c1e",
+                    "surface-container-highest": "#e0e3e5",
+                    "surface-container": "#eceef0",
+                    "on-background": "#191c1e",
+                    "surface-tint": "#515f78",
+                    "outline-variant": "#c5c6cd",
+                    "surface-container-low": "#f2f4f6",
+                    "on-primary": "#ffffff",
+                    "on-tertiary-container": "#469446",
+                    "error": "#ba1a1a",
+                    "surface-dim": "#d8dadc",
+                    "secondary-container": "#00e3fd",
+                    "on-tertiary-fixed": "#002204",
+                    "on-error": "#ffffff",
+                    "outline": "#75777e",
+                    "on-primary-container": "#76849f",
+                    "surface-variant": "#e0e3e5",
+                    "background": "#f7f9fb",
+                    "on-secondary-container": "#00616d",
+                    "secondary": "#006875",
+                    "tertiary": "#000000"
+            },
+            "borderRadius": {
+                    "DEFAULT": "0.25rem",
+                    "lg": "0.5rem",
+                    "xl": "0.75rem",
+                    "full": "9999px"
+            },
+            "spacing": {
+                    "stack-sm": "8px",
+                    "stack-md": "16px",
+                    "gutter": "16px",
+                    "stack-lg": "32px",
+                    "unit": "4px",
+                    "container-padding": "20px"
+            },
+            "fontFamily": {
+                    "label-sm": ["Inter"],
+                    "body-md": ["Inter"],
+                    "headline-md": ["Manrope"],
+                    "display-lg": ["Manrope"],
+                    "body-lg": ["Inter"]
+            },
+            "fontSize": {
+                    "label-sm": ["13px", {"lineHeight": "16px", "letterSpacing": "0.05em", "fontWeight": "600"}],
+                    "body-md": ["16px", {"lineHeight": "24px", "fontWeight": "400"}],
+                    "headline-md": ["24px", {"lineHeight": "32px", "letterSpacing": "-0.01em", "fontWeight": "600"}],
+                    "headline-md-mobile": ["20px", {"lineHeight": "28px", "letterSpacing": "-0.01em", "fontWeight": "600"}],
+                    "display-lg": ["40px", {"lineHeight": "48px", "letterSpacing": "-0.02em", "fontWeight": "700"}],
+                    "body-lg": ["18px", {"lineHeight": "28px", "fontWeight": "400"}]
+            }
+          },
+        },
+      }
+    </script>
+<style>
+    body {
+      min-height: max(884px, 100dvh);
+    }
+  </style>
+  </head>
+<body class="bg-surface text-on-surface font-body-md min-h-screen pb-32">
+<!-- TopAppBar -->
+<header class="fixed top-0 w-full z-50 bg-surface/70 backdrop-blur-xl border-b border-white/10 shadow-sm h-16 max-w-md mx-auto left-0 right-0 flex justify-between items-center px-container-padding">
+<div class="flex items-center gap-3">
+<div class="w-10 h-10 rounded-full bg-primary-container flex items-center justify-center overflow-hidden border border-outline-variant">
+<img alt="EcoRisk Logo" class="w-6 h-6 invert" src="https://lh3.googleusercontent.com/aida-public/AB6AXuBsWII-t6Mhu4cuibImD7mBo2GVCCWCDG_WtVq2ZH4wzxnXqVYXlIS7Bh1Ob9Sl7jQKdwlL89jIdnU8SBjuqyzUI2_1IrWwT5TsCGz4TH8H_xCMNAgO2IpyV99Nyb3wkRe0_oB0cl-Ajsvmy7Trnd30gknvK8u8pDYTaO_oopQq3TIxLKbeEsGOkMxk0GTBuBvgKS1aZUKBt12ffKZGge9tISlqpNBuYsvSpYdDcXH7e7jE02DM96LDRWbKn7_dH1mGsDQ69NGIY8I"/>
+</div>
+<span class="font-headline-md-mobile text-headline-md-mobile font-bold text-primary">HydroWealth</span>
+</div>
+<button class="active:scale-95 transition-transform duration-200 text-on-surface-variant hover:opacity-80">
+<span class="material-symbols-outlined" data-icon="notifications">notifications</span>
+</button>
+</header>
+<main class="max-w-md mx-auto pt-24 px-container-padding space-y-6">
+<!-- Profile Header Section -->
+<section class="flex flex-col items-center text-center space-y-4">
+<div class="relative">
+<div class="w-24 h-24 rounded-2xl bg-surface-container-highest flex items-center justify-center overflow-hidden border-2 border-white shadow-lg">
+<img class="w-full h-full object-cover" data-alt="A professional corporate building exterior with clean glass windows reflecting a clear blue sky. The architecture is modern and minimalist, conveying a sense of corporate stability and institutional trust. The lighting is bright, high-key daylight, emphasizing a clean and professional atmosphere consistent with an insurance provider's brand identity." src="https://lh3.googleusercontent.com/aida-public/AB6AXuBD9ye5WatoMIBwheSPtxGdUwTwLgRF9IewNbpXsUJAjjHyzED4X9Ly3eHjO552rcUDGp8lPSN2HoFJ5qBGUvDuIM61Nlsbtd-dxx-Ka3IAGSvES8w42RRMGc1-SSGurqfqopZPusED34EHQL6LshD0rXAcvyy0titC47UhepaN03Q-KybLkWwWI9Sj6VdScWFTFqADTEsC-lYr1C_-SrTuB7i6uY6PlUK7Ffe5-FuHRSF0YkEzJllZ17ui8728BcW_cl2PvwUXP1w"/>
+</div>
+<div class="absolute -bottom-2 -right-2 bg-secondary text-on-secondary px-3 py-1 rounded-full flex items-center gap-1 shadow-md">
+<span class="material-symbols-outlined text-[14px]" data-icon="verified" style="font-variation-settings: 'FILL' 1;">verified</span>
+<span class="font-label-sm text-[10px] uppercase tracking-wider">Verified</span>
+</div>
+</div>
+<div class="space-y-1">
+<h1 class="font-headline-md text-headline-md text-primary">EcoRisk Insurance</h1>
+<div class="flex items-center justify-center gap-2 flex-wrap">
+<span class="bg-primary-container text-on-primary-container px-3 py-1 rounded-lg font-label-sm text-label-sm">Insurance Provider</span>
+<span class="flex items-center gap-1 text-on-surface-variant font-label-sm text-label-sm">
+<span class="material-symbols-outlined text-sm" data-icon="location_on">location_on</span>
+                        Middle East
+                    </span>
+</div>
+</div>
+<button class="w-full py-3 bg-primary text-on-primary rounded-xl font-label-sm text-label-sm shadow-sm active:scale-95 transition-transform duration-200 flex items-center justify-center gap-2">
+<span class="material-symbols-outlined text-lg" data-icon="edit">edit</span>
+                Edit Profile
+            </button>
+</section>
+<!-- Basic Info Bento Grid -->
+<section class="grid grid-cols-2 gap-3">
+<div class="glass-card p-4 rounded-2xl space-y-1">
+<p class="text-on-surface-variant font-label-sm text-label-sm">Email</p>
+<p class="text-primary font-bold truncate">underwriting@ecorisk.com</p>
+</div>
+<div class="glass-card p-4 rounded-2xl space-y-1">
+<p class="text-on-surface-variant font-label-sm text-label-sm">Phone</p>
+<p class="text-primary font-bold">+971 4 123 4567</p>
+</div>
+<div class="glass-card p-4 rounded-2xl space-y-1">
+<p class="text-on-surface-variant font-label-sm text-label-sm">Reg Date</p>
+<p class="text-primary font-bold">Feb 2023</p>
+</div>
+<div class="glass-card p-4 rounded-2xl space-y-1">
+<p class="text-on-surface-variant font-label-sm text-label-sm">Status</p>
+<div class="flex items-center gap-1.5 text-[#005312]">
+<span class="w-2 h-2 rounded-full bg-[#469446] animate-pulse"></span>
+<p class="font-bold">Active</p>
+</div>
+</div>
+</section>
+<!-- Role-Specific Metrics -->
+<section class="space-y-4">
+<h2 class="font-headline-md text-headline-md-mobile text-primary px-1">Portfolio Insights</h2>
+<div class="grid grid-cols-1 gap-4">
+<!-- Large Stats Card -->
+<div class="bg-primary-container text-on-primary-container p-5 rounded-2xl shadow-sm relative overflow-hidden">
+<div class="relative z-10 flex justify-between items-end">
+<div class="space-y-1">
+<p class="font-label-sm text-label-sm opacity-80 uppercase tracking-widest">Active Coverages</p>
+<p class="font-display-lg text-display-lg text-primary-fixed">42</p>
+</div>
+<div class="text-right">
+<p class="font-label-sm text-label-sm opacity-80 mb-1">Risk Category</p>
+<span class="bg-secondary-fixed-dim text-on-secondary-fixed px-3 py-1 rounded-full font-bold text-xs">Medium-High</span>
+</div>
+</div>
+<!-- Decorative background curve -->
+<div class="absolute -right-10 -bottom-10 w-40 h-40 bg-secondary/10 rounded-full blur-3xl"></div>
+</div>
+<!-- Secondary Grid -->
+<div class="grid grid-cols-2 gap-4">
+<div class="glass-card p-4 rounded-2xl">
+<div class="flex items-center gap-2 mb-2 text-secondary">
+<span class="material-symbols-outlined" data-icon="water_drop">water_drop</span>
+<span class="font-label-sm text-label-sm">Coverage</span>
+</div>
+<div class="flex flex-wrap gap-1">
+<span class="px-2 py-0.5 bg-surface-container rounded text-xs font-semibold">Flood</span>
+<span class="px-2 py-0.5 bg-surface-container rounded text-xs font-semibold">Scarcity</span>
+</div>
+</div>
+<div class="glass-card p-4 rounded-2xl">
+<div class="flex items-center gap-2 mb-2 text-secondary">
+<span class="material-symbols-outlined" data-icon="description">description</span>
+<span class="font-label-sm text-label-sm">Plans</span>
+</div>
+<p class="text-2xl font-bold text-primary">12</p>
+<p class="text-[10px] text-on-surface-variant">Published to Market</p>
+</div>
+</div>
+</div>
+</section>
+<!-- Recent Activity -->
+<section class="space-y-4">
+<div class="flex justify-between items-center px-1">
+<h2 class="font-headline-md text-headline-md-mobile text-primary">Recent Activity</h2>
+<button class="text-secondary font-label-sm text-label-sm">View All</button>
+</div>
+<div class="space-y-2">
+<div class="flex items-start gap-4 p-4 glass-card rounded-2xl transition-all hover:translate-x-1">
+<div class="w-10 h-10 rounded-xl bg-surface-container-high flex items-center justify-center text-on-surface-variant">
+<span class="material-symbols-outlined" data-icon="login">login</span>
+</div>
+<div class="flex-1">
+<p class="text-sm font-semibold text-primary">Logged in via Enterprise Portal</p>
+<p class="text-xs text-on-surface-variant">Session started from Dubai, UAE</p>
+</div>
+<span class="text-[10px] font-medium text-on-surface-variant whitespace-nowrap">6h ago</span>
+</div>
+<div class="flex items-start gap-4 p-4 glass-card rounded-2xl transition-all hover:translate-x-1 border-l-4 border-secondary">
+<div class="w-10 h-10 rounded-xl bg-secondary-fixed flex items-center justify-center text-on-secondary-container">
+<span class="material-symbols-outlined" data-icon="add_task">add_task</span>
+</div>
+<div class="flex-1">
+<p class="text-sm font-semibold text-primary">New insurance plan published</p>
+<p class="text-xs text-on-surface-variant">Desert Re-greening Parametric</p>
+</div>
+<span class="text-[10px] font-medium text-on-surface-variant whitespace-nowrap">Yesterday</span>
+</div>
+<div class="flex items-start gap-4 p-4 glass-card rounded-2xl transition-all hover:translate-x-1 border-l-4 border-tertiary-fixed-dim">
+<div class="w-10 h-10 rounded-xl bg-tertiary-fixed flex items-center justify-center text-on-tertiary-container">
+<span class="material-symbols-outlined" data-icon="check_circle">check_circle</span>
+</div>
+<div class="flex-1">
+<p class="text-sm font-semibold text-primary">Coverage claim approved</p>
+<p class="text-xs text-on-surface-variant">ID: #DXB-992-K89 approved for payout</p>
+</div>
+<span class="text-[10px] font-medium text-on-surface-variant whitespace-nowrap">2d ago</span>
+</div>
+</div>
+</section>
+</main>
+<!-- BottomNavBar -->
+<nav class="fixed bottom-0 left-0 w-full z-50 bg-surface/80 backdrop-blur-xl border-t border-white/10 shadow-lg flex justify-around items-center px-4 py-3 pb-safe max-w-md mx-auto right-0 rounded-t-xl">
+<a class="flex flex-col items-center justify-center text-on-surface-variant hover:bg-surface-container-low rounded-full px-2 py-1 active:scale-90 transition-transform duration-200" href="#">
+<span class="material-symbols-outlined" data-icon="dashboard">dashboard</span>
+<span class="font-label-sm text-label-sm">Home</span>
+</a>
+<a class="flex flex-col items-center justify-center text-on-surface-variant hover:bg-surface-container-low rounded-full px-2 py-1 active:scale-90 transition-transform duration-200" href="#">
+<span class="material-symbols-outlined" data-icon="water_drop">water_drop</span>
+<span class="font-label-sm text-label-sm">Projects</span>
+</a>
+<a class="flex flex-col items-center justify-center text-on-surface-variant hover:bg-surface-container-low rounded-full px-2 py-1 active:scale-90 transition-transform duration-200" href="#">
+<span class="material-symbols-outlined" data-icon="account_balance_wallet">account_balance_wallet</span>
+<span class="font-label-sm text-label-sm">Credits</span>
+</a>
+<a class="flex flex-col items-center justify-center text-on-surface-variant hover:bg-surface-container-low rounded-full px-2 py-1 active:scale-90 transition-transform duration-200" href="#">
+<span class="material-symbols-outlined" data-icon="storefront">storefront</span>
+<span class="font-label-sm text-label-sm">Market</span>
+</a>
+<a class="flex flex-col items-center justify-center text-secondary font-bold hover:bg-surface-container-low rounded-full px-2 py-1 active:scale-90 transition-transform duration-200" href="#">
+<span class="material-symbols-outlined" data-icon="person" style="font-variation-settings: 'FILL' 1;">person</span>
+<span class="font-label-sm text-label-sm">Profile</span>
+</a>
+</nav>
+<script>
+        // Micro-interaction for activity cards
+        document.querySelectorAll('.glass-card').forEach(card => {
+            card.addEventListener('touchstart', () => {
+                card.style.transform = 'scale(0.98)';
+            });
+            card.addEventListener('touchend', () => {
+                card.style.transform = 'scale(1)';
+            });
+        });
+    </script>
+</body></html>

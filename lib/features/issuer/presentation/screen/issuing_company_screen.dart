@@ -38,17 +38,18 @@ class _DocumentsView extends ConsumerWidget {
             ),
             ElevatedButton.icon(
               onPressed: () async {
-                final session = ref.read(sessionProvider);
-                if (!session.isCompany || session.companyId == null) {
+                // session es AsyncValue<UserModel?> — usamos .value para leer sincrónicamente
+                final user = ref.read(sessionProvider).value;
+                if (user == null || !user.canIssue && user.role.value != 'Company') {
                   ScaffoldMessenger.of(context).showSnackBar(
                     const SnackBar(content: Text('Acceso denegado: no hay empresa autenticada')),
                   );
-                  return;// aca se puede redireccionar a una pantalla home o de login
+                  return;
                 }
 
                 // Crear borrador para la empresa autenticada
                 try {
-                  await ref.read(creditRequestProvider.notifier).createDraft(session.companyId!);
+                  await ref.read(creditRequestProvider.notifier).createDraft(user.uid);
                 } catch (e) {
                   ScaffoldMessenger.of(context).showSnackBar(
                     SnackBar(content: Text('Error creando borrador: $e')),

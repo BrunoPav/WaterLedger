@@ -1,0 +1,288 @@
+<!DOCTYPE html>
+
+<html class="light" lang="en"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>Certification Dashboard</title>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<link href="https://fonts.googleapis.com/css2?family=Manrope:wght@400;600;700;800&amp;family=Inter:wght@400;600;700&amp;family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<script id="tailwind-config">
+        tailwind.config = {
+            darkMode: "class",
+            theme: {
+                extend: {
+                    "colors": {
+                        "on-surface": "#191c1e",
+                        "surface-variant": "#e0e3e5",
+                        "on-tertiary-container": "#469446",
+                        "tertiary": "#000000",
+                        "secondary-container": "#00e3fd",
+                        "on-tertiary": "#ffffff",
+                        "primary-fixed-dim": "#b9c7e4",
+                        "on-primary": "#ffffff",
+                        "error-container": "#ffdad6",
+                        "outline-variant": "#c5c6cd",
+                        "tertiary-fixed": "#a3f69c",
+                        "surface-container-high": "#e6e8ea",
+                        "primary-fixed": "#d6e3ff",
+                        "inverse-on-surface": "#eff1f3",
+                        "primary-container": "#0d1c32",
+                        "on-error": "#ffffff",
+                        "on-background": "#191c1e",
+                        "on-primary-fixed": "#0d1c32",
+                        "surface-container": "#eceef0",
+                        "secondary-fixed": "#9cf0ff",
+                        "background": "#f7f9fb",
+                        "on-tertiary-fixed": "#002204",
+                        "surface-container-lowest": "#ffffff",
+                        "secondary": "#006875",
+                        "tertiary-fixed-dim": "#88d982",
+                        "inverse-primary": "#b9c7e4",
+                        "error": "#ba1a1a",
+                        "surface-tint": "#515f78",
+                        "on-surface-variant": "#44474d",
+                        "surface-container-highest": "#e0e3e5",
+                        "on-tertiary-fixed-variant": "#005312",
+                        "surface": "#f7f9fb",
+                        "outline": "#75777e",
+                        "surface-bright": "#f7f9fb",
+                        "primary": "#000000",
+                        "on-error-container": "#93000a",
+                        "surface-dim": "#d8dadc",
+                        "on-secondary-fixed-variant": "#004f58",
+                        "surface-container-low": "#f2f4f6",
+                        "tertiary-container": "#002204",
+                        "on-primary-fixed-variant": "#39475f",
+                        "on-secondary-fixed": "#001f24",
+                        "on-primary-container": "#76849f",
+                        "inverse-surface": "#2d3133",
+                        "secondary-fixed-dim": "#00daf3",
+                        "on-secondary-container": "#00616d",
+                        "on-secondary": "#ffffff"
+                    },
+                    "borderRadius": {
+                        "DEFAULT": "0.25rem",
+                        "lg": "0.5rem",
+                        "xl": "0.75rem",
+                        "full": "9999px"
+                    },
+                    "spacing": {
+                        "container-padding": "20px",
+                        "stack-sm": "8px",
+                        "stack-lg": "32px",
+                        "stack-md": "16px",
+                        "gutter": "16px",
+                        "unit": "4px"
+                    },
+                    "fontFamily": {
+                        "body-lg": ["Inter"],
+                        "label-sm": ["Inter"],
+                        "display-lg": ["Manrope"],
+                        "headline-md": ["Manrope"],
+                        "body-md": ["Inter"]
+                    },
+                    "fontSize": {
+                        "body-lg": ["18px", {"lineHeight": "28px", "fontWeight": "400"}],
+                        "label-sm": ["13px", {"lineHeight": "16px", "letterSpacing": "0.05em", "fontWeight": "600"}],
+                        "display-lg": ["40px", {"lineHeight": "48px", "letterSpacing": "-0.02em", "fontWeight": "700"}],
+                        "headline-md": ["24px", {"lineHeight": "32px", "letterSpacing": "-0.01em", "fontWeight": "600"}],
+                        "body-md": ["16px", {"lineHeight": "24px", "fontWeight": "400"}]
+                    }
+                },
+            },
+        }
+    </script>
+<style>
+        body { -webkit-font-smoothing: antialiased; }
+        .glass-card {
+            background: rgba(255, 255, 255, 0.7);
+            backdrop-filter: blur(20px);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+        }
+        .material-symbols-outlined {
+            font-variation-settings: 'FILL' 0, 'wght' 200, 'GRAD' 0, 'opsz' 24;
+        }
+    </style>
+<style>
+    body {
+      min-height: max(884px, 100dvh);
+    }
+  </style>
+  </head>
+<body class="bg-background text-on-surface font-body-md min-h-screen pb-32">
+<!-- TopAppBar -->
+<header class="bg-surface/70 dark:bg-surface-dim/70 backdrop-blur-md border-b border-outline-variant/10 font-headline-md text-headline-md docked full-width top-0 sticky z-40">
+<div class="flex justify-between items-center px-container-padding h-16 w-full max-w-7xl mx-auto">
+<div class="flex items-center gap-3">
+<div class="w-8 h-8 rounded-full overflow-hidden border border-outline-variant/30">
+<img alt="Certification Officer" class="w-full h-full object-cover" data-alt="A professional close-up portrait of a certification officer in a modern, brightly lit office environment. The lighting is soft and high-key, emphasizing a trust-focused, institutional aesthetic. The background is a clean, minimalist architectural space with neutral tones, aligning with a high-end fintech brand. The officer wears a crisp white shirt, projecting reliability and visionary leadership." src="https://lh3.googleusercontent.com/aida-public/AB6AXuBVv0sA4wAyTJPZ901jvVQJWVLzIkc5qFbwuc-uM--Lh_5rRxmSWsJk-5TehktqnWIR10SgFe85ef8fkcCAS3_3hFbezE_redN6V35kFIcbq926L2c2k0eKpSFx96RzjuvYvibEvnYEZFk3pobrwVxqKSm7d7T28kUvgt3_CGPtgZmtU-z4X3PdMJGtS8yAMDHW3LeV3Ruitxaz-cU_j_-ILk6CetfZdV0r9VxqyAd01qoPVBJjGmrvJKq0K_LmxRgcHb0CAr_1kcg"/>
+</div>
+<span class="font-display-lg text-headline-md text-primary tracking-tight">WaterCredit</span>
+</div>
+<button class="w-10 h-10 flex items-center justify-center rounded-full hover:bg-surface-container-high transition-colors active:scale-95 duration-200">
+<span class="material-symbols-outlined text-primary">search</span>
+</button>
+</div>
+</header>
+<main class="max-w-7xl mx-auto px-container-padding pt-6 space-y-stack-lg">
+<!-- Header -->
+<section class="space-y-unit">
+<h1 class="font-display-lg text-display-lg text-primary leading-tight">Certification Dashboard</h1>
+<p class="text-on-surface-variant font-body-md">Review approved audit projects and manage certification decisions.</p>
+</section>
+<!-- KPI Section -->
+<section class="grid grid-cols-2 md:grid-cols-4 gap-gutter">
+<div class="glass-card p-4 rounded-xl border border-outline-variant/20 flex flex-col gap-unit shadow-sm">
+<div class="flex items-center justify-between">
+<span class="material-symbols-outlined text-secondary opacity-80">pending_actions</span>
+</div>
+<span class="text-display-lg font-display-lg leading-none mt-2">12</span>
+<span class="font-label-sm text-on-surface-variant uppercase tracking-wider">Pending</span>
+</div>
+<div class="glass-card p-4 rounded-xl border border-outline-variant/20 flex flex-col gap-unit shadow-sm">
+<div class="flex items-center justify-between">
+<span class="material-symbols-outlined text-on-tertiary-container opacity-80">verified</span>
+</div>
+<span class="text-display-lg font-display-lg leading-none mt-2">45</span>
+<span class="font-label-sm text-on-surface-variant uppercase tracking-wider">Approved</span>
+</div>
+<div class="glass-card p-4 rounded-xl border border-outline-variant/20 flex flex-col gap-unit shadow-sm">
+<div class="flex items-center justify-between">
+<span class="material-symbols-outlined text-error opacity-80">cancel</span>
+</div>
+<span class="text-display-lg font-display-lg leading-none mt-2">3</span>
+<span class="font-label-sm text-on-surface-variant uppercase tracking-wider">Rejected</span>
+</div>
+<div class="glass-card p-4 rounded-xl border border-outline-variant/20 flex flex-col gap-unit shadow-sm">
+<div class="flex items-center justify-between">
+<span class="material-symbols-outlined text-primary opacity-80">analytics</span>
+</div>
+<span class="text-display-lg font-display-lg leading-none mt-2">+5</span>
+<span class="font-label-sm text-on-surface-variant uppercase tracking-wider">Today</span>
+</div>
+</section>
+<!-- Main Content: Projects -->
+<section class="space-y-gutter">
+<div class="flex items-center justify-between">
+<h2 class="font-headline-md text-headline-md text-primary">Projects Awaiting Certification</h2>
+<button class="text-secondary font-label-sm hover:underline">View All</button>
+</div>
+<div class="space-y-stack-md">
+<!-- Project Card 1 -->
+<div class="glass-card rounded-xl border border-outline-variant/20 p-stack-md shadow-sm transition-all hover:border-secondary/30">
+<div class="flex justify-between items-start mb-4">
+<div class="space-y-unit">
+<h3 class="font-headline-md text-[18px] text-primary">Mekong Delta Restoration</h3>
+<p class="font-label-sm text-on-surface-variant">AquaGlobal Corp</p>
+</div>
+<span class="bg-tertiary-fixed text-on-tertiary-fixed-variant text-[11px] font-bold px-2 py-0.5 rounded-full uppercase tracking-tighter">Approved</span>
+</div>
+<div class="bg-surface-container-low rounded-lg p-3 mb-4 space-y-2">
+<div class="flex items-center gap-2">
+<span class="material-symbols-outlined text-[18px] text-secondary">water_drop</span>
+<span class="font-body-md text-sm text-on-surface-variant">15% reduction in groundwater salinity</span>
+</div>
+<div class="flex items-center gap-4 border-t border-outline-variant/10 pt-2">
+<div class="flex items-center gap-1 text-[12px] font-semibold text-on-surface-variant">
+<span class="material-symbols-outlined text-[16px]">verified_user</span>
+                                Verified
+                            </div>
+<div class="flex items-center gap-1 text-[12px] font-semibold text-on-surface-variant">
+<span class="material-symbols-outlined text-[16px]">calendar_today</span>
+                                Oct 12, 2024
+                            </div>
+</div>
+</div>
+<button class="w-full bg-primary-container text-white font-label-sm py-3 rounded-lg flex items-center justify-center gap-2 transition-all active:scale-95">
+                        Review Certification
+                        <span class="material-symbols-outlined text-[18px]">arrow_forward</span>
+</button>
+</div>
+<!-- Project Card 2 -->
+<div class="glass-card rounded-xl border border-outline-variant/20 p-stack-md shadow-sm transition-all hover:border-secondary/30">
+<div class="flex justify-between items-start mb-4">
+<div class="space-y-unit">
+<h3 class="font-headline-md text-[18px] text-primary">Andes Watershed Project</h3>
+<p class="font-label-sm text-on-surface-variant">Summit Ecology Partners</p>
+</div>
+<span class="bg-tertiary-fixed text-on-tertiary-fixed-variant text-[11px] font-bold px-2 py-0.5 rounded-full uppercase tracking-tighter">Approved</span>
+</div>
+<div class="bg-surface-container-low rounded-lg p-3 mb-4 space-y-2">
+<div class="flex items-center gap-2">
+<span class="material-symbols-outlined text-[18px] text-secondary">eco</span>
+<span class="font-body-md text-sm text-on-surface-variant">400k hectares reforestation verified</span>
+</div>
+<div class="flex items-center gap-4 border-t border-outline-variant/10 pt-2">
+<div class="flex items-center gap-1 text-[12px] font-semibold text-on-surface-variant">
+<span class="material-symbols-outlined text-[16px]">verified_user</span>
+                                Verified
+                            </div>
+<div class="flex items-center gap-1 text-[12px] font-semibold text-on-surface-variant">
+<span class="material-symbols-outlined text-[16px]">calendar_today</span>
+                                Oct 10, 2024
+                            </div>
+</div>
+</div>
+<button class="w-full bg-primary-container text-white font-label-sm py-3 rounded-lg flex items-center justify-center gap-2 transition-all active:scale-95">
+                        Review Certification
+                        <span class="material-symbols-outlined text-[18px]">arrow_forward</span>
+</button>
+</div>
+</div>
+</section>
+<!-- Recent Activity -->
+<section class="space-y-gutter pb-10">
+<h2 class="font-headline-md text-headline-md text-primary">Recent Activity</h2>
+<div class="space-y-stack-sm">
+<div class="flex items-start gap-4 p-3 hover:bg-surface-container rounded-lg transition-colors">
+<div class="w-8 h-8 rounded-full bg-tertiary-fixed/30 flex items-center justify-center shrink-0">
+<span class="material-symbols-outlined text-on-tertiary-fixed-variant text-[18px]">check_circle</span>
+</div>
+<div class="space-y-0.5">
+<p class="font-body-md text-sm font-semibold">Certification approved - Ganges Basin</p>
+<p class="text-[12px] text-on-surface-variant">2 hours ago</p>
+</div>
+</div>
+<div class="flex items-start gap-4 p-3 hover:bg-surface-container rounded-lg transition-colors">
+<div class="w-8 h-8 rounded-full bg-secondary-fixed/30 flex items-center justify-center shrink-0">
+<span class="material-symbols-outlined text-secondary text-[18px]">analytics</span>
+</div>
+<div class="space-y-0.5">
+<p class="font-body-md text-sm font-semibold">Emission capacity updated - Nile Project</p>
+<p class="text-[12px] text-on-surface-variant">5 hours ago</p>
+</div>
+</div>
+<div class="flex items-start gap-4 p-3 hover:bg-surface-container rounded-lg transition-colors">
+<div class="w-8 h-8 rounded-full bg-primary-fixed/30 flex items-center justify-center shrink-0">
+<span class="material-symbols-outlined text-primary text-[18px]">shield_with_heart</span>
+</div>
+<div class="space-y-0.5">
+<p class="font-body-md text-sm font-semibold">Project moved to insurance stage - Amazon Basin</p>
+<p class="text-[12px] text-on-surface-variant">Yesterday</p>
+</div>
+</div>
+</div>
+</section>
+</main>
+<!-- BottomNavBar -->
+<nav class="fixed bottom-0 left-0 w-full flex justify-around items-center py-3 px-4 bg-surface/80 backdrop-blur-md border-t border-outline-variant/10 shadow-sm z-50 rounded-t-xl">
+<a class="flex flex-col items-center justify-center text-primary dark:text-secondary-fixed-dim font-semibold active:scale-90 transition-transform duration-150" href="#">
+<span class="material-symbols-outlined" style="font-variation-settings: 'FILL' 1;">dashboard</span>
+<span class="font-label-sm text-label-sm mt-1">Dashboard</span>
+</a>
+<a class="flex flex-col items-center justify-center text-on-surface-variant opacity-60 hover:opacity-100 active:scale-90 transition-transform duration-150" href="#">
+<span class="material-symbols-outlined">verified_user</span>
+<span class="font-label-sm text-label-sm mt-1">Certifications</span>
+</a>
+<a class="flex flex-col items-center justify-center text-on-surface-variant opacity-60 hover:opacity-100 active:scale-90 transition-transform duration-150 relative" href="#">
+<span class="material-symbols-outlined">notifications</span>
+<span class="font-label-sm text-label-sm mt-1">Notifications</span>
+<div class="absolute top-0 right-3 w-2 h-2 bg-error rounded-full"></div>
+</a>
+<a class="flex flex-col items-center justify-center text-on-surface-variant opacity-60 hover:opacity-100 active:scale-90 transition-transform duration-150" href="#">
+<span class="material-symbols-outlined">person</span>
+<span class="font-label-sm text-label-sm mt-1">Profile</span>
+</a>
+</nav>
+</body></html>

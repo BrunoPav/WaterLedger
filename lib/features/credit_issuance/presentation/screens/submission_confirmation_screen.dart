@@ -103,7 +103,7 @@ class SubmissionConfirmationScreen extends ConsumerWidget {
               SizedBox(
                 width: double.infinity,
                 child: ElevatedButton(
-                  onPressed: () => context.push('/request-tracking'),
+                  onPressed: () => context.push('/request-tracking/${request.id}'),
                   style: ElevatedButton.styleFrom(
                     backgroundColor: const Color(0xFF000000),
                     foregroundColor: Colors.white,
@@ -133,7 +133,7 @@ class SubmissionConfirmationScreen extends ConsumerWidget {
 
               // Botón secundario: Ir al Dashboard
               TextButton(
-                onPressed: () => context.go('/splash'),
+                onPressed: () => context.go('/home'),
                 child: const Text(
                   'Volver al Dashboard',
                   style: TextStyle(

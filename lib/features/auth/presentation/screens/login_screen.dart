@@ -1,18 +1,23 @@
 import 'dart:ui';
 import 'package:flutter/material.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
+import 'package:water_ledger/core/domain/exceptions/auth_exception.dart';
+import 'package:water_ledger/core/domain/validators/auth_validators.dart';
+import 'package:water_ledger/core/presentation/providers/session_provider.dart';
 
-class LoginScreen extends StatefulWidget {
+class LoginScreen extends ConsumerStatefulWidget {
   const LoginScreen({super.key});
 
   @override
-  State<LoginScreen> createState() => _LoginScreenState();
+  ConsumerState<LoginScreen> createState() => _LoginScreenState();
 }
 
-class _LoginScreenState extends State<LoginScreen> {
+class _LoginScreenState extends ConsumerState<LoginScreen> {
   final _emailController = TextEditingController();
   final _passwordController = TextEditingController();
   bool _obscurePassword = true;
+  bool _isLoading = false;
 
   // -- Design tokens extraídos de DESIGN.md / Stitch Template --
   static const _bgColor = Color(0xFFF7F9FB);
@@ -32,6 +37,55 @@ class _LoginScreenState extends State<LoginScreen> {
     _emailController.dispose();
     _passwordController.dispose();
     super.dispose();
+  }
+
+  Future<void> _handleLogin() async {
+    final email = _emailController.text.trim();
+    final password = _passwordController.text;
+    // Validación cliente: formato email + longitud mínima de password.
+    // Atrapa errores triviales antes de hacer round-trip a Firebase.
+    final error = AuthValidators.firstError([
+      () => AuthValidators.email(email),
+      () => AuthValidators.password(password),
+    ]);
+    if (error != null) {
+      ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text(error)));
+      return;
+    }
+    setState(() => _isLoading = true);
+    try {
+      await ref.read(authRepositoryProvider).login(email: email, password: password);
+      if (!mounted) return;
+      // Bug del race condition logout → login:
+      //   - Después del logout sessionProvider.value queda en data(null)
+      //   - La asyncMap (authStream → _fetchUserModel) NO vuelve a loading
+      //     cuando authStream emite el nuevo user — se queda con el data(null)
+      //     stale mientras procesa el snapshots
+      //   - El router guard lee session.value, ve null, patea a /login → loop
+      //
+      // Fix: invalidamos sessionProvider. Eso fuerza re-creación, dejándolo
+      // en AsyncValue.loading(). El redirect del router ya hace
+      // `if (session.isLoading) return null;` → no patea durante loading.
+      // /home renderiza, HomeDispatcher muestra spinner ~100ms hasta que la
+      // nueva asyncMap emita el UserModel real, y ahí dispatch al dashboard.
+      ref.invalidate(sessionProvider);
+      context.go('/home');
+    } on AuthException catch (e) {
+      // Mensaje user-friendly traducido del código de FirebaseAuthException
+      if (!mounted) return;
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(content: Text(e.message)),
+      );
+    } catch (e) {
+      // Cualquier otro error inesperado (ej: Firestore down). NO mostramos `$e`
+      // para evitar information disclosure (R016) — el detalle queda solo en logs.
+      if (!mounted) return;
+      ScaffoldMessenger.of(context).showSnackBar(
+        const SnackBar(content: Text('Ocurrió un error inesperado. Intentá nuevamente.')),
+      );
+    } finally {
+      if (mounted) setState(() => _isLoading = false);
+    }
   }
 
   @override
@@ -199,7 +253,7 @@ class _LoginScreenState extends State<LoginScreen> {
                 children: [
                   _buildFieldLabel('PASSWORD'),
                   GestureDetector(
-                    onTap: () {},
+                    onTap: () => context.push('/forgot-password'),
                     child: const Text(
                       'Forgot password?',
                       style: TextStyle(
@@ -236,7 +290,7 @@ class _LoginScreenState extends State<LoginScreen> {
               SizedBox(
                 width: double.infinity,
                 child: ElevatedButton(
-                  onPressed: () {},
+                  onPressed: _isLoading ? null : _handleLogin,
                   style: ElevatedButton.styleFrom(
                     backgroundColor: _primaryColor,
                     foregroundColor: _onPrimaryColor,
@@ -246,14 +300,23 @@ class _LoginScreenState extends State<LoginScreen> {
                     ),
                     elevation: 1,
                   ),
-                  child: const Text(
-                    'Login',
-                    style: TextStyle(
-                      fontFamily: 'Inter',
-                      fontSize: 18,
-                      fontWeight: FontWeight.w600,
-                    ),
-                  ),
+                  child: _isLoading
+                      ? const SizedBox(
+                          height: 20,
+                          width: 20,
+                          child: CircularProgressIndicator(
+                            strokeWidth: 2,
+                            color: Colors.white,
+                          ),
+                        )
+                      : const Text(
+                          'Login',
+                          style: TextStyle(
+                            fontFamily: 'Inter',
+                            fontSize: 18,
+                            fontWeight: FontWeight.w600,
+                          ),
+                        ),
                 ),
               ),
               const SizedBox(height: 24),

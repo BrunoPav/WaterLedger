@@ -1,23 +1,235 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
+import 'package:intl/intl.dart';
+import 'package:water_ledger/core/presentation/providers/session_provider.dart';
+import 'package:water_ledger/features/auditor/presentation/providers/auditor_provider.dart';
+import 'package:water_ledger/features/credit_issuance/domain/entities/credit_request_entity.dart';
 
-class AuditorScreen extends StatelessWidget {
+// ── Design tokens ──────────────────────────────────────────────────────────────
+const _bgColor               = Color(0xFFF7F9FB);
+const _primaryColor          = Color(0xFF000000);
+const _secondaryColor        = Color(0xFF006875);
+const _onSurfaceColor        = Color(0xFF191C1E);
+const _onSurfaceVariantColor = Color(0xFF44474D);
+const _outlineVariantColor   = Color(0xFFC5C6CD);
+const _surfaceColor          = Color(0xFFFFFFFF);
+
+const _statusMeta = <String, (String, Color)>{
+  'draft':      ('Borrador',      Color(0xFF9E9E9E)),
+  'pending':    ('Pendiente',     Color(0xFFFF8F00)),
+  'underAudit': ('En auditoría',  Color(0xFF1565C0)),
+  'certified':  ('Certificado',   Color(0xFF2E7D32)),
+  'insured':    ('Asegurado',     Color(0xFF00695C)),
+  'valued':     ('Valorado',      Color(0xFF6A1B9A)),
+  'published':  ('Publicado',     Color(0xFF1B5E20)),
+  'rejected':   ('Rechazado',     Color(0xFFC62828)),
+};
+
+class AuditorScreen extends ConsumerWidget {
   const AuditorScreen({super.key});
 
   @override
-  Widget build(BuildContext context) {
+  Widget build(BuildContext context, WidgetRef ref) {
+    final user = ref.watch(sessionProvider).value;
+    final assignmentsAsync = ref.watch(auditorAssignmentsProvider);
+
     return Scaffold(
-      appBar: AppBar(title: Text('Auditor')),
-      body: Center(
-        child: Column(
-          mainAxisAlignment: MainAxisAlignment.center,
+      backgroundColor: _bgColor,
+      appBar: AppBar(
+        backgroundColor: _bgColor,
+        elevation: 0,
+        leading: IconButton(
+          icon: const Icon(Icons.arrow_back, color: _onSurfaceColor),
+          onPressed: () => context.pop(),
+        ),
+        title: const Text(
+          'Mis Asignaciones',
+          style: TextStyle(fontFamily: 'Manrope', fontSize: 20, fontWeight: FontWeight.w700, color: _primaryColor),
+        ),
+        actions: [
+          IconButton(
+            icon: const Icon(Icons.refresh, color: _onSurfaceVariantColor),
+            onPressed: () => ref.invalidate(auditorAssignmentsProvider),
+          ),
+        ],
+      ),
+      body: assignmentsAsync.when(
+        loading: () => const Center(child: CircularProgressIndicator(color: _secondaryColor)),
+        error: (e, _) => _ErrorState(onRetry: () => ref.invalidate(auditorAssignmentsProvider)),
+        data: (requests) => requests.isEmpty
+            ? _EmptyState(auditorName: user?.displayName)
+            : RefreshIndicator(
+                color: _secondaryColor,
+                onRefresh: () => ref.refresh(auditorAssignmentsProvider.future),
+                child: ListView.separated(
+                  padding: const EdgeInsets.fromLTRB(16, 16, 16, 32),
+                  itemCount: requests.length,
+                  separatorBuilder: (_, _) => const SizedBox(height: 12),
+                  itemBuilder: (context, i) => _RequestTile(
+                    request: requests[i],
+                    onTap: () => context.push('/auditor-request-detail/${requests[i].id}'),
+                  ),
+                ),
+              ),
+      ),
+    );
+  }
+}
+
+// ── Request tile ──────────────────────────────────────────────────────────────
+class _RequestTile extends StatelessWidget {
+  const _RequestTile({required this.request, required this.onTap});
+
+  final CreditRequestEntity request;
+  final VoidCallback onTap;
+
+  @override
+  Widget build(BuildContext context) {
+    final statusKey = request.status.name;
+    final (label, color) = _statusMeta[statusKey] ?? ('Desconocido', const Color(0xFF9E9E9E));
+    final projectName = request.project?.name;
+    final date = request.submittedAt ?? request.createdAt;
+
+    return GestureDetector(
+      onTap: onTap,
+      child: Container(
+        padding: const EdgeInsets.all(16),
+        decoration: BoxDecoration(
+          color: _surfaceColor,
+          borderRadius: BorderRadius.circular(14),
+          border: Border.all(color: _outlineVariantColor.withValues(alpha: 0.3)),
+          boxShadow: [BoxShadow(color: Colors.black.withValues(alpha: 0.025), blurRadius: 6, offset: const Offset(0, 2))],
+        ),
+        child: Row(
           children: [
-            Text('Contenido de la pantalla de auditor'),
-            SizedBox(height: 16),
+            Container(
+              width: 44, height: 44,
+              decoration: BoxDecoration(color: color.withValues(alpha: 0.1), shape: BoxShape.circle),
+              child: Icon(Icons.assignment_outlined, color: color, size: 22),
+            ),
+            const SizedBox(width: 14),
+            Expanded(
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Text(
+                    projectName ?? 'Sin nombre de proyecto',
+                    style: TextStyle(
+                      fontFamily: 'Manrope', fontSize: 14, fontWeight: FontWeight.w700,
+                      color: projectName != null ? _onSurfaceColor : _onSurfaceVariantColor,
+                    ),
+                    maxLines: 1,
+                    overflow: TextOverflow.ellipsis,
+                  ),
+                  const SizedBox(height: 3),
+                  Text(
+                    request.id,
+                    style: const TextStyle(fontFamily: 'Inter', fontSize: 11, color: _onSurfaceVariantColor),
+                  ),
+                  const SizedBox(height: 6),
+                  Row(
+                    children: [
+                      Container(
+                        padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 3),
+                        decoration: BoxDecoration(
+                          color: color.withValues(alpha: 0.1),
+                          borderRadius: BorderRadius.circular(99),
+                          border: Border.all(color: color.withValues(alpha: 0.25)),
+                        ),
+                        child: Text(label, style: TextStyle(fontFamily: 'Inter', fontSize: 11, fontWeight: FontWeight.w600, color: color)),
+                      ),
+                      const SizedBox(width: 8),
+                      Text(
+                        DateFormat('d MMM yyyy', 'es').format(date),
+                        style: TextStyle(fontFamily: 'Inter', fontSize: 11, color: _onSurfaceVariantColor.withValues(alpha: 0.7)),
+                      ),
+                    ],
+                  ),
+                ],
+              ),
+            ),
+            const Icon(Icons.chevron_right, color: _onSurfaceVariantColor, size: 20),
+          ],
+        ),
+      ),
+    );
+  }
+}
+
+// ── Empty state ───────────────────────────────────────────────────────────────
+class _EmptyState extends StatelessWidget {
+  const _EmptyState({this.auditorName});
+  final String? auditorName;
+
+  @override
+  Widget build(BuildContext context) {
+    return Center(
+      child: Padding(
+        padding: const EdgeInsets.all(40),
+        child: Column(
+          mainAxisSize: MainAxisSize.min,
+          children: [
+            Container(
+              width: 72, height: 72,
+              decoration: BoxDecoration(color: _secondaryColor.withValues(alpha: 0.08), shape: BoxShape.circle),
+              child: const Icon(Icons.assignment_outlined, color: _secondaryColor, size: 36),
+            ),
+            const SizedBox(height: 20),
+            const Text(
+              'Sin asignaciones',
+              style: TextStyle(fontFamily: 'Manrope', fontSize: 20, fontWeight: FontWeight.w700, color: _onSurfaceColor),
+            ),
+            const SizedBox(height: 8),
+            Text(
+              auditorName != null
+                  ? 'Hola ${auditorName!}, todavía no tenés solicitudes asignadas. El administrador te asignará proyectos a auditar.'
+                  : 'Todavía no tenés solicitudes asignadas. El administrador te asignará proyectos a auditar.',
+              textAlign: TextAlign.center,
+              style: const TextStyle(fontFamily: 'Inter', fontSize: 14, color: _onSurfaceVariantColor, height: 1.5),
+            ),
+          ],
+        ),
+      ),
+    );
+  }
+}
+
+// ── Error state ───────────────────────────────────────────────────────────────
+class _ErrorState extends StatelessWidget {
+  const _ErrorState({required this.onRetry});
+  final VoidCallback onRetry;
+
+  @override
+  Widget build(BuildContext context) {
+    return Center(
+      child: Padding(
+        padding: const EdgeInsets.all(40),
+        child: Column(
+          mainAxisSize: MainAxisSize.min,
+          children: [
+            const Icon(Icons.error_outline, color: Color(0xFFC62828), size: 48),
+            const SizedBox(height: 16),
+            const Text(
+              'No se pudieron cargar las asignaciones',
+              textAlign: TextAlign.center,
+              style: TextStyle(fontFamily: 'Manrope', fontSize: 16, fontWeight: FontWeight.w700, color: _onSurfaceColor),
+            ),
+            const SizedBox(height: 8),
+            const Text(
+              'Verificá tu conexión e intentá nuevamente.',
+              textAlign: TextAlign.center,
+              style: TextStyle(fontFamily: 'Inter', fontSize: 14, color: _onSurfaceVariantColor),
+            ),
+            const SizedBox(height: 24),
             ElevatedButton.icon(
-              onPressed: () => context.push('/credit-issuance'),
-              icon: Icon(Icons.insert_drive_file),
-              label: Text('Ver Solicitud'),
+              onPressed: onRetry,
+              style: ElevatedButton.styleFrom(
+                backgroundColor: _primaryColor, foregroundColor: Colors.white,
+                shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(10)),
+              ),
+              icon: const Icon(Icons.refresh, size: 18),
+              label: const Text('Reintentar', style: TextStyle(fontFamily: 'Manrope', fontWeight: FontWeight.w700)),
             ),
           ],
         ),

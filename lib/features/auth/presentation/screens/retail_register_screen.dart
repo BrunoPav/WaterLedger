@@ -1,15 +1,19 @@
 import 'dart:ui';
 import 'package:flutter/material.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
+import 'package:water_ledger/core/domain/exceptions/auth_exception.dart';
+import 'package:water_ledger/core/domain/validators/auth_validators.dart';
+import 'package:water_ledger/core/presentation/providers/session_provider.dart';
 
-class RetailRegisterScreen extends StatefulWidget {
+class RetailRegisterScreen extends ConsumerStatefulWidget {
   const RetailRegisterScreen({super.key});
 
   @override
-  State<RetailRegisterScreen> createState() => _RetailRegisterScreenState();
+  ConsumerState<RetailRegisterScreen> createState() => _RetailRegisterScreenState();
 }
 
-class _RetailRegisterScreenState extends State<RetailRegisterScreen> {
+class _RetailRegisterScreenState extends ConsumerState<RetailRegisterScreen> {
   final _firstNameController = TextEditingController();
   final _lastNameController = TextEditingController();
   final _emailController = TextEditingController();
@@ -25,6 +29,8 @@ class _RetailRegisterScreenState extends State<RetailRegisterScreen> {
     'Water Rights',
   ];
   final Set<String> _selectedInterests = {'Desalination Tech'};
+
+  bool _isLoading = false;
 
   // Risk profile
   String _selectedRisk = 'Medium';
@@ -59,6 +65,52 @@ class _RetailRegisterScreenState extends State<RetailRegisterScreen> {
     _phoneController.dispose();
     _passwordController.dispose();
     super.dispose();
+  }
+
+  Future<void> _handleRegister() async {
+    final firstName = _firstNameController.text.trim();
+    final lastName = _lastNameController.text.trim();
+    final email = _emailController.text.trim();
+    final phone = _phoneController.text.trim();
+    final password = _passwordController.text;
+
+    // Validación cliente: corta antes del round-trip a Firebase.
+    final error = AuthValidators.firstError([
+      () => AuthValidators.required(firstName, 'el nombre'),
+      () => AuthValidators.required(lastName, 'el apellido'),
+      () => AuthValidators.email(email),
+      // El phone es opcional en el form actual: solo valida formato si fue cargado.
+      () => phone.isEmpty ? null : AuthValidators.phone(phone),
+      () => AuthValidators.password(password),
+    ]);
+    if (error != null) {
+      ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text(error)));
+      return;
+    }
+
+    setState(() => _isLoading = true);
+    try {
+      await ref.read(authRepositoryProvider).registerRetail(
+        email: email,
+        password: password,
+        fullName: '$firstName $lastName',
+        dni: '',
+      );
+      if (!mounted) return;
+      context.go('/retail-register-success');
+    } on AuthException catch (e) {
+      // Mensaje user-friendly traducido del código de Firebase
+      if (!mounted) return;
+      ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text(e.message)));
+    } catch (e) {
+      // R016 — fallback sin leak del texto crudo del exception.
+      if (!mounted) return;
+      ScaffoldMessenger.of(context).showSnackBar(
+        const SnackBar(content: Text('Ocurrió un error inesperado. Intentá nuevamente.')),
+      );
+    } finally {
+      if (mounted) setState(() => _isLoading = false);
+    }
   }
 
   @override
@@ -699,7 +751,7 @@ class _RetailRegisterScreenState extends State<RetailRegisterScreen> {
     return SizedBox(
       width: double.infinity,
       child: ElevatedButton(
-        onPressed: () => context.go('/retail-register-success'),
+        onPressed: _isLoading ? null : _handleRegister,
         style: ElevatedButton.styleFrom(
           backgroundColor: _primaryColor,
           foregroundColor: _onPrimaryColor,
@@ -709,21 +761,27 @@ class _RetailRegisterScreenState extends State<RetailRegisterScreen> {
           ),
           elevation: 1,
         ),
-        child: const Row(
-          mainAxisAlignment: MainAxisAlignment.center,
-          children: [
-            Text(
-              'Create Account',
-              style: TextStyle(
-                fontFamily: 'Manrope',
-                fontSize: 17,
-                fontWeight: FontWeight.w700,
+        child: _isLoading
+            ? const SizedBox(
+                height: 20,
+                width: 20,
+                child: CircularProgressIndicator(strokeWidth: 2, color: Colors.white),
+              )
+            : const Row(
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: [
+                  Text(
+                    'Create Account',
+                    style: TextStyle(
+                      fontFamily: 'Manrope',
+                      fontSize: 17,
+                      fontWeight: FontWeight.w700,
+                    ),
+                  ),
+                  SizedBox(width: 8),
+                  Icon(Icons.arrow_forward_rounded, size: 20),
+                ],
               ),
-            ),
-            SizedBox(width: 8),
-            Icon(Icons.arrow_forward_rounded, size: 20),
-          ],
-        ),
       ),
     );
   }

@@ -34,5 +34,18 @@ abstract class CreditIssuanceRepository {
 
   Future<List<CreditRequestEntity>> getCompanyRequests(String companyId);
 
+  Future<void> updateCreditAmount({
+    required String requestId,
+    required double amount,
+  });
+
   Future<void> deleteDraft(String requestId);
+
+  Future<List<CreditRequestEntity>> getAuditorAssignments(String auditorId);
+
+  Future<List<CreditRequestEntity>> getCertifiedRequests();
+
+  Future<List<CreditRequestEntity>> getInsuredRequests();
+
+  Future<List<CreditRequestEntity>> getValuedRequests();
 }

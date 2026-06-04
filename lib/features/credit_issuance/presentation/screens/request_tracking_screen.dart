@@ -1,550 +1,612 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:go_router/go_router.dart';
 import 'package:intl/intl.dart';
+import 'package:water_ledger/features/credit_issuance/domain/entities/credit_request_entity.dart';
+import 'package:water_ledger/features/credit_issuance/domain/entities/document_entity.dart';
+import 'package:water_ledger/features/credit_issuance/domain/entities/project_phase_entity.dart';
+import 'package:water_ledger/features/credit_issuance/domain/enums/document_type.dart';
+import 'package:water_ledger/features/credit_issuance/domain/enums/milestones.dart';
 import 'package:water_ledger/features/credit_issuance/domain/enums/request_status.dart';
-import 'package:water_ledger/features/credit_issuance/presentation/providers/credit_request_notifier.dart';
+import 'package:water_ledger/features/credit_issuance/presentation/providers/company_requests_provider.dart';
+import 'package:water_ledger/features/dashboards/presentation/widgets/dashboard_bottom_nav.dart';
+import 'package:water_ledger/features/dashboards/presentation/widgets/dashboard_tokens.dart';
+import 'package:water_ledger/features/dashboards/presentation/widgets/dashboard_top_bar.dart';
 
-class RequestTrackingScreen extends ConsumerWidget {
-  const RequestTrackingScreen({super.key});
+// ── Labels ────────────────────────────────────────────────────────────────────
+const _docTypeLabels = {
+  DocumentType.technical:    'Documentación Técnica',
+  DocumentType.environmental:'Documentación Ambiental',
+  DocumentType.legal:        'Documentación Legal',
+  DocumentType.financial:    'Documentación Financiera',
+};
+
+const _milestoneLabels = {
+  Milestones.initialAudit:               'Auditoría inicial',
+  Milestones.meterInstalation:           'Instalación de medidores',
+  Milestones.infrastructureValidation:   'Validación de infraestructura',
+  Milestones.operativeSistem:            'Sistema operativo',
+  Milestones.firstWaterSavingRegistered: 'Primer ahorro hídrico',
+  Milestones.ambientalReportGenerated:   'Reporte ambiental generado',
+  Milestones.proyectFinalized:           'Proyecto finalizado',
+  Milestones.impactVerificated:          'Impacto verificado',
+  Milestones.proyectReadyToInssue:       'Listo para emisión',
+};
+
+// Status → (label, color)
+const _statusMeta = <RequestStatus, (String, Color)>{
+  RequestStatus.draft:      ('Borrador',       Color(0xFF9E9E9E)),
+  RequestStatus.pending:    ('Pendiente',      Color(0xFFFF8F00)),
+  RequestStatus.underAudit: ('En auditoría',   Color(0xFF1565C0)),
+  RequestStatus.certified:  ('Certificado',    Color(0xFF2E7D32)),
+  RequestStatus.insured:    ('Asegurado',      Color(0xFF00695C)),
+  RequestStatus.valued:     ('Valorado',       Color(0xFF6A1B9A)),
+  RequestStatus.published:  ('Publicado',      Color(0xFF1B5E20)),
+  RequestStatus.rejected:   ('Rechazado',      Color(0xFFC62828)),
+};
+
+// Pipeline de etapas del proceso (sin draft)
+const _pipeline = [
+  (RequestStatus.pending,    'Revisión inicial', 'Administrador revisa la solicitud', Icons.manage_search_outlined),
+  (RequestStatus.underAudit, 'Auditoría',        'Auditor verifica el proyecto',      Icons.verified_user_outlined),
+  (RequestStatus.certified,  'Certificación',    'Certificadora aprueba el proyecto', Icons.workspace_premium_outlined),
+  (RequestStatus.insured,    'Aseguramiento',    'Aseguradora carga el plan de seguro', Icons.security_outlined),
+  (RequestStatus.valued,     'Valorización',     'Admin asigna valor a los créditos', Icons.monetization_on_outlined),
+  (RequestStatus.published,  'Publicación',      'Créditos disponibles en el mercado', Icons.public_outlined),
+];
+
+// Orden para comparar progreso
+const _statusOrder = [
+  RequestStatus.draft,
+  RequestStatus.pending,
+  RequestStatus.underAudit,
+  RequestStatus.certified,
+  RequestStatus.insured,
+  RequestStatus.valued,
+  RequestStatus.published,
+  RequestStatus.rejected,
+];
+
+class RequestTrackingScreen extends ConsumerStatefulWidget {
+  const RequestTrackingScreen({super.key, required this.requestId});
+
+  final String requestId;
 
   @override
-  Widget build(BuildContext context, WidgetRef ref) {
-    final request = ref.watch(creditRequestProvider);
+  ConsumerState<RequestTrackingScreen> createState() => _RequestTrackingScreenState();
+}
 
-    return DefaultTabController(
-      length: 4,
-      child: Scaffold(
-        appBar: AppBar(
-          title: const Text('Seguimiento de Solicitud'),
-          bottom: const TabBar(
-            tabs: [
-              Tab(icon: Icon(Icons.info_outlined), text: 'Resumen'),
-              Tab(icon: Icon(Icons.timeline), text: 'Roadmap'),
-              Tab(icon: Icon(Icons.description_outlined), text: 'Documentos'),
-              Tab(icon: Icon(Icons.history_outlined), text: 'Historial'),
-            ],
-          ),
-        ),
-        body: TabBarView(
+class _RequestTrackingScreenState extends ConsumerState<RequestTrackingScreen> {
+  int _tabIndex = 0;
+
+  @override
+  Widget build(BuildContext context) {
+    final requestAsync = ref.watch(requestTrackingProvider(widget.requestId));
+
+    return Scaffold(
+      backgroundColor: DashboardTokens.bgColor,
+      appBar: DashboardTopBar(
+        leading: Row(
           children: [
-            _buildResumenTab(context, request),
-            _buildRoadmapTab(request),
-            _buildDocumentosTab(request),
-            _buildHistorialTab(),
+            IconButton(
+              onPressed: () => context.pop(),
+              icon: const Icon(Icons.arrow_back, color: DashboardTokens.onSurfaceVariantColor, size: 22),
+              padding: EdgeInsets.zero,
+              constraints: const BoxConstraints(),
+            ),
+            const SizedBox(width: 8),
+            const TopBarTitled(title: 'Seguimiento'),
+          ],
+        ),
+        actions: [
+          TopBarIconButton(
+            icon: Icons.refresh,
+            onTap: () => ref.invalidate(requestTrackingProvider(widget.requestId)),
+          ),
+        ],
+      ),
+      body: requestAsync.when(
+        loading: () => const Center(child: CircularProgressIndicator(color: DashboardTokens.secondaryColor)),
+        error: (e, _) => _ErrorBody(onRetry: () => ref.invalidate(requestTrackingProvider(widget.requestId))),
+        data: (request) => IndexedStack(
+          index: _tabIndex,
+          children: [
+            _ResumenTab(request: request),
+            _RoadmapTab(request: request),
+            _DocumentosTab(request: request),
+            _HistorialTab(request: request),
           ],
         ),
       ),
-    );
-  }
-
-  Widget _buildResumenTab(BuildContext context, dynamic request) {
-    return SingleChildScrollView(
-      padding: const EdgeInsets.all(16),
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          // Card Estado Actual
-          _buildStatusCard(request),
-          const SizedBox(height: 24),
-
-          // Detalles de la Solicitud
-          const Text(
-            'Detalles de la Solicitud',
-            style: TextStyle(
-              fontSize: 16,
-              fontWeight: FontWeight.w600,
-              color: Color(0xFF000000),
-            ),
-          ),
-          const SizedBox(height: 12),
-          _buildDetailItem('ID Solicitud', request.id),
-          _buildDetailItem('Empresa', request.issuerCompanyId),
-          _buildDetailItem(
-            'Fecha de Creación',
-            DateFormat('dd/MM/yyyy HH:mm').format(request.createdAt),
-          ),
-          if (request.updatedAt != null)
-            _buildDetailItem(
-              'Fecha de Envío',
-              DateFormat('dd/MM/yyyy HH:mm').format(request.updatedAt!),
-            ),
-          const SizedBox(height: 24),
-
-          // Próximas Etapas
-          const Text(
-            'Próximas Etapas',
-            style: TextStyle(
-              fontSize: 16,
-              fontWeight: FontWeight.w600,
-              color: Color(0xFF000000),
-            ),
-          ),
-          const SizedBox(height: 12),
-          _buildNextStepsTimeline(),
+      bottomNavigationBar: DashboardBottomNav(
+        selectedIndex: _tabIndex,
+        items: [
+          DashboardNavItem(icon: Icons.info_outlined,        label: 'Resumen',    onTap: () => setState(() => _tabIndex = 0)),
+          DashboardNavItem(icon: Icons.timeline_outlined,    label: 'Roadmap',    onTap: () => setState(() => _tabIndex = 1)),
+          DashboardNavItem(icon: Icons.description_outlined, label: 'Documentos', onTap: () => setState(() => _tabIndex = 2)),
+          DashboardNavItem(icon: Icons.history_outlined,     label: 'Historial',  onTap: () => setState(() => _tabIndex = 3)),
         ],
       ),
     );
   }
+}
 
-  Widget _buildStatusCard(dynamic request) {
-    final statusColor = _getStatusColor(request.status);
-    final statusLabel = _getStatusLabel(request.status);
+// ── TAB: Resumen ──────────────────────────────────────────────────────────────
+class _ResumenTab extends StatelessWidget {
+  const _ResumenTab({required this.request});
+  final CreditRequestEntity request;
 
-    return Container(
-      padding: const EdgeInsets.all(20),
-      decoration: BoxDecoration(
-        color: statusColor.withValues(alpha: 0.1),
-        border: Border.all(color: statusColor.withValues(alpha: 0.3)),
-        borderRadius: BorderRadius.circular(12),
-      ),
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          const Text(
-            'Estado Actual',
-            style: TextStyle(
-              fontSize: 12,
-              fontWeight: FontWeight.w600,
-              color: Color(0xFF44474D),
-              letterSpacing: 0.3,
-            ),
-          ),
-          const SizedBox(height: 8),
-          Row(
-            children: [
-              Container(
-                width: 12,
-                height: 12,
-                decoration: BoxDecoration(
-                  shape: BoxShape.circle,
-                  color: statusColor,
-                ),
-              ),
-              const SizedBox(width: 12),
-              Text(
-                statusLabel,
-                style: TextStyle(
-                  fontSize: 20,
-                  fontWeight: FontWeight.w700,
-                  color: statusColor,
-                  letterSpacing: -0.3,
-                ),
-              ),
-            ],
-          ),
-        ],
-      ),
-    );
-  }
-
-  Widget _buildRoadmapTab(dynamic request) {
-    return SingleChildScrollView(
-      padding: const EdgeInsets.all(16),
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          const Text(
-            'Fases del Proyecto',
-            style: TextStyle(
-              fontSize: 16,
-              fontWeight: FontWeight.w600,
-              color: Color(0xFF000000),
-            ),
-          ),
-          const SizedBox(height: 16),
-          if (request.roadmap != null)
-            _buildRoadmapTimeline(request.roadmap)
-          else
-            Center(
-              child: Padding(
-                padding: const EdgeInsets.all(24),
-                child: Column(
-                  children: [
-                    Icon(
-                      Icons.timeline_outlined,
-                      size: 48,
-                      color: Colors.grey[400],
-                    ),
-                    const SizedBox(height: 12),
-                    Text(
-                      'Roadmap no disponible',
-                      style: TextStyle(
-                        color: Colors.grey[600],
-                        fontSize: 14,
-                      ),
-                    ),
-                  ],
-                ),
-              ),
-            ),
-        ],
-      ),
-    );
-  }
-
-  Widget _buildDocumentosTab(dynamic request) {
-    final hasDocuments = request.documents.isNotEmpty;
+  @override
+  Widget build(BuildContext context) {
+    final (statusLabel, statusColor) = _statusMeta[request.status] ?? ('Desconocido', DashboardTokens.outlineColor);
+    final currentIndex = _statusOrder.indexOf(request.status);
 
     return SingleChildScrollView(
-      padding: const EdgeInsets.all(16),
+      padding: const EdgeInsets.fromLTRB(16, 20, 16, 32),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          const Text(
-            'Documentos Enviados',
-            style: TextStyle(
-              fontSize: 16,
-              fontWeight: FontWeight.w600,
-              color: Color(0xFF000000),
+          // Status card
+          Container(
+            padding: const EdgeInsets.all(20),
+            decoration: BoxDecoration(
+              color: statusColor.withValues(alpha: 0.07),
+              border: Border.all(color: statusColor.withValues(alpha: 0.3)),
+              borderRadius: BorderRadius.circular(14),
             ),
-          ),
-          const SizedBox(height: 16),
-          if (hasDocuments)
-            ListView.separated(
-              shrinkWrap: true,
-              physics: const NeverScrollableScrollPhysics(),
-              itemCount: request.documents.length,
-              separatorBuilder: (_, __) => const SizedBox(height: 12),
-              itemBuilder: (_, index) {
-                final doc = request.documents[index];
-                return _buildDocumentCard(doc);
-              },
-            )
-          else
-            Center(
-              child: Padding(
-                padding: const EdgeInsets.all(24),
-                child: Column(
-                  children: [
-                    Icon(
-                      Icons.description_outlined,
-                      size: 48,
-                      color: Colors.grey[400],
-                    ),
-                    const SizedBox(height: 12),
-                    Text(
-                      'Sin documentos enviados',
-                      style: TextStyle(
-                        color: Colors.grey[600],
-                        fontSize: 14,
-                      ),
-                    ),
-                  ],
-                ),
-              ),
-            ),
-        ],
-      ),
-    );
-  }
-
-  Widget _buildHistorialTab() {
-    return SingleChildScrollView(
-      padding: const EdgeInsets.all(16),
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          const Text(
-            'Historial de Cambios',
-            style: TextStyle(
-              fontSize: 16,
-              fontWeight: FontWeight.w600,
-              color: Color(0xFF000000),
-            ),
-          ),
-          const SizedBox(height: 16),
-          _buildHistoryTimeline(),
-        ],
-      ),
-    );
-  }
-
-  // Helper Widgets
-
-  Widget _buildDetailItem(String label, String value) {
-    return Padding(
-      padding: const EdgeInsets.symmetric(vertical: 10),
-      child: Row(
-        mainAxisAlignment: MainAxisAlignment.spaceBetween,
-        children: [
-          Text(
-            label,
-            style: const TextStyle(
-              fontSize: 14,
-              color: Color(0xFF44474D),
-              fontWeight: FontWeight.w500,
-            ),
-          ),
-          Text(
-            value,
-            style: const TextStyle(
-              fontSize: 14,
-              fontWeight: FontWeight.w600,
-              color: Color(0xFF000000),
-            ),
-          ),
-        ],
-      ),
-    );
-  }
-
-  Widget _buildNextStepsTimeline() {
-    final steps = [
-      ('Revisión Inicial', 'En progreso', Icons.schedule_outlined),
-      ('Análisis Técnico', 'Pendiente', Icons.checklist_outlined),
-      ('Auditoría', 'Pendiente', Icons.verified_user_outlined),
-      ('Aprobación', 'Pendiente', Icons.check_circle_outline_rounded),
-    ];
-
-    return Column(
-      children: List.generate(
-        steps.length,
-        (index) {
-          final (label, status, icon) = steps[index];
-          final isActive = index == 0;
-          return Padding(
-            padding: const EdgeInsets.only(bottom: 16),
-            child: Row(
-              children: [
-                Column(
-                  children: [
-                    Container(
-                      width: 40,
-                      height: 40,
-                      decoration: BoxDecoration(
-                        shape: BoxShape.circle,
-                        color: isActive
-                            ? const Color(0xFF00E3FD)
-                            : Colors.grey[300],
-                      ),
-                      child: Icon(icon,
-                          size: 20,
-                          color: isActive ? Colors.white : Colors.grey[600]),
-                    ),
-                    if (index < steps.length - 1)
-                      Container(
-                        width: 2,
-                        height: 24,
-                        color: Colors.grey[300],
-                      ),
-                  ],
-                ),
-                const SizedBox(width: 16),
-                Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    Text(
-                      label,
-                      style: const TextStyle(
-                        fontSize: 14,
-                        fontWeight: FontWeight.w600,
-                        color: Color(0xFF000000),
-                      ),
-                    ),
-                    Text(
-                      status,
-                      style: TextStyle(
-                        fontSize: 12,
-                        color: isActive
-                            ? const Color(0xFF00E3FD)
-                            : const Color(0xFF44474D),
-                      ),
-                    ),
-                  ],
-                ),
-              ],
-            ),
-          );
-        },
-      ),
-    );
-  }
-
-  Widget _buildRoadmapTimeline(dynamic roadmap) {
-    if (roadmap.phases.isEmpty) {
-      return Center(
-        child: Padding(
-          padding: const EdgeInsets.all(24),
-          child: Text(
-            'Sin fases definidas',
-            style: TextStyle(color: Colors.grey[600]),
-          ),
-        ),
-      );
-    }
-
-    return Column(
-      children: List.generate(
-        roadmap.phases.length,
-        (index) {
-          final phase = roadmap.phases[index];
-          return Padding(
-            padding: const EdgeInsets.only(bottom: 20),
-            child: Container(
-              padding: const EdgeInsets.all(16),
-              decoration: BoxDecoration(
-                border: Border.all(color: Colors.grey[300]!),
-                borderRadius: BorderRadius.circular(12),
-              ),
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  Row(
-                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                    children: [
-                      Text(
-                        phase.name ?? 'Fase ${index + 1}',
-                        style: const TextStyle(
-                          fontSize: 14,
-                          fontWeight: FontWeight.w600,
-                          color: Color(0xFF000000),
-                        ),
-                      ),
-                      Chip(
-                        label: Text(
-                          '${phase.startDate != null ? 'Iniciado' : 'Próximo'}',
-                          style: const TextStyle(fontSize: 11),
-                        ),
-                        backgroundColor: Colors.grey[200],
-                      ),
-                    ],
-                  ),
-                  const SizedBox(height: 8),
-                  Text(
-                    'Hitos clave: ${phase.milestones.join(", ")}',
-                    style: TextStyle(
-                      fontSize: 12,
-                      color: Colors.grey[600],
-                    ),
-                  ),
-                ],
-              ),
-            ),
-          );
-        },
-      ),
-    );
-  }
-
-  Widget _buildDocumentCard(dynamic doc) {
-    return Container(
-      padding: const EdgeInsets.all(12),
-      decoration: BoxDecoration(
-        border: Border.all(color: Colors.grey[300]!),
-        borderRadius: BorderRadius.circular(8),
-      ),
-      child: Row(
-        children: [
-          const Icon(Icons.insert_drive_file_outlined,
-              size: 32, color: Color(0xFF006875)),
-          const SizedBox(width: 12),
-          Expanded(
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                Text(
-                  doc.fileName ?? 'Documento',
-                  style: const TextStyle(
-                    fontSize: 13,
-                    fontWeight: FontWeight.w600,
-                    color: Color(0xFF000000),
-                  ),
-                  maxLines: 1,
-                  overflow: TextOverflow.ellipsis,
-                ),
-                Text(
-                  doc.documentType.toString(),
-                  style: const TextStyle(
-                    fontSize: 11,
-                    color: Color(0xFF44474D),
-                  ),
-                ),
-              ],
-            ),
-          ),
-          Icon(Icons.check_circle, color: Colors.green[600], size: 20),
-        ],
-      ),
-    );
-  }
-
-  Widget _buildHistoryTimeline() {
-    final historyItems = [
-      ('Solicitud Creada', 'Borrador guardado', Icons.edit_outlined),
-      ('Roadmap Actualizado', 'Fases definidas', Icons.timeline),
-      ('Documentos Subidos', '3 documentos', Icons.upload_file_outlined),
-      ('Solicitud Enviada', 'Cambio a Pendiente', Icons.send_outlined),
-    ];
-
-    return Column(
-      children: List.generate(
-        historyItems.length,
-        (index) {
-          final (title, desc, icon) = historyItems[index];
-          return Padding(
-            padding: const EdgeInsets.only(bottom: 16),
             child: Row(
               children: [
                 Container(
-                  width: 40,
-                  height: 40,
-                  decoration: BoxDecoration(
-                    shape: BoxShape.circle,
-                    color: Colors.blue[100],
-                  ),
-                  child:
-                      Icon(icon, size: 20, color: Colors.blue[700]),
+                  width: 48, height: 48,
+                  decoration: BoxDecoration(color: statusColor.withValues(alpha: 0.12), shape: BoxShape.circle),
+                  child: Icon(Icons.assignment_outlined, color: statusColor, size: 24),
                 ),
                 const SizedBox(width: 16),
                 Expanded(
                   child: Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
-                      Text(
-                        title,
-                        style: const TextStyle(
-                          fontSize: 14,
-                          fontWeight: FontWeight.w600,
-                          color: Color(0xFF000000),
-                        ),
-                      ),
-                      Text(
-                        desc,
-                        style: TextStyle(
-                          fontSize: 12,
-                          color: Colors.grey[600],
-                        ),
-                      ),
+                      const Text('Estado actual', style: TextStyle(fontFamily: 'Inter', fontSize: 11, fontWeight: FontWeight.w600, color: DashboardTokens.onSurfaceVariantColor, letterSpacing: 0.5)),
+                      const SizedBox(height: 4),
+                      Text(statusLabel, style: TextStyle(fontFamily: 'Manrope', fontSize: 22, fontWeight: FontWeight.w700, color: statusColor, letterSpacing: -0.3)),
                     ],
                   ),
                 ),
               ],
             ),
-          );
-        },
+          ),
+          const SizedBox(height: 24),
+
+          // Detalles
+          _sectionTitle('Detalles de la Solicitud'),
+          const SizedBox(height: 12),
+          _infoCard(children: [
+            _row('ID Solicitud', request.id),
+            _divider(),
+            _row('Empresa', request.issuerCompanyId),
+            _divider(),
+            _row('Proyecto', request.project?.name ?? '—'),
+            _divider(),
+            _row('Créditos', request.creditAmount > 0 ? '${request.creditAmount.toStringAsFixed(0)} m³' : '—'),
+            _divider(),
+            _row('Creada', _fmtDate(request.createdAt)),
+            if (request.submittedAt != null) ...[
+              _divider(),
+              _row('Enviada', _fmtDate(request.submittedAt!)),
+            ],
+          ]),
+          const SizedBox(height: 24),
+
+          // Pipeline
+          _sectionTitle('Proceso de Aprobación'),
+          const SizedBox(height: 12),
+          ...List.generate(_pipeline.length, (i) {
+            final (pipelineStatus, pipelineLabel, pipelineDesc, pipelineIcon) = _pipeline[i];
+            final pipelineIndex = _statusOrder.indexOf(pipelineStatus);
+            final isDone    = request.status != RequestStatus.rejected && currentIndex > pipelineIndex;
+            final isActive  = currentIndex == pipelineIndex;
+            final isRejected = request.status == RequestStatus.rejected;
+
+            final Color circleColor;
+            if (isRejected && isActive) {
+              circleColor = DashboardTokens.errorColor;
+            } else if (isDone) {
+              circleColor = DashboardTokens.secondaryColor;
+            } else if (isActive) {
+              circleColor = DashboardTokens.cyanColor;
+            } else {
+              circleColor = DashboardTokens.outlineVariantColor;
+            }
+
+            return Padding(
+              padding: const EdgeInsets.only(bottom: 4),
+              child: Row(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Column(
+                    children: [
+                      Container(
+                        width: 40, height: 40,
+                        decoration: BoxDecoration(shape: BoxShape.circle, color: circleColor.withValues(alpha: isDone || isActive ? 1 : 0.15)),
+                        child: Icon(
+                          isDone ? Icons.check : pipelineIcon,
+                          size: 18,
+                          color: isDone || isActive ? Colors.white : DashboardTokens.outlineVariantColor,
+                        ),
+                      ),
+                      if (i < _pipeline.length - 1)
+                        Container(width: 2, height: 28, color: DashboardTokens.outlineVariantColor.withValues(alpha: 0.4)),
+                    ],
+                  ),
+                  const SizedBox(width: 14),
+                  Padding(
+                    padding: const EdgeInsets.only(top: 8),
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        Text(pipelineLabel, style: TextStyle(fontFamily: 'Manrope', fontSize: 13, fontWeight: FontWeight.w700, color: isActive ? DashboardTokens.primaryColor : DashboardTokens.onSurfaceVariantColor)),
+                        Text(pipelineDesc, style: TextStyle(fontFamily: 'Inter', fontSize: 11, color: DashboardTokens.onSurfaceVariantColor.withValues(alpha: 0.75))),
+                      ],
+                    ),
+                  ),
+                ],
+              ),
+            );
+          }),
+        ],
       ),
     );
   }
+}
 
-  Color _getStatusColor(RequestStatus status) {
-    switch (status) {
-      case RequestStatus.draft:
-        return Colors.grey[600]!;
-      case RequestStatus.pending:
-        return const Color(0xFF00E3FD);
-      default:
-        return Colors.grey[600]!;
-    }
-  }
+// ── TAB: Roadmap ──────────────────────────────────────────────────────────────
+class _RoadmapTab extends StatelessWidget {
+  const _RoadmapTab({required this.request});
+  final CreditRequestEntity request;
 
-  String _getStatusLabel(RequestStatus status) {
-    switch (status) {
-      case RequestStatus.draft:
-        return 'BORRADOR';
-      case RequestStatus.pending:
-        return 'PENDIENTE';
-      default:
-        return status.name.toUpperCase();
-    }
+  @override
+  Widget build(BuildContext context) {
+    final phases = request.roadmap?.phases ?? [];
+
+    return SingleChildScrollView(
+      padding: const EdgeInsets.fromLTRB(16, 20, 16, 32),
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          _sectionTitle('Fases del Proyecto'),
+          const SizedBox(height: 4),
+          Text('${phases.length} fase${phases.length == 1 ? '' : 's'} definida${phases.length == 1 ? '' : 's'}',
+            style: const TextStyle(fontFamily: 'Inter', fontSize: 13, color: DashboardTokens.onSurfaceVariantColor)),
+          const SizedBox(height: 16),
+          if (phases.isEmpty)
+            _emptyState(Icons.timeline_outlined, 'Sin roadmap', 'No se han definido fases para este proyecto.')
+          else
+            ...List.generate(phases.length, (i) => Padding(
+              padding: const EdgeInsets.only(bottom: 12),
+              child: _PhaseCard(phase: phases[i], index: i),
+            )),
+        ],
+      ),
+    );
   }
 }
+
+class _PhaseCard extends StatelessWidget {
+  const _PhaseCard({required this.phase, required this.index});
+  final PhaseEntity phase;
+  final int index;
+
+  @override
+  Widget build(BuildContext context) {
+    return Container(
+      padding: const EdgeInsets.all(16),
+      decoration: BoxDecoration(
+        color: DashboardTokens.surfaceLowestColor,
+        borderRadius: BorderRadius.circular(14),
+        border: Border.all(color: DashboardTokens.outlineVariantColor.withValues(alpha: 0.3)),
+        boxShadow: [BoxShadow(color: Colors.black.withValues(alpha: 0.025), blurRadius: 6, offset: const Offset(0, 2))],
+      ),
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          Row(
+            children: [
+              Container(
+                width: 28, height: 28,
+                decoration: BoxDecoration(color: DashboardTokens.secondaryColor.withValues(alpha: 0.1), shape: BoxShape.circle),
+                child: Center(child: Text('${index + 1}', style: const TextStyle(fontFamily: 'Manrope', fontSize: 12, fontWeight: FontWeight.w700, color: DashboardTokens.secondaryColor))),
+              ),
+              const SizedBox(width: 10),
+              Expanded(child: Text(phase.name, style: const TextStyle(fontFamily: 'Manrope', fontSize: 14, fontWeight: FontWeight.w700, color: DashboardTokens.onSurfaceColor))),
+            ],
+          ),
+          const SizedBox(height: 10),
+          Row(
+            children: [
+              const Icon(Icons.calendar_today_outlined, size: 13, color: DashboardTokens.onSurfaceVariantColor),
+              const SizedBox(width: 6),
+              Text(
+                '${_fmtDate(phase.startDate)} → ${_fmtDate(phase.endDate)}',
+                style: const TextStyle(fontFamily: 'Inter', fontSize: 12, color: DashboardTokens.onSurfaceVariantColor),
+              ),
+            ],
+          ),
+          if (phase.milestones.isNotEmpty) ...[
+            const SizedBox(height: 10),
+            const Divider(height: 1, color: DashboardTokens.outlineVariantColor),
+            const SizedBox(height: 10),
+            Wrap(
+              spacing: 6,
+              runSpacing: 6,
+              children: phase.milestones.map((m) => Container(
+                padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 3),
+                decoration: BoxDecoration(
+                  color: DashboardTokens.secondaryColor.withValues(alpha: 0.07),
+                  borderRadius: BorderRadius.circular(99),
+                  border: Border.all(color: DashboardTokens.secondaryColor.withValues(alpha: 0.2)),
+                ),
+                child: Text(
+                  _milestoneLabels[m] ?? m.name,
+                  style: const TextStyle(fontFamily: 'Inter', fontSize: 11, fontWeight: FontWeight.w500, color: DashboardTokens.secondaryColor),
+                ),
+              )).toList(),
+            ),
+          ],
+        ],
+      ),
+    );
+  }
+}
+
+// ── TAB: Documentos ───────────────────────────────────────────────────────────
+class _DocumentosTab extends StatelessWidget {
+  const _DocumentosTab({required this.request});
+  final CreditRequestEntity request;
+
+  @override
+  Widget build(BuildContext context) {
+    final docs = request.documents;
+
+    return SingleChildScrollView(
+      padding: const EdgeInsets.fromLTRB(16, 20, 16, 32),
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          _sectionTitle('Documentos Enviados'),
+          const SizedBox(height: 4),
+          Text('${docs.length} de 4 documentos adjuntos',
+            style: const TextStyle(fontFamily: 'Inter', fontSize: 13, color: DashboardTokens.onSurfaceVariantColor)),
+          const SizedBox(height: 16),
+          if (docs.isEmpty)
+            _emptyState(Icons.description_outlined, 'Sin documentos', 'No se han adjuntado documentos a esta solicitud.')
+          else
+            ...docs.map((doc) => Padding(
+              padding: const EdgeInsets.only(bottom: 10),
+              child: _DocumentCard(doc: doc),
+            )),
+        ],
+      ),
+    );
+  }
+}
+
+class _DocumentCard extends StatelessWidget {
+  const _DocumentCard({required this.doc});
+  final DocumentEntity doc;
+
+  @override
+  Widget build(BuildContext context) {
+    final label = _docTypeLabels[doc.type] ?? doc.type.name;
+    final hasUrl = doc.storageUrl.isNotEmpty;
+
+    return Container(
+      padding: const EdgeInsets.all(14),
+      decoration: BoxDecoration(
+        color: DashboardTokens.surfaceLowestColor,
+        borderRadius: BorderRadius.circular(12),
+        border: Border.all(color: DashboardTokens.outlineVariantColor.withValues(alpha: 0.3)),
+        boxShadow: [BoxShadow(color: Colors.black.withValues(alpha: 0.02), blurRadius: 4, offset: const Offset(0, 1))],
+      ),
+      child: Row(
+        children: [
+          Container(
+            width: 42, height: 42,
+            decoration: BoxDecoration(
+              color: DashboardTokens.secondaryColor.withValues(alpha: 0.08),
+              borderRadius: BorderRadius.circular(10),
+            ),
+            child: const Icon(Icons.insert_drive_file_outlined, size: 22, color: DashboardTokens.secondaryColor),
+          ),
+          const SizedBox(width: 14),
+          Expanded(
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Text(label, style: const TextStyle(fontFamily: 'Manrope', fontSize: 13, fontWeight: FontWeight.w700, color: DashboardTokens.onSurfaceColor)),
+                const SizedBox(height: 2),
+                Text(
+                  'Subido el ${_fmtDate(doc.uploadedAt)}',
+                  style: const TextStyle(fontFamily: 'Inter', fontSize: 11, color: DashboardTokens.onSurfaceVariantColor),
+                ),
+              ],
+            ),
+          ),
+          Icon(
+            hasUrl ? Icons.check_circle_outline : Icons.cancel_outlined,
+            size: 20,
+            color: hasUrl ? const Color(0xFF2E7D32) : DashboardTokens.errorColor,
+          ),
+        ],
+      ),
+    );
+  }
+}
+
+// ── TAB: Historial ────────────────────────────────────────────────────────────
+class _HistorialTab extends StatelessWidget {
+  const _HistorialTab({required this.request});
+  final CreditRequestEntity request;
+
+  List<(DateTime, String, String, IconData)> _buildEvents() {
+    final events = <(DateTime, String, String, IconData)>[];
+    events.add((request.createdAt, 'Solicitud creada', 'Borrador guardado en el sistema', Icons.add_circle_outline));
+    if (request.submittedAt != null) {
+      events.add((request.submittedAt!, 'Solicitud enviada', 'Estado cambiado a Pendiente', Icons.send_outlined));
+    }
+    if (request.status == RequestStatus.underAudit && request.updatedAt != null) {
+      events.add((request.updatedAt!, 'Auditor asignado', 'Solicitud en proceso de auditoría', Icons.assignment_ind_outlined));
+    }
+    if (request.status == RequestStatus.rejected && request.updatedAt != null) {
+      events.add((request.updatedAt!, 'Solicitud rechazada', 'La solicitud fue rechazada', Icons.cancel_outlined));
+    }
+    events.sort((a, b) => a.$1.compareTo(b.$1));
+    return events;
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    final events = _buildEvents();
+
+    return SingleChildScrollView(
+      padding: const EdgeInsets.fromLTRB(16, 20, 16, 32),
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          _sectionTitle('Historial de la Solicitud'),
+          const SizedBox(height: 16),
+          ...List.generate(events.length, (i) {
+            final (date, title, desc, icon) = events[i];
+            final isLast = i == events.length - 1;
+            return Row(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Column(
+                  children: [
+                    Container(
+                      width: 40, height: 40,
+                      decoration: BoxDecoration(
+                        color: DashboardTokens.secondaryColor.withValues(alpha: 0.1),
+                        shape: BoxShape.circle,
+                      ),
+                      child: Icon(icon, size: 18, color: DashboardTokens.secondaryColor),
+                    ),
+                    if (!isLast)
+                      Container(width: 2, height: 36, color: DashboardTokens.outlineVariantColor.withValues(alpha: 0.4)),
+                  ],
+                ),
+                const SizedBox(width: 14),
+                Expanded(
+                  child: Padding(
+                    padding: EdgeInsets.only(bottom: isLast ? 0 : 24),
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        const SizedBox(height: 6),
+                        Text(title, style: const TextStyle(fontFamily: 'Manrope', fontSize: 14, fontWeight: FontWeight.w700, color: DashboardTokens.onSurfaceColor)),
+                        const SizedBox(height: 2),
+                        Text(desc, style: const TextStyle(fontFamily: 'Inter', fontSize: 12, color: DashboardTokens.onSurfaceVariantColor)),
+                        const SizedBox(height: 4),
+                        Text(
+                          DateFormat('d MMM yyyy, HH:mm', 'es').format(date),
+                          style: const TextStyle(fontFamily: 'Inter', fontSize: 11, color: DashboardTokens.outlineColor),
+                        ),
+                      ],
+                    ),
+                  ),
+                ),
+              ],
+            );
+          }),
+        ],
+      ),
+    );
+  }
+}
+
+// ── Error body ────────────────────────────────────────────────────────────────
+class _ErrorBody extends StatelessWidget {
+  const _ErrorBody({required this.onRetry});
+  final VoidCallback onRetry;
+
+  @override
+  Widget build(BuildContext context) {
+    return Center(
+      child: Padding(
+        padding: const EdgeInsets.all(40),
+        child: Column(
+          mainAxisSize: MainAxisSize.min,
+          children: [
+            const Icon(Icons.error_outline, size: 48, color: DashboardTokens.errorColor),
+            const SizedBox(height: 16),
+            const Text('No se pudo cargar la solicitud', textAlign: TextAlign.center,
+              style: TextStyle(fontFamily: 'Manrope', fontSize: 16, fontWeight: FontWeight.w700, color: DashboardTokens.onSurfaceColor)),
+            const SizedBox(height: 8),
+            const Text('Verificá tu conexión e intentá nuevamente.', textAlign: TextAlign.center,
+              style: TextStyle(fontFamily: 'Inter', fontSize: 14, color: DashboardTokens.onSurfaceVariantColor)),
+            const SizedBox(height: 24),
+            ElevatedButton.icon(
+              onPressed: onRetry,
+              style: ElevatedButton.styleFrom(
+                backgroundColor: DashboardTokens.primaryColor, foregroundColor: Colors.white,
+                shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(10)),
+              ),
+              icon: const Icon(Icons.refresh, size: 18),
+              label: const Text('Reintentar', style: TextStyle(fontFamily: 'Manrope', fontWeight: FontWeight.w700)),
+            ),
+          ],
+        ),
+      ),
+    );
+  }
+}
+
+// ── Shared helpers ────────────────────────────────────────────────────────────
+Widget _sectionTitle(String text) => Text(text,
+  style: const TextStyle(fontFamily: 'Manrope', fontSize: 18, fontWeight: FontWeight.w700, color: DashboardTokens.primaryColor, letterSpacing: -0.2));
+
+Widget _infoCard({required List<Widget> children}) => Container(
+  padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 4),
+  decoration: BoxDecoration(
+    color: DashboardTokens.surfaceLowestColor,
+    borderRadius: BorderRadius.circular(14),
+    border: Border.all(color: DashboardTokens.outlineVariantColor.withValues(alpha: 0.3)),
+    boxShadow: [BoxShadow(color: Colors.black.withValues(alpha: 0.025), blurRadius: 6, offset: const Offset(0, 2))],
+  ),
+  child: Column(crossAxisAlignment: CrossAxisAlignment.start, children: children),
+);
+
+Widget _row(String label, String value) => Padding(
+  padding: const EdgeInsets.symmetric(vertical: 10),
+  child: Row(
+    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+    children: [
+      Text(label, style: const TextStyle(fontFamily: 'Inter', fontSize: 13, color: DashboardTokens.onSurfaceVariantColor)),
+      Flexible(
+        child: Text(value.isEmpty ? '—' : value,
+          textAlign: TextAlign.end,
+          style: const TextStyle(fontFamily: 'Inter', fontSize: 13, fontWeight: FontWeight.w600, color: DashboardTokens.onSurfaceColor),
+          maxLines: 2, overflow: TextOverflow.ellipsis),
+      ),
+    ],
+  ),
+);
+
+Widget _divider() => const Divider(height: 1, color: DashboardTokens.outlineVariantColor);
+
+Widget _emptyState(IconData icon, String title, String desc) => Center(
+  child: Padding(
+    padding: const EdgeInsets.symmetric(vertical: 40),
+    child: Column(
+      mainAxisSize: MainAxisSize.min,
+      children: [
+        Icon(icon, size: 48, color: DashboardTokens.outlineVariantColor),
+        const SizedBox(height: 12),
+        Text(title, style: const TextStyle(fontFamily: 'Manrope', fontSize: 16, fontWeight: FontWeight.w600, color: DashboardTokens.onSurfaceColor)),
+        const SizedBox(height: 6),
+        Text(desc, textAlign: TextAlign.center, style: const TextStyle(fontFamily: 'Inter', fontSize: 13, color: DashboardTokens.onSurfaceVariantColor, height: 1.4)),
+      ],
+    ),
+  ),
+);
+
+String _fmtDate(DateTime date) => DateFormat('d MMM yyyy', 'es').format(date);

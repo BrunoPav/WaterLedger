@@ -1,0 +1,327 @@
+<!DOCTYPE html>
+
+<html lang="en"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600&amp;family=Manrope:wght@600;700;800&amp;family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<style>
+        .material-symbols-outlined {
+            font-variation-settings: 'FILL' 0, 'wght' 200, 'GRAD' 0, 'opsz' 24;
+        }
+        .glass-card {
+            background: rgba(255, 255, 255, 0.7);
+            backdrop-filter: blur(20px);
+            border: 1px solid rgba(226, 232, 240, 0.5);
+        }
+    </style>
+<script id="tailwind-config">
+      tailwind.config = {
+        darkMode: "class",
+        theme: {
+          extend: {
+            "colors": {
+                    "surface-container-lowest": "#ffffff",
+                    "secondary": "#006875",
+                    "on-tertiary-fixed-variant": "#005312",
+                    "on-tertiary-container": "#469446",
+                    "on-primary-fixed": "#0d1c32",
+                    "outline": "#75777e",
+                    "surface-dim": "#d8dadc",
+                    "tertiary-fixed-dim": "#88d982",
+                    "on-background": "#191c1e",
+                    "inverse-on-surface": "#eff1f3",
+                    "inverse-primary": "#b9c7e4",
+                    "surface": "#f7f9fb",
+                    "on-tertiary-fixed": "#002204",
+                    "on-tertiary": "#ffffff",
+                    "on-secondary-container": "#00616d",
+                    "tertiary": "#000000",
+                    "primary-fixed-dim": "#b9c7e4",
+                    "on-secondary-fixed-variant": "#004f58",
+                    "secondary-fixed-dim": "#00daf3",
+                    "on-secondary": "#ffffff",
+                    "on-error-container": "#93000a",
+                    "error": "#ba1a1a",
+                    "primary": "#000000",
+                    "surface-variant": "#e0e3e5",
+                    "secondary-container": "#00e3fd",
+                    "on-secondary-fixed": "#001f24",
+                    "primary-container": "#0d1c32",
+                    "on-primary-fixed-variant": "#39475f",
+                    "surface-container-highest": "#e0e3e5",
+                    "surface-container-high": "#e6e8ea",
+                    "primary-fixed": "#d6e3ff",
+                    "on-primary-container": "#76849f",
+                    "surface-container": "#eceef0",
+                    "surface-bright": "#f7f9fb",
+                    "inverse-surface": "#2d3133",
+                    "surface-tint": "#515f78",
+                    "surface-container-low": "#f2f4f6",
+                    "outline-variant": "#c5c6cd",
+                    "on-error": "#ffffff",
+                    "tertiary-container": "#002204",
+                    "on-surface-variant": "#44474d",
+                    "on-primary": "#ffffff",
+                    "error-container": "#ffdad6",
+                    "tertiary-fixed": "#a3f69c",
+                    "background": "#f7f9fb",
+                    "secondary-fixed": "#9cf0ff",
+                    "on-surface": "#191c1e"
+            },
+            "borderRadius": {
+                    "DEFAULT": "0.25rem",
+                    "lg": "0.5rem",
+                    "xl": "0.75rem",
+                    "full": "9999px"
+            },
+            "spacing": {
+                    "container-padding": "20px",
+                    "stack-md": "16px",
+                    "gutter": "16px",
+                    "stack-lg": "32px",
+                    "unit": "4px",
+                    "stack-sm": "8px"
+            },
+            "fontFamily": {
+                    "display-lg": ["Manrope"],
+                    "body-md": ["Inter"],
+                    "body-lg": ["Inter"],
+                    "headline-md": ["Manrope"],
+                    "label-sm": ["Inter"]
+            },
+            "fontSize": {
+                    "display-lg": ["40px", {"lineHeight": "48px", "letterSpacing": "-0.02em", "fontWeight": "700"}],
+                    "body-md": ["16px", {"lineHeight": "24px", "fontWeight": "400"}],
+                    "body-lg": ["18px", {"lineHeight": "28px", "fontWeight": "400"}],
+                    "headline-md": ["24px", {"lineHeight": "32px", "letterSpacing": "-0.01em", "fontWeight": "600"}],
+                    "label-sm": ["13px", {"lineHeight": "16px", "letterSpacing": "0.05em", "fontWeight": "600"}]
+            }
+          }
+        }
+      }
+    </script>
+<style>
+    body {
+      min-height: max(884px, 100dvh);
+    }
+  </style>
+  </head>
+<body class="bg-surface text-on-background font-body-md min-h-screen pb-24">
+<!-- Top App Bar -->
+<header class="fixed top-0 left-0 w-full z-50 bg-surface/70 backdrop-blur-md border-b border-outline-variant/10 shadow-sm h-16">
+<div class="flex justify-between items-center px-gutter h-full w-full max-w-7xl mx-auto">
+<div class="flex items-center gap-3">
+<div class="w-10 h-10 rounded-full bg-primary-container flex items-center justify-center overflow-hidden">
+<img alt="Admin" class="w-full h-full object-cover" data-alt="A professional headshot of a mature executive male with a calm, trustworthy expression. He is wearing a dark navy bespoke suit against a minimalist light gray studio background. The lighting is soft and even, emphasizing a high-end institutional and reliable corporate aesthetic." src="https://lh3.googleusercontent.com/aida-public/AB6AXuBfylHjjE-6R32YPhAQJ11Rn_v34Yd67VUhmQm96mDsPHwBjqG3JXEghuhJdTRx8tq82Vzb4kU4OhJUwF7079AbZrHqGdWt2TlODI6N1I0NpkTy7aMrA6k9WNltBvmA7ewpZPcDhv6hn0ad-2-hx5Rrfsq92Rc3TjWMLLMPnuELeGd1GZNYuC6F84alY10nSAzsbMq7HrfSmyOt11qJOGePZwv0thAN9T7CqbPJc-G2EP-KT0eszmbd48kLw8CP8qnEPR8GPT57UX4"/>
+</div>
+<div>
+<h1 class="font-display-lg text-headline-md text-primary tracking-tight leading-none">Water Ledger</h1>
+</div>
+</div>
+<button class="active:scale-95 transition-all text-primary">
+<span class="material-symbols-outlined text-[28px]" data-icon="notifications">notifications</span>
+</button>
+</div>
+</header>
+<!-- Main Content Canvas -->
+<main class="pt-20 px-container-padding space-y-stack-lg">
+<!-- Header Text -->
+<section class="space-y-unit">
+<h2 class="font-headline-md text-headline-md text-on-surface">Administrator Dashboard</h2>
+<p class="text-on-surface-variant font-body-md">Manage platform operations, approvals, audits, certifications, and project valuation.</p>
+</section>
+<!-- KPI Grid -->
+<section class="grid grid-cols-2 gap-stack-md">
+<div class="glass-card p-4 rounded-xl space-y-stack-sm">
+<span class="material-symbols-outlined text-secondary" data-icon="person_add">person_add</span>
+<div>
+<p class="font-display-lg text-headline-md leading-none">14</p>
+<p class="font-label-sm text-on-surface-variant uppercase tracking-wider text-[10px]">User Approvals</p>
+</div>
+</div>
+<div class="glass-card p-4 rounded-xl space-y-stack-sm">
+<span class="material-symbols-outlined text-secondary" data-icon="account_tree">account_tree</span>
+<div>
+<p class="font-display-lg text-headline-md leading-none">42</p>
+<p class="font-label-sm text-on-surface-variant uppercase tracking-wider text-[10px]">Active Projects</p>
+</div>
+</div>
+<div class="glass-card p-4 rounded-xl space-y-stack-sm">
+<span class="material-symbols-outlined text-secondary" data-icon="verified">verified</span>
+<div>
+<p class="font-display-lg text-headline-md leading-none">8</p>
+<p class="font-label-sm text-on-surface-variant uppercase tracking-wider text-[10px]">Certifications</p>
+</div>
+</div>
+<div class="glass-card p-4 rounded-xl space-y-stack-sm">
+<span class="material-symbols-outlined text-secondary" data-icon="analytics">analytics</span>
+<div>
+<p class="font-display-lg text-headline-md leading-none">5</p>
+<p class="font-label-sm text-on-surface-variant uppercase tracking-wider text-[10px]">Valuations</p>
+</div>
+</div>
+</section>
+<!-- SECTION 1: Pending Approvals -->
+<section class="space-y-stack-md">
+<div class="flex justify-between items-end">
+<h3 class="font-headline-md text-headline-md text-on-surface">Pending Approvals</h3>
+<span class="font-label-sm text-secondary">View all</span>
+</div>
+<div class="space-y-stack-md">
+<!-- Card 1 -->
+<div class="glass-card p-stack-md rounded-xl space-y-stack-md">
+<div class="flex justify-between items-start">
+<div>
+<h4 class="font-headline-md text-body-lg text-on-surface">Global Audit Partners</h4>
+<p class="font-body-md text-on-surface-variant text-sm">Auditor • Oct 24, 2023</p>
+</div>
+<span class="px-3 py-1 bg-secondary-fixed text-on-secondary-fixed text-[11px] font-bold rounded-full uppercase">Pending</span>
+</div>
+<div class="flex gap-stack-sm">
+<button class="flex-1 bg-primary text-on-primary py-2.5 rounded-lg font-label-sm active:scale-95 transition-transform">Approve</button>
+<button class="flex-1 border border-outline-variant text-on-surface-variant py-2.5 rounded-lg font-label-sm active:scale-95 transition-transform">Reject</button>
+</div>
+</div>
+<!-- Card 2 -->
+<div class="glass-card p-stack-md rounded-xl space-y-stack-md">
+<div class="flex justify-between items-start">
+<div>
+<h4 class="font-headline-md text-body-lg text-on-surface">Swiss Water Board</h4>
+<p class="font-body-md text-on-surface-variant text-sm">Certification • Oct 25, 2023</p>
+</div>
+<span class="px-3 py-1 bg-secondary-fixed text-on-secondary-fixed text-[11px] font-bold rounded-full uppercase">Pending</span>
+</div>
+<div class="flex gap-stack-sm">
+<button class="flex-1 bg-primary text-on-primary py-2.5 rounded-lg font-label-sm active:scale-95 transition-transform">Approve</button>
+<button class="flex-1 border border-outline-variant text-on-surface-variant py-2.5 rounded-lg font-label-sm active:scale-95 transition-transform">Reject</button>
+</div>
+</div>
+<!-- Card 3 -->
+<div class="glass-card p-stack-md rounded-xl space-y-stack-md">
+<div class="flex justify-between items-start">
+<div>
+<h4 class="font-headline-md text-body-lg text-on-surface">EcoRisk Insurance</h4>
+<p class="font-body-md text-on-surface-variant text-sm">Insurance • Oct 25, 2023</p>
+</div>
+<span class="px-3 py-1 bg-secondary-fixed text-on-secondary-fixed text-[11px] font-bold rounded-full uppercase">Pending</span>
+</div>
+<div class="flex gap-stack-sm">
+<button class="flex-1 bg-primary text-on-primary py-2.5 rounded-lg font-label-sm active:scale-95 transition-transform">Approve</button>
+<button class="flex-1 border border-outline-variant text-on-surface-variant py-2.5 rounded-lg font-label-sm active:scale-95 transition-transform">Reject</button>
+</div>
+</div>
+</div>
+</section>
+<!-- SECTION 2: Active Project Monitoring -->
+<section class="space-y-stack-md">
+<h3 class="font-headline-md text-headline-md text-on-surface">Project Monitoring</h3>
+<div class="flex overflow-x-auto gap-stack-md pb-4 -mx-container-padding px-container-padding snap-x scrollbar-hide">
+<!-- Project Card 1 -->
+<div class="min-w-[280px] snap-center glass-card rounded-xl overflow-hidden flex flex-col">
+<div class="h-32 bg-surface-container-high relative">
+<img alt="Mekong Delta" class="w-full h-full object-cover" data-alt="A lush, expansive aerial view of the Mekong Delta river system at sunrise. The water is reflecting soft golden light, and the surrounding mangroves are a deep, vibrant emerald green. The image communicates environmental restoration and the natural beauty of aquatic ecosystems in a high-contrast, clean professional style." src="https://lh3.googleusercontent.com/aida-public/AB6AXuAvOnHo8wSTrCOrWZrx3mH7pUjXf-7ENR8ca7bnrVTKyVFqhMyzwug7ocYFV-jFFkW6h2UTHb7NUEvSTGjS_DlwAcwo6JYkW7Ss9N8BfV41FQowpRQ8aX04p2wBmccjlop6yd5QH0HPWZcQV_MIxWaGtm1sPC-vh_fQdZaoV3xe4u1CSBEwYTPzPjVR21c5BWRjq3j49XZAXb05pOzZ4ywA3f9QLKsFSUBALzTREgX_bolzf87pN0ziLNrVAVFEVU7TeGXwQ_PW1Eg"/>
+<div class="absolute top-3 left-3 px-2 py-1 bg-tertiary/80 backdrop-blur text-white text-[10px] font-bold rounded uppercase">Certification</div>
+</div>
+<div class="p-4 space-y-stack-sm flex-1">
+<div>
+<h5 class="font-headline-md text-body-md leading-tight">Mekong Delta Restoration</h5>
+<p class="text-on-surface-variant text-[12px]">AquaGlobal Corp</p>
+</div>
+<div class="pt-2 border-t border-outline-variant/20">
+<div class="flex justify-between text-[11px] font-bold uppercase text-on-surface-variant mb-1">
+<span>Status</span>
+<span class="text-secondary">Reviewing</span>
+</div>
+<p class="text-[12px] text-on-surface">Next: Validate Credits</p>
+</div>
+</div>
+<button class="w-full py-3 bg-surface-container-highest text-primary font-label-sm border-t border-outline-variant/20 active:bg-outline-variant/10">View Project</button>
+</div>
+<!-- Project Card 2 -->
+<div class="min-w-[280px] snap-center glass-card rounded-xl overflow-hidden flex flex-col">
+<div class="h-32 bg-surface-container-high relative">
+<img alt="Murray-Darling" class="w-full h-full object-cover" data-alt="A vast, serene wetland landscape under a clear blue sky, showing healthy water flows and rebounding vegetation. The lighting is bright and high-key, conveying a sense of hope and successful environmental recovery. The aesthetic is clean, minimalist, and institutional, focusing on the clarity of the water and the sky." src="https://lh3.googleusercontent.com/aida-public/AB6AXuCUC3ATI1jee1ZqXEkLKKzdWIlgEpUHqkj3klDluzvH4KtK9bNSUcocXuq_b7HMluEAKMAVE2-F7CpxrY3oBxbe6MCJVVn2Ntqv0_f3vWKQJMOvugYkfqLIKfUWjzh-N6Sq39m8V2ZJoZRlz7Bn7TGTv6eOPAMLKIgGkRUUCgf1RGmGqUQ_KXeFhLcdvz_zWmQq5Q0kzVm-5wdJZZDxq-D26xQkTf_4v593iWJ4ioPN1du2yYmZrwmUY_-tMCj9tEFx9WzWR7i3PS4"/>
+<div class="absolute top-3 left-3 px-2 py-1 bg-tertiary/80 backdrop-blur text-white text-[10px] font-bold rounded uppercase">Insurance</div>
+</div>
+<div class="p-4 space-y-stack-sm flex-1">
+<div>
+<h5 class="font-headline-md text-body-md leading-tight">Murray-Darling Basin Recovery</h5>
+<p class="text-on-surface-variant text-[12px]">EcoRestoration Holdings</p>
+</div>
+<div class="pt-2 border-t border-outline-variant/20">
+<div class="flex justify-between text-[11px] font-bold uppercase text-on-surface-variant mb-1">
+<span>Status</span>
+<span class="text-on-tertiary-container">Active</span>
+</div>
+<p class="text-[12px] text-on-surface">Next: Review Policy</p>
+</div>
+</div>
+<button class="w-full py-3 bg-surface-container-highest text-primary font-label-sm border-t border-outline-variant/20 active:bg-outline-variant/10">View Project</button>
+</div>
+</div>
+</section>
+<!-- SECTION 3: Recent Activity -->
+<section class="space-y-stack-md">
+<h3 class="font-headline-md text-headline-md text-on-surface">Recent Activity</h3>
+<div class="bg-surface-container-lowest rounded-2xl overflow-hidden border border-outline-variant/20">
+<!-- Activity Item 1 -->
+<div class="flex items-center gap-4 p-4 border-b border-outline-variant/10">
+<div class="w-10 h-10 rounded-full bg-tertiary-fixed text-on-tertiary-fixed flex items-center justify-center">
+<span class="material-symbols-outlined" data-icon="check_circle">check_circle</span>
+</div>
+<div class="flex-1">
+<p class="text-sm font-body-md text-on-surface">Auditor approved: Global Audit Partners</p>
+<p class="text-[11px] text-on-surface-variant">1h ago</p>
+</div>
+</div>
+<!-- Activity Item 2 -->
+<div class="flex items-center gap-4 p-4 border-b border-outline-variant/10">
+<div class="w-10 h-10 rounded-full bg-secondary-fixed text-on-secondary-fixed flex items-center justify-center">
+<span class="material-symbols-outlined" data-icon="description">description</span>
+</div>
+<div class="flex-1">
+<p class="text-sm font-body-md text-on-surface">Certification submitted: Mekong Delta</p>
+<p class="text-[11px] text-on-surface-variant">3h ago</p>
+</div>
+</div>
+<!-- Activity Item 3 -->
+<div class="flex items-center gap-4 p-4">
+<div class="w-10 h-10 rounded-full bg-primary-container text-on-primary-container flex items-center justify-center">
+<span class="material-symbols-outlined" data-icon="policy">policy</span>
+</div>
+<div class="flex-1">
+<p class="text-sm font-body-md text-on-surface">Insurance plan selected for AquaFlow</p>
+<p class="text-[11px] text-on-surface-variant">Yesterday</p>
+</div>
+</div>
+</div>
+</section>
+</main>
+<!-- Bottom Navigation Bar -->
+<nav class="fixed bottom-0 left-0 w-full z-50 bg-surface/80 backdrop-blur-xl border-t border-outline-variant/20 shadow-[0_-4px_12px_rgba(0,0,0,0.04)] h-20 rounded-t-xl">
+<div class="flex justify-around items-center h-full px-2 pb-safe w-full">
+<a class="flex flex-col items-center gap-1 text-secondary bg-secondary-container/10 rounded-xl px-3 py-1.5 transition-colors" href="#">
+<span class="material-symbols-outlined" data-icon="home" style="font-variation-settings: 'FILL' 1;">home</span>
+<span class="font-label-sm text-label-sm">Home</span>
+</a>
+<a class="flex flex-col items-center gap-1 text-on-surface-variant hover:text-primary active:scale-90 transition-transform duration-200" href="#">
+<span class="material-symbols-outlined" data-icon="pending_actions">pending_actions</span>
+<span class="font-label-sm text-label-sm">Requests</span>
+</a>
+<a class="flex flex-col items-center gap-1 text-on-surface-variant hover:text-primary active:scale-90 transition-transform duration-200" href="#">
+<span class="material-symbols-outlined" data-icon="water_drop">water_drop</span>
+<span class="font-label-sm text-label-sm">Credits</span>
+</a>
+<a class="flex flex-col items-center gap-1 text-on-surface-variant hover:text-primary active:scale-90 transition-transform duration-200" href="#">
+<span class="material-symbols-outlined" data-icon="storefront">storefront</span>
+<span class="font-label-sm text-label-sm">Market</span>
+</a>
+<a class="flex flex-col items-center gap-1 text-on-surface-variant hover:text-primary active:scale-90 transition-transform duration-200" href="#">
+<span class="material-symbols-outlined" data-icon="person">person</span>
+<span class="font-label-sm text-label-sm">Profile</span>
+</a>
+</div>
+</nav>
+</body></html>

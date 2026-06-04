@@ -1,15 +1,15 @@
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:water_ledger/core/data/repositories/firebase_auth_repository.dart';
+import 'package:water_ledger/core/domain/entities/user_model.dart';
+import 'package:water_ledger/core/domain/repositories/auth_repository.dart';
 
-class Session {
-  final String? companyId;
-  final bool isCompany;
+// class Session { ... } — reemplazada por UserModel en core/domain/entities/user_model.dart
+// final sessionProvider = Provider<Session> — reemplazado por StreamProvider<UserModel?> con Firebase real
 
-  const Session({this.companyId, this.isCompany = false});
-}
+final authRepositoryProvider = Provider<AuthRepository>((ref) {
+  return FirebaseAuthRepository();
+});
 
-// Provider para simular sesion de empresa autenticada, siempre da true. 
-// En una implementación real, esto debería integrarse con el sistema de autenticación real.
-final sessionProvider = Provider<Session>((ref) {
-  //aca iria la logica de la validacion
-  return const Session(companyId: 'mock_company_id', isCompany: true);
+final sessionProvider = StreamProvider<UserModel?>((ref) {
+  return ref.watch(authRepositoryProvider).authStateChanges;
 });
