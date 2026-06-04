@@ -23,9 +23,6 @@ const Set<String> _publicPaths = {
   '/certifier-register-success',
   '/insurance-register-success',
   '/register-success',
-  // Pantalla de prueba accesible para QA — no debería existir en prod
-  '/home-temporal',
-  '/project-info-test',
 };
 
 /// Paths a los que NO debería volver un usuario ya logueado
@@ -40,14 +37,11 @@ const Set<String> _authEntryPaths = {
 const Map<String, Set<UserRole>> _roleAccessMap = {
   // Módulo de emisión (4.2) — solo empresa emisora
   '/credit-issuance': {UserRole.company},
-  '/roadmap-editor': {UserRole.company},
   '/submission-confirmation': {UserRole.company},
   '/request-tracking': {UserRole.company},   // fallback (sin param)
-  '/issuing-company': {UserRole.company},
 
   // Módulo de auditoría — solo auditor
   '/auditor': {UserRole.auditor},
-  '/documentation': {UserRole.auditor},
   '/auditor-request-detail': {UserRole.auditor},
 
   // Módulo de certificación — solo certifier

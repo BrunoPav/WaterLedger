@@ -19,22 +19,8 @@ void main() async {
   );
 }
 
-// Versión anterior — usaba un router global `appRouter` (final estático).
-// Cambiada a ConsumerWidget para poder leer el `appRouterProvider`, que ahora
-// es un Provider de Riverpod (necesario porque el redirect del router consulta
-// sessionProvider y reacciona a cambios de auth de Firebase).
-// class MainApp extends StatelessWidget {
-//   const MainApp({super.key});
-//
-//   @override
-//   Widget build(BuildContext context) {
-//     return MaterialApp.router(
-//       debugShowCheckedModeBanner: false,
-//       routerConfig: appRouter,
-//     );
-//   }
-// }
-
+// ConsumerWidget (en vez de StatelessWidget) para poder leer appRouterProvider,
+// cuyo redirect consulta sessionProvider y reacciona a cambios de auth de Firebase.
 class MainApp extends ConsumerWidget {
   const MainApp({super.key});
 

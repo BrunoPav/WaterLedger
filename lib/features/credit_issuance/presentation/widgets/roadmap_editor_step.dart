@@ -293,8 +293,8 @@ class _RoadmapEditorStepState extends State<RoadmapEditorStep> {
                   final selected = _selectedMilestones.contains(m);
                   return GestureDetector(
                     onTap: () => setState(() {
-                      if (selected) _selectedMilestones.remove(m);
-                      else _selectedMilestones.add(m);
+                      if (selected) { _selectedMilestones.remove(m); }
+                      else { _selectedMilestones.add(m); }
                     }),
                     child: AnimatedContainer(
                       duration: const Duration(milliseconds: 180),

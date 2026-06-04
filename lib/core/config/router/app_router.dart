@@ -5,7 +5,6 @@ import 'package:water_ledger/core/config/router/route_access.dart';
 import 'package:water_ledger/core/presentation/providers/session_provider.dart';
 import 'package:water_ledger/features/auditor/presentation/screens/auditor_screen.dart';
 import 'package:water_ledger/features/auditor/presentation/screens/auditor_request_detail_screen.dart';
-import 'package:water_ledger/features/auditor/presentation/screens/documentation_screen.dart';
 import 'package:water_ledger/features/certifier/presentation/screens/certifier_requests_screen.dart';
 import 'package:water_ledger/features/certifier/presentation/screens/certifier_request_detail_screen.dart';
 import 'package:water_ledger/features/insurer/presentation/screens/insurer_requests_screen.dart';
@@ -17,8 +16,6 @@ import 'package:water_ledger/core/presentation/screens/auth/certifier_register_s
 import 'package:water_ledger/features/auth/presentation/screens/insurance_register_screen.dart';
 import 'package:water_ledger/features/auth/presentation/screens/register_success_screen.dart';
 import 'package:water_ledger/core/presentation/screens/admin/admin_dashboard_screen.dart';
-// Import de la pantalla de seed comentado al borrarse la vista — el usuario ya creó su admin en Firestore:
-// import 'package:water_ledger/core/presentation/screens/admin/admin_seed_screen.dart';
 import 'package:water_ledger/core/presentation/screens/admin/pending_approvals_list_screen.dart';
 import 'package:water_ledger/core/presentation/screens/admin/pending_request_detail_screen.dart';
 import 'package:water_ledger/core/presentation/screens/admin/admin_requests_list_screen.dart';
@@ -34,13 +31,11 @@ import 'package:water_ledger/features/auth/presentation/screens/login_screen.dar
 import 'package:water_ledger/features/auth/presentation/screens/register_screen.dart';
 import 'package:water_ledger/core/presentation/screens/splash_screen.dart';
 import 'package:water_ledger/features/credit_issuance/presentation/screens/credit_issuance_screen.dart';
-import 'package:water_ledger/features/credit_issuance/presentation/screens/roadmap_editor_screen.dart';
 import 'package:water_ledger/features/credit_issuance/presentation/screens/submission_confirmation_screen.dart';
 import 'package:water_ledger/features/credit_issuance/presentation/screens/request_tracking_screen.dart';
 import 'package:water_ledger/features/dashboards/presentation/screens/home_dispatcher.dart';
 import 'package:water_ledger/features/profiles/presentation/screens/profile_dispatcher.dart';
 import 'package:water_ledger/features/profiles/presentation/screens/profile_edit_screen.dart';
-import 'package:water_ledger/features/issuer/presentation/screen/issuing_company_screen.dart';
 
 /// Provider del router con guard de auth y rol.
 /// El guard:
@@ -102,10 +97,6 @@ final appRouterProvider = Provider<GoRouter>((ref) {
     GoRoute(path: '/insurance-register-success', builder: (context, state) => const RegisterSuccessScreen()),
     GoRoute(path: '/register-success', builder: (context, state) => const RegisterSuccessScreen()),
     // ---- Admin (4.6 Gestión del Administrador) ---- //
-    // Ruta /admin-seed comentada al borrarse la pantalla de seed — el usuario ya creó su admin.
-    // El método registerAdmin sigue disponible en AuthRepository por si más adelante se necesita
-    // habilitar creación de admins desde otra pantalla (ej. un panel super-admin).
-    // GoRoute(path: '/admin-seed', builder: (context, state) => const AdminSeedScreen()),
     GoRoute(path: '/admin-dashboard', builder: (context, state) => const AdminDashboardScreen()),
     GoRoute(
       path: '/admin-pending-approvals',
@@ -142,14 +133,6 @@ final appRouterProvider = Provider<GoRouter>((ref) {
     GoRoute(path: '/profile', builder: (context, state) => const ProfileDispatcher()),
     GoRoute(path: '/profile/edit', builder: (context, state) => const ProfileEditScreen()),
     GoRoute(
-      path: '/issuing-company',
-      builder: (context, state) => const IssuingCompanyScreen(),
-    ),
-    GoRoute(
-      path: '/documentation',
-      builder: (context, state) => const DocumentationScreen(),
-    ),
-    GoRoute(
       path: '/auditor',
       builder: (context, state) => const AuditorScreen(),
     ),
@@ -182,10 +165,6 @@ final appRouterProvider = Provider<GoRouter>((ref) {
     GoRoute(
       path: '/credit-issuance',
       builder: (context, state) => const CreditIssuanceScreen(),
-    ),
-    GoRoute(
-      path: '/roadmap-editor',
-      builder: (context, state) => const RoadmapEditorScreen(),
     ),
     GoRoute(
       path: '/submission-confirmation',

@@ -390,12 +390,6 @@ class _RegisterScreenState extends State<RegisterScreen> {
           width: double.infinity,
           child: ElevatedButton(
             onPressed: () {
-              // Lógica anterior con solo 2 tipos (comentada al expandir a 5):
-              // if (_selected == _AccountType.company) {
-              //   context.push('/corporate-onboarding');
-              // } else {
-              //   context.push('/retail-register');
-              // }
               switch (_selected) {
                 case _AccountType.retailInvestor:
                   context.push('/retail-register');
@@ -403,15 +397,6 @@ class _RegisterScreenState extends State<RegisterScreen> {
                   context.push('/corporate-onboarding');
                 case _AccountType.auditor:
                   context.push('/auditor-register');
-                // Historial de routing de los roles B2B:
-                // - Antes Certification Entity e Insurance Provider compartían placeholder a /corporate-onboarding.
-                // - Al implementar la pantalla del certificador, su case quedó separado.
-                // - Ahora Insurance Provider también rutea a su flujo dedicado /insurance-register.
-                // case _AccountType.certificationEntity:
-                // case _AccountType.insuranceProvider:
-                //   context.push('/corporate-onboarding');
-                // case _AccountType.insuranceProvider:
-                //   context.push('/corporate-onboarding');
                 case _AccountType.certificationEntity:
                   context.push('/certifier-register');
                 case _AccountType.insuranceProvider:

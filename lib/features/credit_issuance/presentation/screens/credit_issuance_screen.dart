@@ -540,7 +540,7 @@ class _CreditIssuanceScreenState extends ConsumerState<CreditIssuanceScreen> {
                   const SizedBox(height: 20),
                   _fieldLabel('Categoría'),
                   DropdownButtonFormField<ProjectCategory>(
-                    value: _category,
+                    initialValue: _category,
                     decoration: _inputDecoration(),
                     items: ProjectCategory.values.map((c) => DropdownMenuItem(value: c, child: Text(_categoryLabels[c] ?? c.name))).toList(),
                     onChanged: (v) { if (v != null) setState(() => _category = v); },

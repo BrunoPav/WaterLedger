@@ -91,57 +91,6 @@ class _LoadingScreen extends StatelessWidget {
   }
 }
 
-// Placeholder de Admin — ya no se usa porque admin redirige a /admin-dashboard
-// (existe pantalla propia en el módulo 4.6 - core/presentation/screens/admin/).
-// Se conserva comentado por si en algún momento queremos mostrar un mensaje
-// intermedio antes del redirect en vez de saltar directo.
-//
-// class _AdminPlaceholder extends StatelessWidget {
-//   const _AdminPlaceholder();
-//
-//   @override
-//   Widget build(BuildContext context) {
-//     return Scaffold(
-//       backgroundColor: DashboardTokens.bgColor,
-//       body: Center(
-//         child: Padding(
-//           padding: const EdgeInsets.all(24),
-//           child: Column(
-//             mainAxisSize: MainAxisSize.min,
-//             children: [
-//               const Icon(
-//                 Icons.admin_panel_settings_outlined,
-//                 size: 48,
-//                 color: DashboardTokens.secondaryColor,
-//               ),
-//               const SizedBox(height: 12),
-//               const Text(
-//                 'Admin Dashboard',
-//                 style: TextStyle(
-//                   fontFamily: 'Manrope',
-//                   fontSize: 22,
-//                   fontWeight: FontWeight.w700,
-//                   color: DashboardTokens.primaryColor,
-//                 ),
-//               ),
-//               const SizedBox(height: 8),
-//               const Text(
-//                 'Pendiente de implementar.',
-//                 textAlign: TextAlign.center,
-//                 style: TextStyle(
-//                   fontFamily: 'Inter',
-//                   fontSize: 13,
-//                   color: DashboardTokens.onSurfaceVariantColor,
-//                 ),
-//               ),
-//             ],
-//           ),
-//         ),
-//       ),
-//     );
-//   }
-// }
-
 class _ErrorScreen extends StatelessWidget {
   final String message;
   const _ErrorScreen({required this.message});
