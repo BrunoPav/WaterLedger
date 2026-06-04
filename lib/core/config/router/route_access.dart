@@ -22,6 +22,7 @@ const Set<String> _publicPaths = {
   '/auditor-register-success',
   '/certifier-register-success',
   '/insurance-register-success',
+  '/register-success',
   // Pantalla de prueba accesible para QA — no debería existir en prod
   '/home-temporal',
   '/project-info-test',

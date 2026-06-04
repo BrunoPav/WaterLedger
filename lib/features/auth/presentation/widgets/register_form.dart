@@ -996,7 +996,8 @@ class StepCredencialesForm extends StatelessWidget {
 class RegisterStep {
   final String title;
   final Widget Function(BuildContext) builder;
-  const RegisterStep({required this.title, required this.builder});
+  final String? Function()? validate;
+  const RegisterStep({required this.title, required this.builder, this.validate});
 }
 
 class RegisterForm extends StatefulWidget {
@@ -1004,7 +1005,7 @@ class RegisterForm extends StatefulWidget {
   final Widget? hero;
   final Widget Function(int current)? heroBuilder;
   final Widget? adminApprovalCard;
-  final VoidCallback? onSubmit;
+  final Future<void> Function()? onSubmit;
 
   const RegisterForm({
     super.key,
@@ -1021,12 +1022,30 @@ class RegisterForm extends StatefulWidget {
 
 class _RegisterFormState extends State<RegisterForm> {
   int _current = 0;
+  bool _isSubmitting = false;
 
   void _next() {
+    final error = widget.steps[_current].validate?.call();
+    if (error != null) {
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(content: Text(error), behavior: SnackBarBehavior.floating),
+      );
+      return;
+    }
     if (_current < widget.steps.length - 1) {
       setState(() => _current++);
     } else {
-      widget.onSubmit?.call();
+      _handleSubmit();
+    }
+  }
+
+  Future<void> _handleSubmit() async {
+    if (widget.onSubmit == null) return;
+    setState(() => _isSubmitting = true);
+    try {
+      await widget.onSubmit!();
+    } finally {
+      if (mounted) setState(() => _isSubmitting = false);
     }
   }
 
@@ -1134,7 +1153,7 @@ class _RegisterFormState extends State<RegisterForm> {
         Expanded(
           flex: 2,
           child: ElevatedButton(
-            onPressed: _next,
+            onPressed: _isSubmitting ? null : _next,
             style: ElevatedButton.styleFrom(
               backgroundColor: RegisterFormTokens.primaryColor,
               foregroundColor: RegisterFormTokens.onPrimaryColor,
@@ -1144,21 +1163,30 @@ class _RegisterFormState extends State<RegisterForm> {
               ),
               elevation: 1,
             ),
-            child: Row(
-              mainAxisAlignment: MainAxisAlignment.center,
-              children: [
-                Text(
-                  isLast ? 'Enviar registro' : 'Continuar',
-                  style: const TextStyle(
-                    fontFamily: 'Inter',
-                    fontSize: 16,
-                    fontWeight: FontWeight.w600,
+            child: _isSubmitting
+                ? const SizedBox(
+                    width: 20,
+                    height: 20,
+                    child: CircularProgressIndicator(
+                      strokeWidth: 2,
+                      color: RegisterFormTokens.onPrimaryColor,
+                    ),
+                  )
+                : Row(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    children: [
+                      Text(
+                        isLast ? 'Enviar registro' : 'Continuar',
+                        style: const TextStyle(
+                          fontFamily: 'Inter',
+                          fontSize: 16,
+                          fontWeight: FontWeight.w600,
+                        ),
+                      ),
+                      const SizedBox(width: 8),
+                      const Icon(Icons.arrow_forward, size: 18),
+                    ],
                   ),
-                ),
-                const SizedBox(width: 8),
-                const Icon(Icons.arrow_forward, size: 18),
-              ],
-            ),
           ),
         ),
       ],

@@ -1,16 +1,25 @@
+import 'dart:io' as io;
+
+import 'package:file_picker/file_picker.dart';
+import 'package:firebase_storage/firebase_storage.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
+import 'package:water_ledger/core/domain/exceptions/auth_exception.dart';
+import 'package:water_ledger/core/domain/validators/auth_validators.dart';
+import 'package:water_ledger/core/presentation/providers/session_provider.dart';
 import 'package:water_ledger/features/auth/presentation/widgets/register_form.dart';
 
-class InsuranceRegisterScreen extends StatefulWidget {
+class InsuranceRegisterScreen extends ConsumerStatefulWidget {
   const InsuranceRegisterScreen({super.key});
 
   @override
-  State<InsuranceRegisterScreen> createState() =>
+  ConsumerState<InsuranceRegisterScreen> createState() =>
       _InsuranceRegisterScreenState();
 }
 
-class _InsuranceRegisterScreenState extends State<InsuranceRegisterScreen> {
+class _InsuranceRegisterScreenState
+    extends ConsumerState<InsuranceRegisterScreen> {
   // Shared steps 1–3 + 5
   final _empresa       = EmpresaFormControllers();
   final _representante = RepresentanteFormControllers();
@@ -19,14 +28,14 @@ class _InsuranceRegisterScreenState extends State<InsuranceRegisterScreen> {
   // Step 1 — dropdown state
   String _tipoSociedad = 'SA';
 
-  // Step 2 — upload state
-  String? _estatutoFileName;
-  String? _constanciaFiscalFileName;
-  String? _balanceFileName;
+  // Step 2 — picked files
+  PlatformFile? _estatutoFile;
+  PlatformFile? _constanciaFiscalFile;
+  PlatformFile? _balanceFile;
 
-  // Step 3 — upload state
-  String? _poderActaFileName;
-  String? _docVinculoFileName;
+  // Step 3 — picked files
+  PlatformFile? _poderActaFile;
+  PlatformFile? _docVinculoFile;
 
   // Step 4 — Autorización + Cobertura (Insurance-specific)
   String _organismoSupervisor = 'SSN';
@@ -73,6 +82,159 @@ class _InsuranceRegisterScreenState extends State<InsuranceRegisterScreen> {
     super.dispose();
   }
 
+  // ------------------------------------------------------------------ //
+  //  FILE PICKER
+  // ------------------------------------------------------------------ //
+  Future<void> _pickFile(String docType) async {
+    final result = await FilePicker.pickFiles(
+      type: FileType.custom,
+      allowedExtensions: ['pdf', 'jpg', 'jpeg', 'png'],
+      withData: true,
+    );
+    if (result == null || result.files.isEmpty) return;
+    if (!mounted) return;
+    final file = result.files.first;
+    setState(() {
+      switch (docType) {
+        case 'estatuto':         _estatutoFile         = file;
+        case 'constanciaFiscal': _constanciaFiscalFile = file;
+        case 'balance':          _balanceFile          = file;
+        case 'poderActa':        _poderActaFile        = file;
+        case 'docVinculo':       _docVinculoFile       = file;
+      }
+    });
+  }
+
+  // ------------------------------------------------------------------ //
+  //  SUBMIT
+  // ------------------------------------------------------------------ //
+  Future<void> _submit() async {
+    final email    = _credenciales.email.text.trim();
+    final password = _credenciales.password.text;
+    final confirm  = _credenciales.confirmPassword.text;
+
+    if (password != confirm) {
+      if (!mounted) return;
+      ScaffoldMessenger.of(context).showSnackBar(
+        const SnackBar(content: Text('Las contraseñas no coinciden.')),
+      );
+      return;
+    }
+
+    final companyData = {
+      'fantasyName':         _empresa.nombreFantasia.text.trim(),
+      'razonSocial':         _empresa.razonSocial.text.trim(),
+      'cuit':                _empresa.cuit.text.trim(),
+      'tipoSociedad':        _tipoSociedad,
+      'pais':                _empresa.pais.text.trim(),
+      'provincia':           _empresa.provincia.text.trim(),
+      'domicilioLegal':      _empresa.domicilioLegal.text.trim(),
+      'fechaConstitucion':   _empresa.fechaConstitucion.text.trim(),
+      'sitioWeb':            _empresa.sitioWeb.text.trim(),
+      'telefonoCorporativo': _empresa.telefonoCorporativo.text.trim(),
+      'emailInstitucional':  _empresa.emailInstitucional.text.trim(),
+      'correspondencia':     _empresa.correspondencia.text.trim(),
+    };
+
+    final representativeData = {
+      'nombreApellido':  _representante.nombreApellido.text.trim(),
+      'dniCuil':         _representante.dniCuil.text.trim(),
+      'fechaNacimiento': _representante.fechaNacimiento.text.trim(),
+      'nacionalidad':    _representante.nacionalidad.text.trim(),
+      'email':           _representante.email.text.trim(),
+      'telefonoCelular': _representante.telefonoCelular.text.trim(),
+      'cargoFuncion':    _representante.cargoFuncion.text.trim(),
+    };
+
+    final insurerRoleData = {
+      'organismoSupervisor': _organismoSupervisor,
+      'numeroAutorizacion':  _numeroAutorizacion.text.trim(),
+      'resolucion':          _resolucion.text.trim(),
+      'vigenciaResolucion':  _vigenciaResolucion.text.trim(),
+      'coberturas':          _selectedCoberturas.toList(),
+    };
+
+    try {
+      final user = await ref.read(authRepositoryProvider).registerInsurer(
+        email: email,
+        password: password,
+        companyData: companyData,
+        representativeData: representativeData,
+        insurerRoleData: insurerRoleData,
+      );
+
+      final urlUpdates = <String, dynamic>{};
+
+      Future<void> tryUpload(
+          PlatformFile? file, String docType, String firestoreKey) async {
+        if (file == null) return;
+        try {
+          final url = await _uploadFile(user.uid, docType, file);
+          if (url != null) urlUpdates[firestoreKey] = url;
+        } catch (_) {}
+      }
+
+      await Future.wait([
+        tryUpload(_estatutoFile,         'estatuto',         'companyData.estatutoUrl'),
+        tryUpload(_constanciaFiscalFile, 'constanciaFiscal', 'companyData.constanciaFiscalUrl'),
+        tryUpload(_balanceFile,          'balance',          'companyData.balanceUrl'),
+        tryUpload(_poderActaFile,        'poderActa',        'representativeData.poderActaUrl'),
+        tryUpload(_docVinculoFile,       'docVinculo',       'representativeData.docVinculoUrl'),
+      ]);
+
+      if (urlUpdates.isNotEmpty) {
+        await ref
+            .read(authRepositoryProvider)
+            .updateProfile(uid: user.uid, updates: urlUpdates);
+      }
+
+      if (!mounted) return;
+      context.go('/register-success');
+    } on AuthException catch (e) {
+      if (!mounted) return;
+      ScaffoldMessenger.of(context)
+          .showSnackBar(SnackBar(content: Text(e.message)));
+    } catch (_) {
+      if (!mounted) return;
+      ScaffoldMessenger.of(context).showSnackBar(
+        const SnackBar(
+            content: Text('Ocurrió un error inesperado. Intentá nuevamente.')),
+      );
+    }
+  }
+
+  Future<String?> _uploadFile(
+      String uid, String docType, PlatformFile file) async {
+    final mime = _mimeType(file.name);
+    final storageRef = FirebaseStorage.instance
+        .ref('registrations/$uid/$docType/${file.name}');
+    final UploadTask task;
+    if (file.bytes != null) {
+      task = storageRef.putData(
+          file.bytes!, SettableMetadata(contentType: mime));
+    } else if (file.path != null) {
+      task = storageRef.putFile(
+          io.File(file.path!), SettableMetadata(contentType: mime));
+    } else {
+      return null;
+    }
+    final snapshot = await task;
+    return await snapshot.ref.getDownloadURL();
+  }
+
+  String _mimeType(String filename) {
+    switch (filename.toLowerCase().split('.').last) {
+      case 'pdf':  return 'application/pdf';
+      case 'jpg':
+      case 'jpeg': return 'image/jpeg';
+      case 'png':  return 'image/png';
+      default:     return 'application/octet-stream';
+    }
+  }
+
+  // ------------------------------------------------------------------ //
+  //  BUILD
+  // ------------------------------------------------------------------ //
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -94,10 +256,17 @@ class _InsuranceRegisterScreenState extends State<InsuranceRegisterScreen> {
                   body: 'Tu organización deberá ser revisada y aprobada por un '
                       'administrador antes de publicar planes de seguro.',
                 ),
-                onSubmit: () => context.go('/register-success'),
+                onSubmit: _submit,
                 steps: [
                   RegisterStep(
                     title: 'Empresa',
+                    validate: () => AuthValidators.firstError([
+                      () => AuthValidators.required(_empresa.nombreFantasia.text.trim(), 'el nombre de fantasía'),
+                      () => AuthValidators.required(_empresa.razonSocial.text.trim(), 'la razón social'),
+                      () => AuthValidators.cuit(_empresa.cuit.text.trim()),
+                      () => AuthValidators.required(_empresa.pais.text.trim(), 'el país'),
+                      () => AuthValidators.required(_empresa.domicilioLegal.text.trim(), 'el domicilio legal'),
+                    ]),
                     builder: (_) => StepEmpresaForm(
                       controllers: _empresa,
                       tipoSociedad: _tipoSociedad,
@@ -108,43 +277,54 @@ class _InsuranceRegisterScreenState extends State<InsuranceRegisterScreen> {
                   RegisterStep(
                     title: 'Documentación',
                     builder: (_) => StepDocumentacionForm(
-                      estatutoFileName: _estatutoFileName,
-                      constanciaFiscalFileName: _constanciaFiscalFileName,
-                      balanceFileName: _balanceFileName,
-                      onEstatutoTap: () =>
-                          setState(() => _estatutoFileName = 'estatuto.pdf'),
-                      onConstanciaFiscalTap: () => setState(
-                          () => _constanciaFiscalFileName = 'constancia_fiscal.pdf'),
-                      onBalanceTap: () =>
-                          setState(() => _balanceFileName = 'balance.pdf'),
+                      estatutoFileName: _estatutoFile?.name,
+                      constanciaFiscalFileName: _constanciaFiscalFile?.name,
+                      balanceFileName: _balanceFile?.name,
+                      onEstatutoTap:         () { _pickFile('estatuto'); },
+                      onConstanciaFiscalTap: () { _pickFile('constanciaFiscal'); },
+                      onBalanceTap:          () { _pickFile('balance'); },
                     ),
                   ),
                   RegisterStep(
                     title: 'Representante',
+                    validate: () => AuthValidators.firstError([
+                      () => AuthValidators.required(_representante.nombreApellido.text.trim(), 'el nombre y apellido'),
+                      () => AuthValidators.required(_representante.dniCuil.text.trim(), 'el DNI o CUIL'),
+                      () => AuthValidators.email(_representante.email.text.trim()),
+                      () => AuthValidators.phone(_representante.telefonoCelular.text.trim()),
+                      () => AuthValidators.required(_representante.cargoFuncion.text.trim(), 'el cargo o función'),
+                    ]),
                     builder: (_) => StepRepresentanteForm(
                       controllers: _representante,
-                      poderActaFileName: _poderActaFileName,
-                      docVinculoFileName: _docVinculoFileName,
-                      onPoderActaTap: () =>
-                          setState(() => _poderActaFileName = 'poder.pdf'),
-                      onDocVinculoTap: () =>
-                          setState(() => _docVinculoFileName = 'vinculo.pdf'),
+                      poderActaFileName: _poderActaFile?.name,
+                      docVinculoFileName: _docVinculoFile?.name,
+                      onPoderActaTap:  () { _pickFile('poderActa'); },
+                      onDocVinculoTap: () { _pickFile('docVinculo'); },
                     ),
                   ),
                   RegisterStep(
                     title: 'Autorización',
+                    validate: () => AuthValidators.firstError([
+                      () => AuthValidators.required(_numeroAutorizacion.text.trim(), 'el número de autorización'),
+                      () => AuthValidators.required(_resolucion.text.trim(), 'la resolución'),
+                    ]),
                     builder: (_) => _buildStepAutorizacion(),
                   ),
                   RegisterStep(
                     title: 'Credenciales',
+                    validate: () => AuthValidators.firstError([
+                      () => AuthValidators.email(_credenciales.email.text.trim()),
+                      () => AuthValidators.password(_credenciales.password.text),
+                      () => AuthValidators.passwordConfirm(_credenciales.confirmPassword.text, _credenciales.password.text),
+                    ]),
                     builder: (_) => StepCredencialesForm(
                       controllers: _credenciales,
                       obscurePassword: _obscurePassword,
                       obscureConfirmPassword: _obscureConfirmPassword,
                       onTogglePassword: () =>
                           setState(() => _obscurePassword = !_obscurePassword),
-                      onToggleConfirmPassword: () => setState(
-                          () => _obscureConfirmPassword = !_obscureConfirmPassword),
+                      onToggleConfirmPassword: () => setState(() =>
+                          _obscureConfirmPassword = !_obscureConfirmPassword),
                       emailHint: 'underwriting@empresa.com',
                     ),
                   ),
@@ -158,7 +338,7 @@ class _InsuranceRegisterScreenState extends State<InsuranceRegisterScreen> {
   }
 
   // ------------------------------------------------------------------ //
-  //  PASO 4 — AUTORIZACIÓN + COBERTURA  (Insurance-specific)
+  //  PASO 4 — AUTORIZACIÓN + COBERTURA
   // ------------------------------------------------------------------ //
   Widget _buildStepAutorizacion() {
     return Column(

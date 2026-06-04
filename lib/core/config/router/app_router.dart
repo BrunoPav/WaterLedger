@@ -100,6 +100,7 @@ final appRouterProvider = Provider<GoRouter>((ref) {
     GoRoute(path: '/certifier-register-success', builder: (context, state) => const CertifierRegisterSuccessScreen()),
     GoRoute(path: '/insurance-register', builder: (context, state) => const InsuranceRegisterScreen()),
     GoRoute(path: '/insurance-register-success', builder: (context, state) => const RegisterSuccessScreen()),
+    GoRoute(path: '/register-success', builder: (context, state) => const RegisterSuccessScreen()),
     // ---- Admin (4.6 Gestión del Administrador) ---- //
     // Ruta /admin-seed comentada al borrarse la pantalla de seed — el usuario ya creó su admin.
     // El método registerAdmin sigue disponible en AuthRepository por si más adelante se necesita
