@@ -1,4 +1,4 @@
-import 'package:flutter/material.dart';
+﻿import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 import 'package:water_ledger/features/auth/presentation/providers/session_provider.dart';
@@ -104,13 +104,13 @@ class RetailProfileScreen extends ConsumerWidget {
           ),
           DashboardNavItem(
             icon: Icons.pie_chart_outline,
-            label: 'Portfolio',
-            onTap: () => _comingSoon(context, 'Portfolio'),
+            label: 'Cartera',
+            onTap: () => _comingSoon(context, 'Cartera'),
           ),
           DashboardNavItem(
             icon: Icons.notifications_outlined,
-            label: 'Alerts',
-            onTap: () => _comingSoon(context, 'Alerts'),
+            label: 'Alertas',
+            onTap: () => _comingSoon(context, 'Alertas'),
           ),
           DashboardNavItem(icon: Icons.person, label: 'Profile', onTap: () {}),
         ],

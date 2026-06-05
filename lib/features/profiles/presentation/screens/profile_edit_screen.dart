@@ -109,7 +109,7 @@ class _ProfileEditScreenState extends ConsumerState<ProfileEditScreen> {
               ),
             ),
             const SizedBox(width: 4),
-            const TopBarTitled(title: 'Edit Profile'),
+            const TopBarTitled(title: 'Editar Perfil'),
           ],
         ),
       ),
@@ -143,7 +143,7 @@ class _ProfileEditScreenState extends ConsumerState<ProfileEditScreen> {
                 const SizedBox(height: 8),
                 _buildEditableCard(),
                 const SizedBox(height: 24),
-                const _Label('READ-ONLY'),
+                const _Label('SOLO LECTURA'),
                 const SizedBox(height: 8),
                 _buildReadOnlyCard(user),
                 const SizedBox(height: 12),
@@ -221,7 +221,7 @@ class _ProfileEditScreenState extends ConsumerState<ProfileEditScreen> {
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              _fieldLabel('Display name'),
+              _fieldLabel('Nombre de perfil'),
               const SizedBox(height: 6),
               _editableField(
                 controller: _displayNameController,
@@ -249,7 +249,7 @@ class _ProfileEditScreenState extends ConsumerState<ProfileEditScreen> {
         children: [
           _readonlyRow(
             icon: Icons.email_outlined,
-            label: 'Email',
+            label: 'Correo electrónico',
             value: user.email,
           ),
           const Divider(
@@ -258,7 +258,7 @@ class _ProfileEditScreenState extends ConsumerState<ProfileEditScreen> {
           ),
           _readonlyRow(
             icon: Icons.badge_outlined,
-            label: 'Account role',
+            label: 'Rol de cuenta',
             value: _roleLabel(user.role),
           ),
           const Divider(
@@ -267,7 +267,7 @@ class _ProfileEditScreenState extends ConsumerState<ProfileEditScreen> {
           ),
           _readonlyRow(
             icon: Icons.verified_outlined,
-            label: 'Account status',
+            label: 'Estado de cuenta',
             value: _statusLabel(user.status, isAdmin: user.role == UserRole.admin),
           ),
           const Divider(
@@ -276,7 +276,7 @@ class _ProfileEditScreenState extends ConsumerState<ProfileEditScreen> {
           ),
           _readonlyRow(
             icon: Icons.event_outlined,
-            label: 'Member since',
+            label: 'Miembro desde',
             value: DateFormat('MMM y').format(user.createdAt),
           ),
         ],
@@ -347,7 +347,7 @@ class _ProfileEditScreenState extends ConsumerState<ProfileEditScreen> {
                 ),
               )
             : const Text(
-                'Save changes',
+                'Guardar cambios',
                 style: TextStyle(
                   fontFamily: 'Inter',
                   fontSize: 16,
@@ -463,22 +463,22 @@ class _ProfileEditScreenState extends ConsumerState<ProfileEditScreen> {
 
   String _roleLabel(UserRole role) {
     return switch (role) {
-      UserRole.retail => 'Retail Investor',
-      UserRole.company => 'Registered Company',
-      UserRole.issuer => 'Issuing Company',
-      UserRole.auditor => 'Certified Auditor',
-      UserRole.certifier => 'Certification Entity',
-      UserRole.insurer => 'Insurance Provider',
-      UserRole.admin => 'System Administrator',
+      UserRole.retail => 'Inversor Retail',
+      UserRole.company => 'Empresa Registrada',
+      UserRole.issuer => 'Empresa Emisora',
+      UserRole.auditor => 'Auditor Certificado',
+      UserRole.certifier => 'Entidad Certificadora',
+      UserRole.insurer => 'Aseguradora',
+      UserRole.admin => 'Administrador del Sistema',
     };
   }
 
   String _statusLabel(UserStatus status, {bool isAdmin = false}) {
-    if (isAdmin) return 'Superuser';
+    if (isAdmin) return 'Superusuario';
     return switch (status) {
-      UserStatus.active => 'Active',
-      UserStatus.pending => 'Pending approval',
-      UserStatus.rejected => 'Rejected',
+      UserStatus.active => 'Activo',
+      UserStatus.pending => 'Pendiente de aprobación',
+      UserStatus.rejected => 'Rechazado',
     };
   }
 }

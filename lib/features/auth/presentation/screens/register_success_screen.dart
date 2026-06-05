@@ -162,7 +162,7 @@ class _RegisterSuccessScreenState
     return const Column(
       children: [
         Text(
-          'Registration Submitted\nSuccessfully',
+          'Registro Enviado\nExitosamente',
           textAlign: TextAlign.center,
           style: TextStyle(
             fontFamily: 'Manrope',
@@ -175,7 +175,7 @@ class _RegisterSuccessScreenState
         ),
         SizedBox(height: 10),
         Text(
-          'Your application is currently under review.',
+          'Tu solicitud está siendo revisada.',
           textAlign: TextAlign.center,
           style: TextStyle(
             fontFamily: 'Inter',
@@ -223,7 +223,7 @@ class _RegisterSuccessScreenState
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
                     Text(
-                      'ACCOUNT STATUS',
+                      'ESTADO DE CUENTA',
                       style: TextStyle(
                         fontFamily: 'Inter',
                         fontSize: 11,
@@ -234,7 +234,7 @@ class _RegisterSuccessScreenState
                     ),
                     SizedBox(height: 3),
                     Text(
-                      'Pending Approval',
+                      'Pendiente de Aprobación',
                       style: TextStyle(
                         fontFamily: 'Manrope',
                         fontSize: 18,
@@ -292,9 +292,9 @@ class _RegisterSuccessScreenState
               const SizedBox(width: 12),
               const Expanded(
                 child: Text(
-                  'Our institutional verification team is reviewing your credentials. '
-                  'This process typically takes 24–48 business hours. You will receive '
-                  'an email notification once your account is active.',
+                  'Nuestro equipo de verificación institucional está revisando tus credenciales. '
+                  'Este proceso generalmente toma entre 24 y 48 horas hábiles. Recibirás '
+                  'una notificación por email una vez que tu cuenta esté activa.',
                   style: TextStyle(
                     fontFamily: 'Inter',
                     fontSize: 14,
@@ -332,7 +332,7 @@ class _RegisterSuccessScreenState
                 elevation: 1,
               ),
               child: const Text(
-                'Continue',
+                'Continuar',
                 style: TextStyle(
                   fontFamily: 'Manrope',
                   fontSize: 16,
@@ -367,7 +367,7 @@ class _RegisterSuccessScreenState
               ),
               const SizedBox(height: 4),
               Text(
-                '© 2024 Secure Institutional Infrastructure',
+                '© 2024 Infraestructura Institucional Segura',
                 style: TextStyle(
                   fontFamily: 'Inter',
                   fontSize: 10,

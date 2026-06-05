@@ -1,4 +1,4 @@
-import 'package:flutter/material.dart';
+﻿import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 import 'package:intl/intl.dart';
@@ -214,7 +214,7 @@ class AdminProfileScreen extends ConsumerWidget {
             icon: Icons.fact_check_outlined,
             iconBg: DashboardTokens.errorColor.withValues(alpha: 0.10),
             iconColor: DashboardTokens.errorColor,
-            title: 'Review Pending Approvals',
+            title: 'Revisar Aprobaciones Pendientes',
             subtitle: pendingCount == 0
                 ? 'Sin solicitudes pendientes'
                 : pendingCount == 1

@@ -1,4 +1,4 @@
-import 'package:flutter/material.dart';
+﻿import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 import 'package:water_ledger/features/auth/presentation/providers/session_provider.dart';
@@ -49,7 +49,7 @@ class InsurerProfileScreen extends ConsumerWidget {
                   )
                 else
                   const ProfileBadge(
-                    label: 'Pending Approval',
+                    label: 'Pendiente de Aprobación',
                     style: ProfileBadgeStyle.neutral,
                     icon: Icons.hourglass_top,
                   ),

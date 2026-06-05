@@ -23,26 +23,27 @@ class _RetailRegisterScreenState extends ConsumerState<RetailRegisterScreen> {
 
   // Investment interests — los seleccionados se guardan en un Set
   static const _allInterests = [
-    'Aquifer Restoration',
-    'Smart Infrastructure',
-    'Desalination Tech',
-    'Water Rights',
+    'Restauración de Acuíferos',
+    'Infraestructura Inteligente',
+    'Tecnología de Desalinización',
+    'Derechos de Agua',
   ];
-  final Set<String> _selectedInterests = {'Desalination Tech'};
+  final Set<String> _selectedInterests = {'Tecnología de Desalinización'};
 
   bool _isLoading = false;
 
   // Risk profile
-  String _selectedRisk = 'Medium';
-  static const _riskOptions = ['Low', 'Medium', 'High'];
+  String _selectedRisk = 'Medio';
+  static const _riskOptions = ['Bajo', 'Medio', 'Alto'];
 
   // Country dropdown
-  String _selectedCountry = 'United States';
+  String _selectedCountry = 'Argentina';
   static const _countries = [
-    'United States',
-    'United Kingdom',
-    'Singapore',
+    'Estados Unidos',
+    'Reino Unido',
+    'Singapur',
     'Australia',
+    'Argentina',
   ];
 
   // -- Design tokens (consistentes con el resto de auth screens) --
@@ -198,7 +199,7 @@ class _RetailRegisterScreenState extends ConsumerState<RetailRegisterScreen> {
                     Row(
                       children: [
                         const Text(
-                          'Have an account? ',
+                          '¿Ya tenés una cuenta? ',
                           style: TextStyle(
                             fontFamily: 'Inter',
                             fontSize: 12,
@@ -208,7 +209,7 @@ class _RetailRegisterScreenState extends ConsumerState<RetailRegisterScreen> {
                         GestureDetector(
                           onTap: () => context.go('/login'),
                           child: const Text(
-                            'Login',
+                            'Iniciá sesión',
                             style: TextStyle(
                               fontFamily: 'Inter',
                               fontSize: 13,
@@ -245,7 +246,7 @@ class _RetailRegisterScreenState extends ConsumerState<RetailRegisterScreen> {
             borderRadius: BorderRadius.circular(99),
           ),
           child: const Text(
-            'RETAIL INVESTOR',
+            'INVERSOR RETAIL',
             style: TextStyle(
               fontFamily: 'Inter',
               fontSize: 11,
@@ -258,7 +259,7 @@ class _RetailRegisterScreenState extends ConsumerState<RetailRegisterScreen> {
         const SizedBox(height: 14),
         // Headline
         const Text(
-          'Invest in a\nliquid future.',
+          'Inverti en un\nfuturo sostenible.',
           style: TextStyle(
             fontFamily: 'Manrope',
             fontSize: 38,
@@ -270,7 +271,7 @@ class _RetailRegisterScreenState extends ConsumerState<RetailRegisterScreen> {
         ),
         const SizedBox(height: 12),
         const Text(
-          'Join Water Ledger to access institutional-grade water assets and sustainable infrastructure projects across the globe.',
+          'Únete a Water Ledger para acceder a activos hídricos de grado institucional y proyectos de infraestructura sostenible en todo el mundo.',
           style: TextStyle(
             fontFamily: 'Inter',
             fontSize: 15,
@@ -282,16 +283,16 @@ class _RetailRegisterScreenState extends ConsumerState<RetailRegisterScreen> {
         // Feature cards
         _buildFeatureCard(
           icon: Icons.verified_user_outlined,
-          title: 'Institutional Trust',
+          title: 'Confianza Institucional',
           subtitle:
-              'Regulatory compliant fintech platform for global water trading.',
+              'Plataforma fintech conforme a regulaciones para el comercio global de agua.',
         ),
         const SizedBox(height: 12),
         _buildFeatureCard(
           icon: Icons.eco_outlined,
-          title: 'Environmental Impact',
+          title: 'Impacto Ambiental',
           subtitle:
-              'Support aquifer restoration and smart infrastructure directly.',
+              'Apoya la restauración de acuíferos y la infraestructura inteligente directamente.',
         ),
       ],
     );
@@ -380,7 +381,7 @@ class _RetailRegisterScreenState extends ConsumerState<RetailRegisterScreen> {
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
               const Text(
-                'Create Account',
+                'Crear Cuenta',
                 style: TextStyle(
                   fontFamily: 'Manrope',
                   fontSize: 22,
@@ -395,33 +396,33 @@ class _RetailRegisterScreenState extends ConsumerState<RetailRegisterScreen> {
                 children: [
                   Expanded(
                     child: _buildField(
-                      label: 'First Name',
+                      label: 'Primer Nombre',
                       controller: _firstNameController,
-                      hint: 'John',
+                      hint: 'Juan',
                     ),
                   ),
                   const SizedBox(width: 12),
                   Expanded(
                     child: _buildField(
-                      label: 'Last Name',
+                      label: 'Apellido',
                       controller: _lastNameController,
-                      hint: 'Doe',
+                      hint: 'García',
                     ),
                   ),
                 ],
               ),
               const SizedBox(height: 16),
               _buildField(
-                label: 'Email Address',
+                label: 'Dirección de Email',
                 controller: _emailController,
-                hint: 'john.doe@finance.com',
+                hint: 'juan.garcia@empresa.com',
                 keyboardType: TextInputType.emailAddress,
               ),
               const SizedBox(height: 16),
               _buildField(
-                label: 'Phone Number',
+                label: 'Número de Teléfono',
                 controller: _phoneController,
-                hint: '+1 (555) 000-0000',
+                hint: '+54 (11) 0000-0000',
                 keyboardType: TextInputType.phone,
               ),
               const SizedBox(height: 16),
@@ -510,7 +511,7 @@ class _RetailRegisterScreenState extends ConsumerState<RetailRegisterScreen> {
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
         Text(
-          'Country',
+          'País',
           style: TextStyle(
             fontFamily: 'Inter',
             fontSize: 12,
@@ -555,7 +556,7 @@ class _RetailRegisterScreenState extends ConsumerState<RetailRegisterScreen> {
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
         Text(
-          'Password',
+          'Contraseña',
           style: TextStyle(
             fontFamily: 'Inter',
             fontSize: 12,
@@ -620,7 +621,7 @@ class _RetailRegisterScreenState extends ConsumerState<RetailRegisterScreen> {
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
         const Text(
-          'INVESTMENT INTERESTS (OPTIONAL)',
+          'INTERESES DE INVERSIÓN (OPCIONAL)',
           style: TextStyle(
             fontFamily: 'Inter',
             fontSize: 11,
@@ -683,7 +684,7 @@ class _RetailRegisterScreenState extends ConsumerState<RetailRegisterScreen> {
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
         const Text(
-          'RISK PROFILE (OPTIONAL)',
+          'PERFIL DE RIESGO (OPCIONAL)',
           style: TextStyle(
             fontFamily: 'Inter',
             fontSize: 11,
@@ -771,7 +772,7 @@ class _RetailRegisterScreenState extends ConsumerState<RetailRegisterScreen> {
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: [
                   Text(
-                    'Create Account',
+                    'Crear Cuenta',
                     style: TextStyle(
                       fontFamily: 'Manrope',
                       fontSize: 17,
@@ -799,12 +800,12 @@ class _RetailRegisterScreenState extends ConsumerState<RetailRegisterScreen> {
           color: _onSurfaceVariantColor,
         ),
         children: [
-          const TextSpan(text: 'By signing up, you agree to our '),
+          const TextSpan(text: 'Al registrarte, aceptas nuestros '),
           WidgetSpan(
             child: GestureDetector(
               onTap: () {},
               child: const Text(
-                'Terms of Service',
+                'Términos de Servicio',
                 style: TextStyle(
                   fontFamily: 'Inter',
                   fontSize: 12,
@@ -815,12 +816,12 @@ class _RetailRegisterScreenState extends ConsumerState<RetailRegisterScreen> {
               ),
             ),
           ),
-          const TextSpan(text: ' and '),
+          const TextSpan(text: ' y '),
           WidgetSpan(
             child: GestureDetector(
               onTap: () {},
               child: const Text(
-                'Privacy Policy',
+                'Política de Privacidad',
                 style: TextStyle(
                   fontFamily: 'Inter',
                   fontSize: 12,

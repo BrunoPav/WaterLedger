@@ -1,4 +1,4 @@
-import 'package:flutter/material.dart';
+﻿import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 import 'package:intl/intl.dart';
@@ -67,8 +67,8 @@ class CertifierDashboardScreen extends ConsumerWidget {
           ),
           DashboardNavItem(
             icon: Icons.notifications_outlined,
-            label: 'Alerts',
-            onTap: () => _comingSoon(context, 'Alerts'),
+            label: 'Alertas',
+            onTap: () => _comingSoon(context, 'Alertas'),
           ),
           DashboardNavItem(
             icon: Icons.person_outline,

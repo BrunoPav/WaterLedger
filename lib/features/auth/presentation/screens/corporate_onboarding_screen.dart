@@ -23,12 +23,12 @@ class _CorporateOnboardingScreenState
   final _companyNameController = TextEditingController();
   final _legalNameController = TextEditingController();
   final _taxIdController = TextEditingController();
-  String _selectedIndustry = 'Agriculture & Forestry';
+  String _selectedIndustry = 'Agropecuario y Forestal';
   static const _industries = [
-    'Agriculture & Forestry',
-    'Industrial Manufacturing',
-    'Renewable Energy',
-    'Municipal Infrastructure',
+    'Agropecuario y Forestal',
+    'Manufactura Industrial',
+    'Energías Renovables',
+    'Infraestructura Municipal',
   ];
 
   // Step 2 — Localization & Contact
@@ -210,7 +210,7 @@ class _CorporateOnboardingScreenState
                       ],
                     ),
                     Text(
-                      'Step ${_currentStep + 1} of $_totalSteps',
+                      'Paso ${_currentStep + 1} de $_totalSteps',
                       style: const TextStyle(
                         fontFamily: 'Inter',
                         fontSize: 13,
@@ -234,16 +234,16 @@ class _CorporateOnboardingScreenState
   // ------------------------------------------------------------------ //
   Widget _buildHero() {
     const subtitles = [
-      'Complete the following details to register your organization within the global water market ecosystem.',
-      'Tell us where your organization is located and how to reach you.',
-      'Set up secure access credentials for your Water Ledger account.',
+      'Completá los siguientes datos para registrar tu organización en el ecosistema global del mercado hídrico.',
+      'Indicanos dónde está ubicada tu organización y cómo contactarla.',
+      'Configurá las credenciales de acceso seguro para tu cuenta de Water Ledger.',
     ];
 
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
         const Text(
-          'Corporate\nOnboarding',
+          'Alta\nCorporativa',
           style: TextStyle(
             fontFamily: 'Manrope',
             fontSize: 36,
@@ -419,22 +419,22 @@ class _CorporateOnboardingScreenState
   // ------------------------------------------------------------------ //
   Widget _buildEntityInformation() {
     return _buildFormCard(
-      title: 'Entity Information',
+      title: 'Información de la Entidad',
       fields: [
         _buildField(
-          label: 'Company name',
+          label: 'Nombre de la empresa',
           controller: _companyNameController,
-          hint: 'e.g. Aqua Global',
+          hint: 'ej. Aqua Global',
         ),
         const SizedBox(height: 16),
         _buildField(
-          label: 'Legal name',
+          label: 'Razón social',
           controller: _legalNameController,
-          hint: 'Full Registered Entity Name',
+          hint: 'Nombre completo de la entidad registrada',
         ),
         const SizedBox(height: 16),
         _buildField(
-          label: 'Tax ID / CUIT',
+          label: 'CUIT',
           controller: _taxIdController,
           hint: 'XX-XXXXXXXX-X',
         ),
@@ -444,7 +444,7 @@ class _CorporateOnboardingScreenState
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
             Text(
-              'Industry sector',
+              'Sector de la industria',
               style: TextStyle(
                 fontFamily: 'Inter',
                 fontSize: 13,
@@ -488,25 +488,25 @@ class _CorporateOnboardingScreenState
   // ------------------------------------------------------------------ //
   Widget _buildLocalizationContact() {
     return _buildFormCard(
-      title: 'Localization & Contact',
+      title: 'Localización y Contacto',
       fields: [
         _buildField(
-          label: 'Country',
+          label: 'País',
           controller: _countryController,
-          hint: 'Select Country',
+          hint: 'Seleccioná el país',
         ),
         const SizedBox(height: 16),
         _buildField(
-          label: 'Phone number',
+          label: 'Número de teléfono',
           controller: _phoneController,
-          hint: '+1 (555) 000-0000',
+          hint: '+54 (11) 0000-0000',
           keyboardType: TextInputType.phone,
         ),
         const SizedBox(height: 16),
         _buildField(
-          label: 'Address',
+          label: 'Dirección',
           controller: _addressController,
-          hint: 'Street, City, State, ZIP',
+          hint: 'Calle, Ciudad, Provincia, CP',
         ),
       ],
     );
@@ -517,17 +517,17 @@ class _CorporateOnboardingScreenState
   // ------------------------------------------------------------------ //
   Widget _buildAccessCredentials() {
     return _buildFormCard(
-      title: 'Access Credentials',
+      title: 'Credenciales de Acceso',
       fields: [
         _buildField(
-          label: 'Corporate email',
+          label: 'Email corporativo',
           controller: _emailController,
-          hint: 'admin@company.com',
+          hint: 'admin@empresa.com',
           keyboardType: TextInputType.emailAddress,
         ),
         const SizedBox(height: 16),
         _buildField(
-          label: 'Password',
+          label: 'Contraseña',
           controller: _passwordController,
           hint: '••••••••',
           obscure: _obscurePassword,
@@ -569,7 +569,7 @@ class _CorporateOnboardingScreenState
                         borderRadius: BorderRadius.circular(12)),
                   ),
                   child: const Text(
-                    'Back',
+                    'Atrás',
                     style: TextStyle(
                       fontFamily: 'Inter',
                       fontSize: 16,
@@ -602,7 +602,7 @@ class _CorporateOnboardingScreenState
                         mainAxisAlignment: MainAxisAlignment.center,
                         children: [
                           Text(
-                            isLastStep ? 'Create Account' : 'Continue',
+                            isLastStep ? 'Crear Cuenta' : 'Continuar',
                             style: const TextStyle(
                               fontFamily: 'Inter',
                               fontSize: 16,
@@ -628,12 +628,12 @@ class _CorporateOnboardingScreenState
                 color: _onSurfaceVariantColor,
               ),
               children: [
-                const TextSpan(text: 'By creating an account, you agree to our '),
+                const TextSpan(text: 'Al crear una cuenta, aceptás nuestros '),
                 WidgetSpan(
                   child: GestureDetector(
                     onTap: () {},
                     child: const Text(
-                      'Institutional Terms of Service',
+                      'Términos de Servicio Institucionales',
                       style: TextStyle(
                         fontFamily: 'Inter',
                         fontSize: 13,
@@ -654,7 +654,7 @@ class _CorporateOnboardingScreenState
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
             const Text(
-              'Already have an account? ',
+              '¿Ya tenés una cuenta? ',
               style: TextStyle(
                 fontFamily: 'Inter',
                 fontSize: 13,
@@ -664,7 +664,7 @@ class _CorporateOnboardingScreenState
             GestureDetector(
               onTap: () => context.go('/login'),
               child: const Text(
-                'Log in',
+                'Ingresá',
                 style: TextStyle(
                   fontFamily: 'Inter',
                   fontSize: 13,

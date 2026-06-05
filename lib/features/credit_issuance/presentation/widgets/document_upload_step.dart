@@ -358,7 +358,7 @@ class _DocumentUploadStepState extends ConsumerState<DocumentUploadStep> {
               TextButton.icon(
                 onPressed: (anyUploading || _isSaving) ? null : widget.onBack,
                 icon: const Icon(Icons.arrow_back, size: 18, color: _onSurfaceVariantColor),
-                label: const Text('Back', style: TextStyle(fontFamily: 'Inter', fontSize: 13, fontWeight: FontWeight.w600, color: _onSurfaceVariantColor)),
+                label: const Text('Atrás', style: TextStyle(fontFamily: 'Inter', fontSize: 13, fontWeight: FontWeight.w600, color: _onSurfaceVariantColor)),
               ),
               const Spacer(),
               ElevatedButton(

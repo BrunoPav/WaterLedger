@@ -1,4 +1,4 @@
-import 'package:flutter/material.dart';
+﻿import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 import 'package:intl/intl.dart';
@@ -81,7 +81,7 @@ class AuditorDashboardScreen extends ConsumerWidget {
           ),
           DashboardNavItem(
             icon: Icons.notifications_outlined,
-            label: 'Alerts',
+            label: 'Alertas',
             onTap: () => ScaffoldMessenger.of(context).showSnackBar(
               const SnackBar(content: Text('Alerts — pendiente de implementar'), duration: Duration(seconds: 2)),
             ),

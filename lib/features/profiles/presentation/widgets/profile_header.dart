@@ -189,7 +189,7 @@ class _EditProfileButton extends StatelessWidget {
       ),
       icon: const Icon(Icons.edit_outlined, size: 16),
       label: const Text(
-        'Edit Profile',
+        'Editar Perfil',
         style: TextStyle(
           fontFamily: 'Inter',
           fontSize: 13,
@@ -218,7 +218,7 @@ class _LogoutButton extends ConsumerWidget {
         color: DashboardTokens.onSurfaceColor,
       ),
       label: const Text(
-        'Logout',
+        'Cerrar sesión',
         style: TextStyle(
           fontFamily: 'Inter',
           fontSize: 13,

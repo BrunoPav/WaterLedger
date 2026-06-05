@@ -6,15 +6,15 @@ import 'package:water_ledger/features/credit_issuance/domain/enums/milestones.da
 import 'package:water_ledger/features/credit_issuance/domain/validators/roadmap_validator.dart';
 
 const Map<Milestones, String> kMilestoneLabels = {
-  Milestones.initialAudit: 'Initial Audit',
-  Milestones.meterInstalation: 'Meter Installation',
-  Milestones.infrastructureValidation: 'Infrastructure Validation',
-  Milestones.operativeSistem: 'Operative System',
-  Milestones.firstWaterSavingRegistered: 'First Water Saving',
-  Milestones.ambientalReportGenerated: 'Environmental Report',
-  Milestones.proyectFinalized: 'Project Finalized',
-  Milestones.impactVerificated: 'Impact Verified',
-  Milestones.proyectReadyToInssue: 'Ready to Issue',
+  Milestones.initialAudit: 'Auditoría Inicial',
+  Milestones.meterInstalation: 'Instalación de Medidores',
+  Milestones.infrastructureValidation: 'Validación de Infraestructura',
+  Milestones.operativeSistem: 'Sistema Operativo',
+  Milestones.firstWaterSavingRegistered: 'Primer Ahorro de Agua',
+  Milestones.ambientalReportGenerated: 'Informe Ambiental',
+  Milestones.proyectFinalized: 'Proyecto Finalizado',
+  Milestones.impactVerificated: 'Impacto Verificado',
+  Milestones.proyectReadyToInssue: 'Listo para Emitir',
 };
 
 /// Widget reutilizable con el editor de roadmap.
@@ -242,7 +242,7 @@ class _RoadmapEditorStepState extends State<RoadmapEditorStep> {
                   const Icon(Icons.edit_calendar_outlined, color: _secondaryColor, size: 22),
                   const SizedBox(width: 8),
                   const Text(
-                    'Phase Configuration',
+                    'Configuración de Fase',
                     style: TextStyle(
                       fontFamily: 'Manrope',
                       fontSize: 18,
@@ -256,7 +256,7 @@ class _RoadmapEditorStepState extends State<RoadmapEditorStep> {
               const SizedBox(height: 20),
               _label('Nombre de la Fase'),
               const SizedBox(height: 6),
-              _textField(controller: _phaseNameController, hint: 'e.g., Infrastructure Development'),
+              _textField(controller: _phaseNameController, hint: 'ej., Desarrollo de Infraestructura'),
               const SizedBox(height: 18),
               Row(
                 children: [
@@ -337,7 +337,7 @@ class _RoadmapEditorStepState extends State<RoadmapEditorStep> {
                     Icon(Icons.add_circle_outline, color: _secondaryColor, size: 22),
                     SizedBox(width: 8),
                     Text(
-                      'Add Fase',
+                      'Agregar Fase',
                       style: TextStyle(
                         fontFamily: 'Inter',
                         fontSize: 14,
@@ -431,7 +431,7 @@ class _RoadmapEditorStepState extends State<RoadmapEditorStep> {
         children: [
           Icon(Icons.event_outlined, size: 38, color: _onSurfaceVariantColor.withValues(alpha: 0.35)),
           const SizedBox(height: 10),
-          Text('No phases added yet', style: TextStyle(fontFamily: 'Inter', fontSize: 13, color: _onSurfaceVariantColor.withValues(alpha: 0.65))),
+          Text('Aún no se agregaron fases', style: TextStyle(fontFamily: 'Inter', fontSize: 13, color: _onSurfaceVariantColor.withValues(alpha: 0.65))),
         ],
       ),
     );
@@ -490,7 +490,7 @@ class _RoadmapEditorStepState extends State<RoadmapEditorStep> {
                           Container(
                             padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 2),
                             decoration: BoxDecoration(color: _secondaryColor.withValues(alpha: 0.12), borderRadius: BorderRadius.circular(4)),
-                            child: const Text('CURRENT', style: TextStyle(fontFamily: 'Inter', fontSize: 10, fontWeight: FontWeight.w700, color: _secondaryColor, letterSpacing: 0.8)),
+                            child: const Text('ACTUAL', style: TextStyle(fontFamily: 'Inter', fontSize: 10, fontWeight: FontWeight.w700, color: _secondaryColor, letterSpacing: 0.8)),
                           ),
                           const Spacer(),
                         ] else ...[
@@ -547,7 +547,7 @@ class _RoadmapEditorStepState extends State<RoadmapEditorStep> {
                         child: TextButton.icon(
                           onPressed: _isSaving ? null : widget.onBack,
                           icon: const Icon(Icons.arrow_back, size: 18, color: _onSurfaceVariantColor),
-                          label: const Text('Back', style: TextStyle(fontFamily: 'Inter', fontSize: 13, fontWeight: FontWeight.w600, color: _onSurfaceVariantColor)),
+                          label: const Text('Atrás', style: TextStyle(fontFamily: 'Inter', fontSize: 13, fontWeight: FontWeight.w600, color: _onSurfaceVariantColor)),
                         ),
                       ),
                       const SizedBox(width: 8),
@@ -561,7 +561,7 @@ class _RoadmapEditorStepState extends State<RoadmapEditorStep> {
                         ),
                         child: _isSaving
                             ? const SizedBox(width: 18, height: 18, child: CircularProgressIndicator(strokeWidth: 2, color: Colors.white))
-                            : const Text('Save and Continue', style: TextStyle(fontFamily: 'Manrope', fontSize: 14, fontWeight: FontWeight.w600)),
+                            : const Text('Guardar y Continuar', style: TextStyle(fontFamily: 'Manrope', fontSize: 14, fontWeight: FontWeight.w600)),
                       ),
                     ],
                   ),
