@@ -19,9 +19,6 @@ const Set<String> _publicPaths = {
   '/insurance-register',
   '/retail-register-success',
   '/company-register-success',
-  '/auditor-register-success',
-  '/certifier-register-success',
-  '/insurance-register-success',
   '/register-success',
 };
 

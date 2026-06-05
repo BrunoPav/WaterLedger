@@ -10,9 +10,7 @@ import 'package:water_ledger/features/certifier/presentation/screens/certifier_r
 import 'package:water_ledger/features/insurer/presentation/screens/insurer_requests_screen.dart';
 import 'package:water_ledger/features/insurer/presentation/screens/insurer_request_detail_screen.dart';
 import 'package:water_ledger/features/auth/presentation/screens/auditor_register_screen.dart';
-import 'package:water_ledger/features/auth/presentation/screens/auditor_register_success_screen.dart';
 import 'package:water_ledger/features/auth/presentation/screens/certifier_register_screen.dart';
-import 'package:water_ledger/features/auth/presentation/screens/certifier_register_success_screen.dart';
 import 'package:water_ledger/features/auth/presentation/screens/insurance_register_screen.dart';
 import 'package:water_ledger/features/auth/presentation/screens/register_success_screen.dart';
 import 'package:water_ledger/features/admin/presentation/screens/admin_dashboard_screen.dart';
@@ -90,11 +88,8 @@ final appRouterProvider = Provider<GoRouter>((ref) {
     GoRoute(path: '/company-register-success', builder: (context, state) => const CompanyRegisterSuccessScreen()),
     GoRoute(path: '/retail-register', builder: (context, state) => const RetailRegisterScreen()),
     GoRoute(path: '/auditor-register', builder: (context, state) => const AuditorRegisterScreen()),
-    GoRoute(path: '/auditor-register-success', builder: (context, state) => const AuditorRegisterSuccessScreen()),
     GoRoute(path: '/certifier-register', builder: (context, state) => const CertifierRegisterScreen()),
-    GoRoute(path: '/certifier-register-success', builder: (context, state) => const CertifierRegisterSuccessScreen()),
     GoRoute(path: '/insurance-register', builder: (context, state) => const InsuranceRegisterScreen()),
-    GoRoute(path: '/insurance-register-success', builder: (context, state) => const RegisterSuccessScreen()),
     GoRoute(path: '/register-success', builder: (context, state) => const RegisterSuccessScreen()),
     // ---- Admin (4.6 Gestión del Administrador) ---- //
     GoRoute(path: '/admin-dashboard', builder: (context, state) => const AdminDashboardScreen()),
