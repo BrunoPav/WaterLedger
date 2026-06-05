@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
-import 'package:water_ledger/core/domain/enums/user_role.dart';
-import 'package:water_ledger/core/presentation/providers/session_provider.dart';
+import 'package:water_ledger/features/shared/domain/enums/user_role.dart';
+import 'package:water_ledger/features/auth/presentation/providers/session_provider.dart';
 import 'package:water_ledger/features/auditor/presentation/screens/auditor_dashboard_screen.dart';
 import 'package:water_ledger/features/certifier/presentation/screens/certifier_dashboard_screen.dart';
 import 'package:water_ledger/features/dashboards/presentation/screens/company_dashboard_screen.dart';

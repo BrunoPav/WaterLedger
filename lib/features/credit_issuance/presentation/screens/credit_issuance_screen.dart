@@ -12,7 +12,7 @@ import 'package:water_ledger/features/credit_issuance/presentation/widgets/docum
 import 'package:water_ledger/features/credit_issuance/domain/validators/water_project_validator.dart';
 import 'package:water_ledger/features/credit_issuance/domain/validators/roadmap_validator.dart';
 import 'package:water_ledger/features/credit_issuance/domain/validators/document_validator.dart';
-import 'package:water_ledger/core/presentation/providers/session_provider.dart';
+import 'package:water_ledger/features/auth/presentation/providers/session_provider.dart';
 
 // ── Design tokens ──────────────────────────────────────────────────────────────
 const _bgColor               = Color(0xFFF7F9FB);

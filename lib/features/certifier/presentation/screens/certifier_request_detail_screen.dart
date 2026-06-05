@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 import 'package:intl/intl.dart';
-import 'package:water_ledger/core/presentation/providers/session_provider.dart';
+import 'package:water_ledger/features/auth/presentation/providers/session_provider.dart';
 import 'package:water_ledger/features/auditor/domain/entities/audit_entity.dart';
 import 'package:water_ledger/features/auditor/domain/enums/audit_recommendation.dart';
 import 'package:water_ledger/features/auditor/presentation/providers/audit_repository_provider.dart';

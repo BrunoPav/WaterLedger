@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
-import 'package:water_ledger/core/domain/entities/user_model.dart';
-import 'package:water_ledger/core/domain/enums/user_status.dart';
+import 'package:water_ledger/features/shared/domain/entities/user_model.dart';
+import 'package:water_ledger/features/shared/domain/enums/user_status.dart';
 import 'package:water_ledger/features/dashboards/presentation/widgets/dashboard_tokens.dart';
 
 /// Card "Basic Information" compartida por todos los perfiles.

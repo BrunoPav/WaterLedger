@@ -1,8 +1,8 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
-import 'package:water_ledger/core/domain/enums/user_permission.dart';
-import 'package:water_ledger/core/domain/enums/user_role.dart';
-import 'package:water_ledger/core/domain/enums/user_status.dart';
-import 'package:water_ledger/core/domain/enums/user_type.dart';
+import 'package:water_ledger/features/shared/domain/enums/user_permission.dart';
+import 'package:water_ledger/features/shared/domain/enums/user_role.dart';
+import 'package:water_ledger/features/shared/domain/enums/user_status.dart';
+import 'package:water_ledger/features/shared/domain/enums/user_type.dart';
 
 class UserModel {
   final String uid;

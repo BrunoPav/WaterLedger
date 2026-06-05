@@ -1,7 +1,7 @@
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:water_ledger/core/data/repositories/firebase_auth_repository.dart';
-import 'package:water_ledger/core/domain/entities/user_model.dart';
-import 'package:water_ledger/core/domain/repositories/auth_repository.dart';
+import 'package:water_ledger/features/auth/data/repositories/firebase_auth_repository.dart';
+import 'package:water_ledger/features/shared/domain/entities/user_model.dart';
+import 'package:water_ledger/features/auth/domain/repositories/auth_repository.dart';
 
 // class Session { ... } — reemplazada por UserModel en core/domain/entities/user_model.dart
 // final sessionProvider = Provider<Session> — reemplazado por StreamProvider<UserModel?> con Firebase real

@@ -1,7 +1,7 @@
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:water_ledger/core/data/repositories/firebase_admin_repository.dart';
-import 'package:water_ledger/core/domain/entities/user_model.dart';
-import 'package:water_ledger/core/domain/repositories/admin_repository.dart';
+import 'package:water_ledger/features/admin/data/repositories/firebase_admin_repository.dart';
+import 'package:water_ledger/features/shared/domain/entities/user_model.dart';
+import 'package:water_ledger/features/admin/domain/repositories/admin_repository.dart';
 
 final adminRepositoryProvider = Provider<AdminRepository>((ref) {
   return FirebaseAdminRepository();

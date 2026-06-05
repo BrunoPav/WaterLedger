@@ -1,7 +1,7 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
-import 'package:water_ledger/core/domain/entities/user_model.dart';
-import 'package:water_ledger/core/domain/enums/user_role.dart';
-import 'package:water_ledger/core/domain/enums/user_status.dart';
+import 'package:water_ledger/features/shared/domain/entities/user_model.dart';
+import 'package:water_ledger/features/shared/domain/enums/user_role.dart';
+import 'package:water_ledger/features/shared/domain/enums/user_status.dart';
 
 /// Registro reducido para el feed "Recent Audit Log" del perfil admin.
 /// Combina el dato del usuario afectado con la decisión que tomó el admin.

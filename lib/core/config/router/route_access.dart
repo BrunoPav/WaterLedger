@@ -1,4 +1,4 @@
-import 'package:water_ledger/core/domain/enums/user_role.dart';
+import 'package:water_ledger/features/shared/domain/enums/user_role.dart';
 
 /// Configuración de control de acceso del router.
 ///

@@ -2,9 +2,9 @@ import 'dart:ui';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
-import 'package:water_ledger/core/domain/exceptions/auth_exception.dart';
-import 'package:water_ledger/core/domain/validators/auth_validators.dart';
-import 'package:water_ledger/core/presentation/providers/session_provider.dart';
+import 'package:water_ledger/features/auth/domain/exceptions/auth_exception.dart';
+import 'package:water_ledger/features/auth/domain/validators/auth_validators.dart';
+import 'package:water_ledger/features/auth/presentation/providers/session_provider.dart';
 
 class RetailRegisterScreen extends ConsumerStatefulWidget {
   const RetailRegisterScreen({super.key});
