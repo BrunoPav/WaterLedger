@@ -1,13 +1,11 @@
-import 'dart:io' as io;
-
 import 'package:file_picker/file_picker.dart';
-import 'package:firebase_storage/firebase_storage.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 import 'package:water_ledger/features/auth/domain/exceptions/auth_exception.dart';
 import 'package:water_ledger/features/auth/domain/validators/auth_validators.dart';
 import 'package:water_ledger/features/auth/presentation/providers/session_provider.dart';
+import 'package:water_ledger/features/auth/presentation/widgets/b2b_register_upload.dart';
 import 'package:water_ledger/features/auth/presentation/widgets/register_form.dart';
 
 class CertifierRegisterScreen extends ConsumerStatefulWidget {
@@ -19,7 +17,7 @@ class CertifierRegisterScreen extends ConsumerStatefulWidget {
 }
 
 class _CertifierRegisterScreenState
-    extends ConsumerState<CertifierRegisterScreen> {
+    extends ConsumerState<CertifierRegisterScreen> with B2bRegisterUpload {
   // Shared steps 1–3 + 5
   final _empresa       = EmpresaFormControllers();
   final _representante = RepresentanteFormControllers();
@@ -87,14 +85,8 @@ class _CertifierRegisterScreenState
   //  FILE PICKER
   // ------------------------------------------------------------------ //
   Future<void> _pickFile(String docType) async {
-    final result = await FilePicker.pickFiles(
-      type: FileType.custom,
-      allowedExtensions: ['pdf', 'jpg', 'jpeg', 'png'],
-      withData: true,
-    );
-    if (result == null || result.files.isEmpty) return;
-    if (!mounted) return;
-    final file = result.files.first;
+    final file = await pickDocument();
+    if (file == null || !mounted) return;
     setState(() {
       switch (docType) {
         case 'estatuto':         _estatutoFile         = file;
@@ -122,30 +114,8 @@ class _CertifierRegisterScreenState
       return;
     }
 
-    final companyData = {
-      'fantasyName':         _empresa.nombreFantasia.text.trim(),
-      'razonSocial':         _empresa.razonSocial.text.trim(),
-      'cuit':                _empresa.cuit.text.trim(),
-      'tipoSociedad':        _tipoSociedad,
-      'pais':                _empresa.pais.text.trim(),
-      'provincia':           _empresa.provincia.text.trim(),
-      'domicilioLegal':      _empresa.domicilioLegal.text.trim(),
-      'fechaConstitucion':   _empresa.fechaConstitucion.text.trim(),
-      'sitioWeb':            _empresa.sitioWeb.text.trim(),
-      'telefonoCorporativo': _empresa.telefonoCorporativo.text.trim(),
-      'emailInstitucional':  _empresa.emailInstitucional.text.trim(),
-      'correspondencia':     _empresa.correspondencia.text.trim(),
-    };
-
-    final representativeData = {
-      'nombreApellido':  _representante.nombreApellido.text.trim(),
-      'dniCuil':         _representante.dniCuil.text.trim(),
-      'fechaNacimiento': _representante.fechaNacimiento.text.trim(),
-      'nacionalidad':    _representante.nacionalidad.text.trim(),
-      'email':           _representante.email.text.trim(),
-      'telefonoCelular': _representante.telefonoCelular.text.trim(),
-      'cargoFuncion':    _representante.cargoFuncion.text.trim(),
-    };
+    final companyData = _empresa.toFirestoreMap(_tipoSociedad);
+    final representativeData = _representante.toFirestoreMap();
 
     final certifierRoleData = {
       'entidadAcreditadora':  _entidadAcreditadora.text.trim(),
@@ -164,23 +134,12 @@ class _CertifierRegisterScreenState
         certifierRoleData: certifierRoleData,
       );
 
-      final urlUpdates = <String, dynamic>{};
-
-      Future<void> tryUpload(
-          PlatformFile? file, String docType, String firestoreKey) async {
-        if (file == null) return;
-        try {
-          final url = await _uploadFile(user.uid, docType, file);
-          if (url != null) urlUpdates[firestoreKey] = url;
-        } catch (_) {}
-      }
-
-      await Future.wait([
-        tryUpload(_estatutoFile,         'estatuto',         'companyData.estatutoUrl'),
-        tryUpload(_constanciaFiscalFile, 'constanciaFiscal', 'companyData.constanciaFiscalUrl'),
-        tryUpload(_balanceFile,          'balance',          'companyData.balanceUrl'),
-        tryUpload(_poderActaFile,        'poderActa',        'representativeData.poderActaUrl'),
-        tryUpload(_docVinculoFile,       'docVinculo',       'representativeData.docVinculoUrl'),
+      final urlUpdates = await uploadDocuments(user.uid, [
+        (file: _estatutoFile,         docType: 'estatuto',         firestoreKey: 'companyData.estatutoUrl'),
+        (file: _constanciaFiscalFile, docType: 'constanciaFiscal', firestoreKey: 'companyData.constanciaFiscalUrl'),
+        (file: _balanceFile,          docType: 'balance',          firestoreKey: 'companyData.balanceUrl'),
+        (file: _poderActaFile,        docType: 'poderActa',        firestoreKey: 'representativeData.poderActaUrl'),
+        (file: _docVinculoFile,       docType: 'docVinculo',       firestoreKey: 'representativeData.docVinculoUrl'),
       ]);
 
       if (urlUpdates.isNotEmpty) {
@@ -201,35 +160,6 @@ class _CertifierRegisterScreenState
         const SnackBar(
             content: Text('Ocurrió un error inesperado. Intentá nuevamente.')),
       );
-    }
-  }
-
-  Future<String?> _uploadFile(
-      String uid, String docType, PlatformFile file) async {
-    final mime = _mimeType(file.name);
-    final storageRef = FirebaseStorage.instance
-        .ref('registrations/$uid/$docType/${file.name}');
-    final UploadTask task;
-    if (file.bytes != null) {
-      task = storageRef.putData(
-          file.bytes!, SettableMetadata(contentType: mime));
-    } else if (file.path != null) {
-      task = storageRef.putFile(
-          io.File(file.path!), SettableMetadata(contentType: mime));
-    } else {
-      return null;
-    }
-    final snapshot = await task;
-    return await snapshot.ref.getDownloadURL();
-  }
-
-  String _mimeType(String filename) {
-    switch (filename.toLowerCase().split('.').last) {
-      case 'pdf':  return 'application/pdf';
-      case 'jpg':
-      case 'jpeg': return 'image/jpeg';
-      case 'png':  return 'image/png';
-      default:     return 'application/octet-stream';
     }
   }
 
@@ -396,64 +326,14 @@ class _CertifierRegisterScreenState
               ),
             ),
             const SizedBox(height: 16),
-            Wrap(
-              spacing: 8,
-              runSpacing: 8,
-              children: _estandarOptions.map((estandar) {
-                final selected = _selectedEstandares.contains(estandar);
-                return GestureDetector(
-                  onTap: () => setState(() {
-                    if (selected) {
-                      _selectedEstandares.remove(estandar);
-                    } else {
-                      _selectedEstandares.add(estandar);
-                    }
-                  }),
-                  child: AnimatedContainer(
-                    duration: const Duration(milliseconds: 180),
-                    padding: const EdgeInsets.symmetric(
-                        horizontal: 14, vertical: 8),
-                    decoration: BoxDecoration(
-                      color: selected
-                          ? RegisterFormTokens.cyanColor
-                              .withValues(alpha: 0.10)
-                          : RegisterFormTokens.surfaceLowest,
-                      border: Border.all(
-                        color: selected
-                            ? RegisterFormTokens.secondaryColor
-                            : RegisterFormTokens.outlineVariant
-                                .withValues(alpha: 0.6),
-                        width: selected ? 1.5 : 1,
-                      ),
-                      borderRadius: BorderRadius.circular(99),
-                    ),
-                    child: Row(
-                      mainAxisSize: MainAxisSize.min,
-                      children: [
-                        if (selected) ...[
-                          const Icon(
-                            Icons.check_circle_rounded,
-                            size: 16,
-                            color: RegisterFormTokens.secondaryColor,
-                          ),
-                          const SizedBox(width: 6),
-                        ],
-                        Text(
-                          estandar,
-                          style: TextStyle(
-                            fontFamily: 'Inter',
-                            fontSize: 13,
-                            fontWeight: FontWeight.w600,
-                            color: selected
-                                ? RegisterFormTokens.secondaryColor
-                                : RegisterFormTokens.onSurfaceVariantColor,
-                          ),
-                        ),
-                      ],
-                    ),
-                  ),
-                );
-              }).toList(),
+            RegisterMultiChipSelector(
+              options: _estandarOptions,
+              selected: _selectedEstandares,
+              onToggle: (estandar) => setState(() {
+                if (!_selectedEstandares.add(estandar)) {
+                  _selectedEstandares.remove(estandar);
+                }
+              }),
             ),
           ],
         ),

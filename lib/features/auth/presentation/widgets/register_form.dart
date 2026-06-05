@@ -532,6 +532,80 @@ class RegisterAdminApprovalCard extends StatelessWidget {
 // FORM CONTROLLER BUNDLES
 // ======================================================================
 
+// ======================================================================
+// MULTI-CHIP SELECTOR (certificaciones / estándares / coberturas)
+// ======================================================================
+
+/// Grupo de "chips" seleccionables (multi-selección) reutilizable por los
+/// registros B2B. Renderiza el `Wrap` de opciones; el estado (`Set`) y el
+/// toggle los maneja la pantalla que lo usa.
+class RegisterMultiChipSelector extends StatelessWidget {
+  const RegisterMultiChipSelector({
+    super.key,
+    required this.options,
+    required this.selected,
+    required this.onToggle,
+  });
+
+  final List<String> options;
+  final Set<String> selected;
+  final ValueChanged<String> onToggle;
+
+  @override
+  Widget build(BuildContext context) {
+    return Wrap(
+      spacing: 8,
+      runSpacing: 8,
+      children: options.map((option) {
+        final isSelected = selected.contains(option);
+        return GestureDetector(
+          onTap: () => onToggle(option),
+          child: AnimatedContainer(
+            duration: const Duration(milliseconds: 180),
+            padding: const EdgeInsets.symmetric(horizontal: 14, vertical: 8),
+            decoration: BoxDecoration(
+              color: isSelected
+                  ? RegisterFormTokens.cyanColor.withValues(alpha: 0.10)
+                  : RegisterFormTokens.surfaceLowest,
+              border: Border.all(
+                color: isSelected
+                    ? RegisterFormTokens.secondaryColor
+                    : RegisterFormTokens.outlineVariant.withValues(alpha: 0.6),
+                width: isSelected ? 1.5 : 1,
+              ),
+              borderRadius: BorderRadius.circular(99),
+            ),
+            child: Row(
+              mainAxisSize: MainAxisSize.min,
+              children: [
+                if (isSelected) ...[
+                  const Icon(
+                    Icons.check_circle_rounded,
+                    size: 16,
+                    color: RegisterFormTokens.secondaryColor,
+                  ),
+                  const SizedBox(width: 6),
+                ],
+                Text(
+                  option,
+                  style: TextStyle(
+                    fontFamily: 'Inter',
+                    fontSize: 13,
+                    fontWeight: FontWeight.w600,
+                    color: isSelected
+                        ? RegisterFormTokens.secondaryColor
+                        : RegisterFormTokens.onSurfaceVariantColor,
+                  ),
+                ),
+              ],
+            ),
+          ),
+        );
+      }).toList(),
+    );
+  }
+}
+
 class EmpresaFormControllers {
   final TextEditingController nombreFantasia  = TextEditingController();
   final TextEditingController razonSocial     = TextEditingController();
@@ -544,6 +618,22 @@ class EmpresaFormControllers {
   final TextEditingController telefonoCorporativo = TextEditingController();
   final TextEditingController emailInstitucional  = TextEditingController();
   final TextEditingController correspondencia = TextEditingController();
+
+  /// Datos institucionales de la empresa para Firestore.
+  Map<String, dynamic> toFirestoreMap(String tipoSociedad) => {
+        'fantasyName':         nombreFantasia.text.trim(),
+        'razonSocial':         razonSocial.text.trim(),
+        'cuit':                cuit.text.trim(),
+        'tipoSociedad':        tipoSociedad,
+        'pais':                pais.text.trim(),
+        'provincia':           provincia.text.trim(),
+        'domicilioLegal':      domicilioLegal.text.trim(),
+        'fechaConstitucion':   fechaConstitucion.text.trim(),
+        'sitioWeb':            sitioWeb.text.trim(),
+        'telefonoCorporativo': telefonoCorporativo.text.trim(),
+        'emailInstitucional':  emailInstitucional.text.trim(),
+        'correspondencia':     correspondencia.text.trim(),
+      };
 
   void dispose() {
     nombreFantasia.dispose();
@@ -568,6 +658,17 @@ class RepresentanteFormControllers {
   final TextEditingController email           = TextEditingController();
   final TextEditingController telefonoCelular = TextEditingController();
   final TextEditingController cargoFuncion    = TextEditingController();
+
+  /// Datos del representante legal para Firestore.
+  Map<String, dynamic> toFirestoreMap() => {
+        'nombreApellido':  nombreApellido.text.trim(),
+        'dniCuil':         dniCuil.text.trim(),
+        'fechaNacimiento': fechaNacimiento.text.trim(),
+        'nacionalidad':    nacionalidad.text.trim(),
+        'email':           email.text.trim(),
+        'telefonoCelular': telefonoCelular.text.trim(),
+        'cargoFuncion':    cargoFuncion.text.trim(),
+      };
 
   void dispose() {
     nombreApellido.dispose();
