@@ -8,7 +8,7 @@ import 'package:water_ledger/features/auditor/domain/enums/audit_status.dart';
 import 'package:water_ledger/features/auditor/domain/enums/observation_type.dart';
 import 'package:water_ledger/features/auditor/presentation/providers/audit_repository_provider.dart';
 import 'package:water_ledger/features/auditor/presentation/providers/auditor_provider.dart';
-import 'package:water_ledger/core/presentation/providers/session_provider.dart';
+import 'package:water_ledger/features/auth/presentation/providers/session_provider.dart';
 import 'package:water_ledger/features/credit_issuance/domain/entities/credit_request_entity.dart';
 
 // ── Design tokens ──────────────────────────────────────────────────────────────

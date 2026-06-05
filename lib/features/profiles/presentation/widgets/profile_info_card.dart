@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
-import 'package:water_ledger/core/domain/entities/user_model.dart';
-import 'package:water_ledger/core/domain/enums/user_status.dart';
+import 'package:water_ledger/features/shared/domain/entities/user_model.dart';
+import 'package:water_ledger/features/shared/domain/enums/user_status.dart';
 import 'package:water_ledger/features/dashboards/presentation/widgets/dashboard_tokens.dart';
 
 /// Card "Basic Information" compartida por todos los perfiles.
@@ -42,13 +42,13 @@ class ProfileInfoCard extends StatelessWidget {
         children: [
           _row(
             icon: Icons.email_outlined,
-            label: 'Email',
+            label: 'Correo electrónico',
             value: user.email,
           ),
           const Divider(height: 22, color: DashboardTokens.outlineVariantColor),
           _row(
             icon: Icons.phone_outlined,
-            label: 'Phone',
+            label: 'Teléfono',
             // TODO: cuando exista getter para teléfono en UserModel (hoy vive
             // dentro de representativeData en Firestore), reemplazar este "—".
             value: '—',
@@ -59,14 +59,14 @@ class ProfileInfoCard extends StatelessWidget {
             children: [
               Expanded(
                 child: _miniColumn(
-                  label: 'Registration date',
+                  label: 'Fecha de registro',
                   value: _formatRegistrationDate(user.createdAt),
                 ),
               ),
               const SizedBox(width: 12),
               Expanded(
                 child: _miniColumn(
-                  label: 'Account status',
+                  label: 'Estado de cuenta',
                   valueWidget: _StatusValue(
                     status: user.status,
                     labelOverride: statusLabelOverride,
@@ -182,9 +182,9 @@ class _StatusValue extends StatelessWidget {
       UserStatus.rejected => DashboardTokens.errorColor,
     };
     final label = labelOverride ?? switch (status) {
-      UserStatus.active => 'Active',
-      UserStatus.pending => 'Pending',
-      UserStatus.rejected => 'Rejected',
+      UserStatus.active => 'Activo',
+      UserStatus.pending => 'Pendiente',
+      UserStatus.rejected => 'Rechazado',
     };
 
     return Row(

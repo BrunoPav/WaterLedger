@@ -1,13 +1,13 @@
-import 'package:flutter/material.dart';
+﻿import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 import 'package:intl/intl.dart';
-import 'package:water_ledger/core/domain/enums/user_role.dart';
-import 'package:water_ledger/core/domain/enums/user_status.dart';
-import 'package:water_ledger/core/domain/repositories/admin_repository.dart';
-import 'package:water_ledger/core/presentation/providers/admin_provider.dart';
-import 'package:water_ledger/core/presentation/providers/session_provider.dart';
-import 'package:water_ledger/core/presentation/screens/admin/notifications_modal.dart';
+import 'package:water_ledger/features/shared/domain/enums/user_role.dart';
+import 'package:water_ledger/features/shared/domain/enums/user_status.dart';
+import 'package:water_ledger/features/admin/domain/repositories/admin_repository.dart';
+import 'package:water_ledger/features/admin/presentation/providers/admin_provider.dart';
+import 'package:water_ledger/features/auth/presentation/providers/session_provider.dart';
+import 'package:water_ledger/features/admin/presentation/screens/notifications_modal.dart';
 import 'package:water_ledger/features/dashboards/presentation/widgets/activity_tile.dart';
 import 'package:water_ledger/features/dashboards/presentation/widgets/dashboard_bottom_nav.dart';
 import 'package:water_ledger/features/dashboards/presentation/widgets/dashboard_tokens.dart';
@@ -214,7 +214,7 @@ class AdminProfileScreen extends ConsumerWidget {
             icon: Icons.fact_check_outlined,
             iconBg: DashboardTokens.errorColor.withValues(alpha: 0.10),
             iconColor: DashboardTokens.errorColor,
-            title: 'Review Pending Approvals',
+            title: 'Revisar Aprobaciones Pendientes',
             subtitle: pendingCount == 0
                 ? 'Sin solicitudes pendientes'
                 : pendingCount == 1

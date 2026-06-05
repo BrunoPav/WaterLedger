@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 import 'package:intl/intl.dart';
-import 'package:water_ledger/core/presentation/providers/session_provider.dart';
+import 'package:water_ledger/features/auth/presentation/providers/session_provider.dart';
 import 'package:water_ledger/features/certifier/domain/entities/certification_entity.dart';
 import 'package:water_ledger/features/certifier/domain/enums/certification_status.dart';
 import 'package:water_ledger/features/certifier/presentation/providers/certification_repository_provider.dart';

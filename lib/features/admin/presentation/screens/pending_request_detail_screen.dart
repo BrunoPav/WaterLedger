@@ -3,8 +3,8 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 import 'package:intl/intl.dart';
-import 'package:water_ledger/core/domain/enums/user_role.dart';
-import 'package:water_ledger/core/presentation/providers/admin_provider.dart';
+import 'package:water_ledger/features/shared/domain/enums/user_role.dart';
+import 'package:water_ledger/features/admin/presentation/providers/admin_provider.dart';
 
 /// Pantalla de detalle de una solicitud de aprobación pendiente.
 ///

@@ -1,10 +1,10 @@
-import 'dart:ui';
+﻿import 'dart:ui';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
-import 'package:water_ledger/core/domain/exceptions/auth_exception.dart';
-import 'package:water_ledger/core/domain/validators/auth_validators.dart';
-import 'package:water_ledger/core/presentation/providers/session_provider.dart';
+import 'package:water_ledger/features/auth/domain/exceptions/auth_exception.dart';
+import 'package:water_ledger/features/auth/domain/validators/auth_validators.dart';
+import 'package:water_ledger/features/auth/presentation/providers/session_provider.dart';
 
 class ForgotPasswordScreen extends ConsumerStatefulWidget {
   const ForgotPasswordScreen({super.key});
@@ -214,7 +214,7 @@ class _ForgotPasswordScreenState extends ConsumerState<ForgotPasswordScreen> {
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
               const Text(
-                'EMAIL ADDRESS',
+                'DIRECCIÓN DE EMAIL',
                 style: TextStyle(
                   fontFamily: 'Inter',
                   fontSize: 12,

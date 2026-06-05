@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
-import 'package:water_ledger/core/presentation/providers/session_provider.dart';
+import 'package:water_ledger/features/auth/presentation/providers/session_provider.dart';
 import 'package:water_ledger/features/dashboards/presentation/widgets/dashboard_tokens.dart';
 
 /// Header reusable de las pantallas de perfil.
@@ -189,7 +189,7 @@ class _EditProfileButton extends StatelessWidget {
       ),
       icon: const Icon(Icons.edit_outlined, size: 16),
       label: const Text(
-        'Edit Profile',
+        'Editar Perfil',
         style: TextStyle(
           fontFamily: 'Inter',
           fontSize: 13,
@@ -218,7 +218,7 @@ class _LogoutButton extends ConsumerWidget {
         color: DashboardTokens.onSurfaceColor,
       ),
       label: const Text(
-        'Logout',
+        'Cerrar sesión',
         style: TextStyle(
           fontFamily: 'Inter',
           fontSize: 13,

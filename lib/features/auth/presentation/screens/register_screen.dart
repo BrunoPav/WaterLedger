@@ -71,21 +71,21 @@ class _RegisterScreenState extends State<RegisterScreen> {
                   _buildCard(
                     type: _AccountType.retailInvestor,
                     icon: Icons.person_outline,
-                    title: 'Retail Investor',
-                    description: 'Invest in verified water credits and track your portfolio.',
+                    title: 'Inversor Retail',
+                    description: 'Invertí en créditos hídricos verificados y seguí tu cartera.',
                     features: [
-                      (Icons.show_chart, 'Portfolio'),
-                      (Icons.account_balance_wallet_outlined, 'Wallet'),
+                      (Icons.show_chart, 'Cartera'),
+                      (Icons.account_balance_wallet_outlined, 'Billetera'),
                     ],
                   ),
                   const SizedBox(height: 16),
                   _buildCard(
                     type: _AccountType.company,
                     icon: Icons.corporate_fare,
-                    title: 'Company',
-                    description: 'Purchase credits and request water credit issuance for sustainability projects.',
+                    title: 'Empresa',
+                    description: 'Comprá créditos y solicitá emisiones de créditos hídricos para proyectos de sostenibilidad.',
                     features: [
-                      (Icons.verified_outlined, 'Issuance'),
+                      (Icons.verified_outlined, 'Emisión'),
                       (Icons.pie_chart_outline, 'ESG'),
                     ],
                   ),
@@ -94,9 +94,9 @@ class _RegisterScreenState extends State<RegisterScreen> {
                     type: _AccountType.auditor,
                     icon: Icons.fact_check_outlined,
                     title: 'Auditor',
-                    description: 'Review projects, manage audit stages, and validate submitted documentation.',
+                    description: 'Revisá proyectos, gestioná etapas de auditoría y validá la documentación enviada.',
                     features: [
-                      (Icons.assignment_outlined, 'Review'),
+                      (Icons.assignment_outlined, 'Revisión'),
                       (Icons.description_outlined, 'Docs'),
                     ],
                   ),
@@ -104,22 +104,22 @@ class _RegisterScreenState extends State<RegisterScreen> {
                   _buildCard(
                     type: _AccountType.certificationEntity,
                     icon: Icons.workspace_premium_outlined,
-                    title: 'Certification Entity',
-                    description: 'Validate approved projects and certify emission eligibility.',
+                    title: 'Entidad Certificadora',
+                    description: 'Validá proyectos aprobados y certificá la elegibilidad de emisión.',
                     features: [
-                      (Icons.verified_user_outlined, 'Validate'),
-                      (Icons.military_tech_outlined, 'Certify'),
+                      (Icons.verified_user_outlined, 'Validar'),
+                      (Icons.military_tech_outlined, 'Certificar'),
                     ],
                   ),
                   const SizedBox(height: 16),
                   _buildCard(
                     type: _AccountType.insuranceProvider,
                     icon: Icons.shield_outlined,
-                    title: 'Insurance Provider',
-                    description: 'Offer insurance plans for approved sustainability projects.',
+                    title: 'Aseguradora',
+                    description: 'Ofrecé planes de seguro para proyectos de sostenibilidad aprobados.',
                     features: [
-                      (Icons.policy_outlined, 'Plans'),
-                      (Icons.health_and_safety_outlined, 'Protection'),
+                      (Icons.policy_outlined, 'Planes'),
+                      (Icons.health_and_safety_outlined, 'Cobertura'),
                     ],
                   ),
                   const SizedBox(height: 24),
@@ -127,7 +127,7 @@ class _RegisterScreenState extends State<RegisterScreen> {
                   const Padding(
                     padding: EdgeInsets.symmetric(horizontal: 4),
                     child: Text(
-                      'Operational access for auditors, certification entities, and insurance providers requires administrative approval.',
+                      'El acceso operativo para auditores, entidades certificadoras y aseguradoras requiere aprobación administrativa.',
                       textAlign: TextAlign.center,
                       style: TextStyle(
                         fontFamily: 'Inter',
@@ -209,7 +209,7 @@ class _RegisterScreenState extends State<RegisterScreen> {
     return const Column(
       children: [
         Text(
-          'How do you want\nto register?',
+          '¿Cómo querés\nregistrarte?',
           textAlign: TextAlign.center,
           style: TextStyle(
             fontFamily: 'Manrope',
@@ -222,7 +222,7 @@ class _RegisterScreenState extends State<RegisterScreen> {
         ),
         SizedBox(height: 10),
         Text(
-          'Choose the account type that best describes your goals in the water credit ecosystem.',
+          'Elegí el tipo de cuenta que mejor describe tus objetivos en el ecosistema de créditos hídricos.',
           textAlign: TextAlign.center,
           style: TextStyle(
             fontFamily: 'Inter',
@@ -411,7 +411,7 @@ class _RegisterScreenState extends State<RegisterScreen> {
               elevation: 2,
             ),
             child: const Text(
-              'Continue with Registration',
+              'Continuar con el Registro',
               style: TextStyle(
                 fontFamily: 'Manrope',
                 fontSize: 16,
@@ -425,7 +425,7 @@ class _RegisterScreenState extends State<RegisterScreen> {
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
             const Text(
-              'Already have an account? ',
+              '¿Ya tenés una cuenta? ',
               style: TextStyle(
                 fontFamily: 'Inter',
                 fontSize: 13,
@@ -436,7 +436,7 @@ class _RegisterScreenState extends State<RegisterScreen> {
             GestureDetector(
               onTap: () => context.go('/login'),
               child: const Text(
-                'Log in',
+                'Ingresá',
                 style: TextStyle(
                   fontFamily: 'Inter',
                   fontSize: 13,
@@ -471,15 +471,15 @@ class _RegisterScreenState extends State<RegisterScreen> {
             Row(
               mainAxisAlignment: MainAxisAlignment.center,
               children: [
-                _buildFooterBadge(Icons.lock_outline, 'End-to-end encrypted'),
+                _buildFooterBadge(Icons.lock_outline, 'Cifrado de extremo a extremo'),
                 const SizedBox(width: 20),
                 _buildFooterBadge(
-                    Icons.verified_user_outlined, 'Institutional Grade Security'),
+                    Icons.verified_user_outlined, 'Seguridad de Grado Institucional'),
               ],
             ),
             const SizedBox(height: 8),
             Text(
-              '© 2024 Water Ledger Inc. All rights reserved.',
+              '© 2024 Water Ledger Inc. Todos los derechos reservados.',
               style: TextStyle(
                 fontFamily: 'Inter',
                 fontSize: 11,

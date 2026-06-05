@@ -2,7 +2,7 @@
 
 > Documento de referencia detallada para el equipo (onboarding + historial).
 > Para la referencia operativa compacta ver [CLAUDE.md](../CLAUDE.md) en la raíz.
-> Última actualización: 2026-06-04.
+> Última actualización: 2026-06-05.
 
 ---
 
@@ -151,6 +151,23 @@ Revisión completa del código de `main`. Fases A y B aplicadas:
 - `test/mocks/test_credit_issuance_repository.dart` conservado como base para tests futuros
 
 Resultado: `flutter analyze` → **No issues found**.
+
+### Reorganización core → features (2026-06-05)
+
+Migración de `lib/core` al patrón por-feature en `lib/features` (rama `Arquitectura`,
+commit `aa6d624`). 24 archivos movidos con `git mv` (historial preservado), 118 imports
+actualizados en 46 archivos.
+
+- **`features/shared/`** (nueva) → kernel de identidad: `user_model` + enums de usuario + `splash_screen`.
+- **`features/admin/`** (nueva) → `admin_repository`, `firebase_admin_repository`, `admin_provider`
+  y las screens de administración (incluye las 2 de `valuation`).
+- **`features/auth/`** → completada con `domain/` + `data/`: `auth_repository`,
+  `firebase_auth_repository`, `session_provider`, `auth_exception`, `auth_validators`, success screens.
+- Se mantiene en `lib/core/`: routing (`app_router`, `route_access`, `go_router_refresh_stream`),
+  `date_picker_field` (sin uso) y `Stitch_Templates/`.
+
+Verificación: `flutter analyze` → **No issues found** (igual que baseline); `dart fix --dry-run` → **Nothing to fix**.
+Respaldos: rama `Arquitectura-backup-pre-refactor-2026-06-04` + tag `pre-core-to-features-2026-06-04`.
 
 ### Fase C — Pendiente (refactors de duplicación)
 - **C1:** extraer helpers de presentación (`_comingSoon` ~11 copias, `_timeAgo` ~7, `_avatarInitial` ~4) a un util/extension compartido

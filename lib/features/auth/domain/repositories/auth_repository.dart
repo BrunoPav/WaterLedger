@@ -1,4 +1,4 @@
-import 'package:water_ledger/core/domain/entities/user_model.dart';
+import 'package:water_ledger/features/shared/domain/entities/user_model.dart';
 
 abstract class AuthRepository {
   Stream<UserModel?> get authStateChanges;

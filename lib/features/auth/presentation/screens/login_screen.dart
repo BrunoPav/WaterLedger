@@ -2,9 +2,9 @@ import 'dart:ui';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
-import 'package:water_ledger/core/domain/exceptions/auth_exception.dart';
-import 'package:water_ledger/core/domain/validators/auth_validators.dart';
-import 'package:water_ledger/core/presentation/providers/session_provider.dart';
+import 'package:water_ledger/features/auth/domain/exceptions/auth_exception.dart';
+import 'package:water_ledger/features/auth/domain/validators/auth_validators.dart';
+import 'package:water_ledger/features/auth/presentation/providers/session_provider.dart';
 
 class LoginScreen extends ConsumerStatefulWidget {
   const LoginScreen({super.key});
@@ -197,7 +197,7 @@ class _LoginScreenState extends ConsumerState<LoginScreen> {
         ),
         const SizedBox(height: 8),
         const Text(
-          'Secure environmental asset management\nand institutional water trading.',
+          'Gestión segura de activos ambientales\ny comercio institucional de agua.',
           textAlign: TextAlign.center,
           style: TextStyle(
             fontFamily: 'Inter',
@@ -239,7 +239,7 @@ class _LoginScreenState extends ConsumerState<LoginScreen> {
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
               // --- Email ---
-              _buildFieldLabel('EMAIL ADDRESS'),
+              _buildFieldLabel('DIRECCIÓN DE EMAIL'),
               const SizedBox(height: 8),
               _buildTextField(
                 controller: _emailController,
@@ -251,11 +251,11 @@ class _LoginScreenState extends ConsumerState<LoginScreen> {
               Row(
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: [
-                  _buildFieldLabel('PASSWORD'),
+                  _buildFieldLabel('CONTRASEÑA'),
                   GestureDetector(
                     onTap: () => context.push('/forgot-password'),
                     child: const Text(
-                      'Forgot password?',
+                      '¿Olvidaste tu contraseña?',
                       style: TextStyle(
                         fontFamily: 'Inter',
                         fontSize: 13,
@@ -310,7 +310,7 @@ class _LoginScreenState extends ConsumerState<LoginScreen> {
                           ),
                         )
                       : const Text(
-                          'Login',
+                          'Iniciar sesión',
                           style: TextStyle(
                             fontFamily: 'Inter',
                             fontSize: 18,
@@ -332,7 +332,7 @@ class _LoginScreenState extends ConsumerState<LoginScreen> {
                     color: Colors.white.withValues(alpha: 0.72),
                     padding: const EdgeInsets.symmetric(horizontal: 12),
                     child: Text(
-                      'INSTITUTIONAL ACCESS ONLY',
+                      'SOLO ACCESO INSTITUCIONAL',
                       style: TextStyle(
                         fontFamily: 'Inter',
                         fontSize: 11,
@@ -350,7 +350,7 @@ class _LoginScreenState extends ConsumerState<LoginScreen> {
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: [
                   const Text(
-                    'New to the platform? ',
+                    '¿Sos nuevo en la plataforma? ',
                     style: TextStyle(
                       fontFamily: 'Inter',
                       fontSize: 16,
@@ -360,7 +360,7 @@ class _LoginScreenState extends ConsumerState<LoginScreen> {
                   GestureDetector(
                     onTap: () => context.push('/register'),
                     child: const Text(
-                      'Register',
+                      'Registrate',
                       style: TextStyle(
                         fontFamily: 'Inter',
                         fontSize: 13,
@@ -508,7 +508,7 @@ class _LoginScreenState extends ConsumerState<LoginScreen> {
             ),
             const SizedBox(width: 8),
             Text(
-              'AES-256 Encrypted Environment',
+              'Entorno cifrado con AES-256',
               style: TextStyle(
                 fontFamily: 'Inter',
                 fontSize: 13,

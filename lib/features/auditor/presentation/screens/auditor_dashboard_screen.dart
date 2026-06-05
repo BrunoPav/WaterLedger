@@ -1,11 +1,11 @@
-import 'package:flutter/material.dart';
+﻿import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 import 'package:intl/intl.dart';
-import 'package:water_ledger/core/domain/entities/user_model.dart';
+import 'package:water_ledger/features/shared/domain/entities/user_model.dart';
 import 'package:water_ledger/features/dashboards/presentation/providers/activity_providers.dart';
 import 'package:water_ledger/features/credit_issuance/domain/enums/request_status.dart';
-import 'package:water_ledger/core/presentation/providers/session_provider.dart';
+import 'package:water_ledger/features/auth/presentation/providers/session_provider.dart';
 import 'package:water_ledger/features/auditor/presentation/providers/auditor_provider.dart';
 import 'package:water_ledger/features/credit_issuance/domain/entities/credit_request_entity.dart';
 import 'package:water_ledger/features/dashboards/presentation/widgets/activity_tile.dart';
@@ -81,7 +81,7 @@ class AuditorDashboardScreen extends ConsumerWidget {
           ),
           DashboardNavItem(
             icon: Icons.notifications_outlined,
-            label: 'Alerts',
+            label: 'Alertas',
             onTap: () => ScaffoldMessenger.of(context).showSnackBar(
               const SnackBar(content: Text('Alerts — pendiente de implementar'), duration: Duration(seconds: 2)),
             ),

@@ -3,13 +3,13 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 import 'package:intl/intl.dart';
-import 'package:water_ledger/core/domain/entities/user_model.dart';
-import 'package:water_ledger/core/domain/enums/user_role.dart';
-import 'package:water_ledger/core/domain/enums/user_status.dart';
-import 'package:water_ledger/core/domain/repositories/admin_repository.dart';
-import 'package:water_ledger/core/presentation/providers/admin_provider.dart';
-import 'package:water_ledger/core/presentation/providers/session_provider.dart';
-import 'package:water_ledger/core/presentation/screens/admin/notifications_modal.dart';
+import 'package:water_ledger/features/shared/domain/entities/user_model.dart';
+import 'package:water_ledger/features/shared/domain/enums/user_role.dart';
+import 'package:water_ledger/features/shared/domain/enums/user_status.dart';
+import 'package:water_ledger/features/admin/domain/repositories/admin_repository.dart';
+import 'package:water_ledger/features/admin/presentation/providers/admin_provider.dart';
+import 'package:water_ledger/features/auth/presentation/providers/session_provider.dart';
+import 'package:water_ledger/features/admin/presentation/screens/notifications_modal.dart';
 
 class AdminDashboardScreen extends ConsumerWidget {
   const AdminDashboardScreen({super.key});

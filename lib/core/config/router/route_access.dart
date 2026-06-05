@@ -1,4 +1,4 @@
-import 'package:water_ledger/core/domain/enums/user_role.dart';
+import 'package:water_ledger/features/shared/domain/enums/user_role.dart';
 
 /// Configuración de control de acceso del router.
 ///
@@ -19,9 +19,6 @@ const Set<String> _publicPaths = {
   '/insurance-register',
   '/retail-register-success',
   '/company-register-success',
-  '/auditor-register-success',
-  '/certifier-register-success',
-  '/insurance-register-success',
   '/register-success',
 };
 

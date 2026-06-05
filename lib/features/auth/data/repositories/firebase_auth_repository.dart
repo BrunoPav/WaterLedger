@@ -2,12 +2,12 @@ import 'dart:async';
 
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
-import 'package:water_ledger/core/domain/entities/user_model.dart';
-import 'package:water_ledger/core/domain/enums/user_permission.dart';
-import 'package:water_ledger/core/domain/enums/user_role.dart';
-import 'package:water_ledger/core/domain/enums/user_status.dart';
-import 'package:water_ledger/core/domain/exceptions/auth_exception.dart';
-import 'package:water_ledger/core/domain/repositories/auth_repository.dart';
+import 'package:water_ledger/features/shared/domain/entities/user_model.dart';
+import 'package:water_ledger/features/shared/domain/enums/user_permission.dart';
+import 'package:water_ledger/features/shared/domain/enums/user_role.dart';
+import 'package:water_ledger/features/shared/domain/enums/user_status.dart';
+import 'package:water_ledger/features/auth/domain/exceptions/auth_exception.dart';
+import 'package:water_ledger/features/auth/domain/repositories/auth_repository.dart';
 
 class FirebaseAuthRepository implements AuthRepository {
   final FirebaseAuth _auth = FirebaseAuth.instance;
