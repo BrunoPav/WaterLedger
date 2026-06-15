@@ -1,6 +1,6 @@
+﻿import 'package:flutter/foundation.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
-import 'package:water_ledger/core/config/router/go_router_refresh_stream.dart';
 import 'package:water_ledger/core/config/router/route_access.dart';
 import 'package:water_ledger/features/auth/presentation/providers/session_provider.dart';
 import 'package:water_ledger/features/auditor/presentation/screens/auditor_screen.dart';
@@ -43,11 +43,9 @@ import 'package:water_ledger/features/profiles/presentation/screens/profile_edit
 /// El `refreshListenable` hace que el redirect se re-evalúe automáticamente
 /// cuando cambia el estado de autenticación de Firebase.
 final appRouterProvider = Provider<GoRouter>((ref) {
-  final authStream = ref.watch(authRepositoryProvider).authStateChanges;
-
   return GoRouter(
     initialLocation: '/login',
-    refreshListenable: GoRouterRefreshStream(authStream),
+    refreshListenable: _RouterNotifier(ref),
     redirect: (context, state) {
       final session = ref.read(sessionProvider);
       final path = state.matchedLocation;
@@ -80,97 +78,156 @@ final appRouterProvider = Provider<GoRouter>((ref) {
       return null;
     },
     routes: [
-    GoRoute(path: '/splash', builder: (context, state) => const SplashScreen()),
-    GoRoute(path: '/login', builder: (context, state) => const LoginScreen()),
-    GoRoute(path: '/forgot-password', builder: (context, state) => const ForgotPasswordScreen()),
-    GoRoute(path: '/register', builder: (context, state) => const RegisterScreen()),
-    GoRoute(path: '/corporate-onboarding', builder: (context, state) => const CorporateOnboardingScreen()),
-    GoRoute(path: '/company-register-success', builder: (context, state) => const CompanyRegisterSuccessScreen()),
-    GoRoute(path: '/retail-register', builder: (context, state) => const RetailRegisterScreen()),
-    GoRoute(path: '/auditor-register', builder: (context, state) => const AuditorRegisterScreen()),
-    GoRoute(path: '/certifier-register', builder: (context, state) => const CertifierRegisterScreen()),
-    GoRoute(path: '/insurance-register', builder: (context, state) => const InsuranceRegisterScreen()),
-    GoRoute(path: '/register-success', builder: (context, state) => const RegisterSuccessScreen()),
-    // ---- Admin (4.6 Gestión del Administrador) ---- //
-    GoRoute(path: '/admin-dashboard', builder: (context, state) => const AdminDashboardScreen()),
-    GoRoute(
-      path: '/admin-pending-approvals',
-      builder: (context, state) => const PendingApprovalsListScreen(),
-    ),
-    GoRoute(
-      path: '/admin-pending-detail/:uid',
-      builder: (context, state) => PendingRequestDetailScreen(
-        uid: state.pathParameters['uid']!,
+      GoRoute(
+        path: '/splash',
+        builder: (context, state) => const SplashScreen(),
       ),
-    ),
-    GoRoute(
-      path: '/admin-credit-requests',
-      builder: (context, state) => const AdminRequestsListScreen(),
-    ),
-    GoRoute(
-      path: '/admin-request-detail/:requestId',
-      builder: (context, state) => AdminRequestDetailScreen(
-        requestId: state.pathParameters['requestId']!,
+      GoRoute(
+        path: '/login', 
+        builder: (context, state) => const LoginScreen()
       ),
-    ),
-    GoRoute(
-      path: '/admin-valuations',
-      builder: (context, state) => const AdminValuationsListScreen(),
-    ),
-    GoRoute(
-      path: '/admin-valuation-detail/:requestId',
-      builder: (context, state) => AdminValuationDetailScreen(
-        requestId: state.pathParameters['requestId']!,
+      GoRoute(
+        path: '/forgot-password',
+        builder: (context, state) => const ForgotPasswordScreen(),
       ),
-    ),
-    GoRoute(path: '/retail-register-success', builder: (context, state) => const RetailRegisterSuccessScreen()),
-    GoRoute(path: '/home', builder: (context, state) => const HomeDispatcher()),
-    GoRoute(path: '/profile', builder: (context, state) => const ProfileDispatcher()),
-    GoRoute(path: '/profile/edit', builder: (context, state) => const ProfileEditScreen()),
-    GoRoute(
-      path: '/auditor',
-      builder: (context, state) => const AuditorScreen(),
-    ),
-    GoRoute(
-      path: '/auditor-request-detail/:requestId',
-      builder: (context, state) => AuditorRequestDetailScreen(
-        requestId: state.pathParameters['requestId']!,
+      GoRoute(
+        path: '/register',
+        builder: (context, state) => const RegisterScreen(),
       ),
-    ),
-    GoRoute(
-      path: '/certifier',
-      builder: (context, state) => const CertifierRequestsScreen(),
-    ),
-    GoRoute(
-      path: '/certifier-request-detail/:requestId',
-      builder: (context, state) => CertifierRequestDetailScreen(
-        requestId: state.pathParameters['requestId']!,
+      GoRoute(
+        path: '/corporate-onboarding',
+        builder: (context, state) => const CorporateOnboardingScreen(),
       ),
-    ),
-    GoRoute(
-      path: '/insurer',
-      builder: (context, state) => const InsurerRequestsScreen(),
-    ),
-    GoRoute(
-      path: '/insurer-request-detail/:requestId',
-      builder: (context, state) => InsurerRequestDetailScreen(
-        requestId: state.pathParameters['requestId']!,
+      GoRoute(
+        path: '/company-register-success',
+        builder: (context, state) => const CompanyRegisterSuccessScreen(),
       ),
-    ),
-    GoRoute(
-      path: '/credit-issuance',
-      builder: (context, state) => const CreditIssuanceScreen(),
-    ),
-    GoRoute(
-      path: '/submission-confirmation',
-      builder: (context, state) => const SubmissionConfirmationScreen(),
-    ),
-    GoRoute(
-      path: '/request-tracking/:requestId',
-      builder: (context, state) => RequestTrackingScreen(
-        requestId: state.pathParameters['requestId']!,
+      GoRoute(
+        path: '/retail-register',
+        builder: (context, state) => const RetailRegisterScreen(),
       ),
-    ),
-  ],
+      GoRoute(
+        path: '/auditor-register',
+        builder: (context, state) => const AuditorRegisterScreen(),
+      ),
+      GoRoute(
+        path: '/certifier-register',
+        builder: (context, state) => const CertifierRegisterScreen(),
+      ),
+      GoRoute(
+        path: '/insurance-register',
+        builder: (context, state) => const InsuranceRegisterScreen(),
+      ),
+      GoRoute(
+        path: '/register-success',
+        builder: (context, state) => const RegisterSuccessScreen(),
+      ),
+      // ---- Admin (4.6 Gestión del Administrador) ---- //
+      GoRoute(
+        path: '/admin-dashboard',
+        builder: (context, state) => const AdminDashboardScreen(),
+      ),
+      GoRoute(
+        path: '/admin-pending-approvals',
+        builder: (context, state) => const PendingApprovalsListScreen(),
+      ),
+      GoRoute(
+        path: '/admin-pending-detail/:uid',
+        builder: (context, state) =>
+            PendingRequestDetailScreen(uid: state.pathParameters['uid']!),
+      ),
+      GoRoute(
+        path: '/admin-credit-requests',
+        builder: (context, state) => const AdminRequestsListScreen(),
+      ),
+      GoRoute(
+        path: '/admin-request-detail/:requestId',
+        builder: (context, state) => AdminRequestDetailScreen(
+          requestId: state.pathParameters['requestId']!,
+        ),
+      ),
+      GoRoute(
+        path: '/admin-valuations',
+        builder: (context, state) => const AdminValuationsListScreen(),
+      ),
+      GoRoute(
+        path: '/admin-valuation-detail/:requestId',
+        builder: (context, state) => AdminValuationDetailScreen(
+          requestId: state.pathParameters['requestId']!,
+        ),
+      ),
+      GoRoute(
+        path: '/retail-register-success',
+        builder: (context, state) => const RetailRegisterSuccessScreen(),
+      ),
+      GoRoute(
+        path: '/home',
+        builder: (context, state) => const HomeDispatcher(),
+      ),
+      GoRoute(
+        path: '/profile',
+        builder: (context, state) => const ProfileDispatcher(),
+      ),
+      GoRoute(
+        path: '/profile/edit',
+        builder: (context, state) => const ProfileEditScreen(),
+      ),
+      GoRoute(
+        path: '/auditor',
+        builder: (context, state) => const AuditorScreen(),
+      ),
+      GoRoute(
+        path: '/auditor-request-detail/:requestId',
+        builder: (context, state) => AuditorRequestDetailScreen(
+          requestId: state.pathParameters['requestId']!,
+        ),
+      ),
+      GoRoute(
+        path: '/certifier',
+        builder: (context, state) => const CertifierRequestsScreen(),
+      ),
+      GoRoute(
+        path: '/certifier-request-detail/:requestId',
+        builder: (context, state) => CertifierRequestDetailScreen(
+          requestId: state.pathParameters['requestId']!,
+        ),
+      ),
+      GoRoute(
+        path: '/insurer',
+        builder: (context, state) => const InsurerRequestsScreen(),
+      ),
+      GoRoute(
+        path: '/insurer-request-detail/:requestId',
+        builder: (context, state) => InsurerRequestDetailScreen(
+          requestId: state.pathParameters['requestId']!,
+        ),
+      ),
+      GoRoute(
+        path: '/credit-issuance',
+        builder: (context, state) => const CreditIssuanceScreen(),
+      ),
+      GoRoute(
+        path: '/submission-confirmation',
+        builder: (context, state) => const SubmissionConfirmationScreen(),
+      ),
+      GoRoute(
+        path: '/request-tracking/:requestId',
+        builder: (context, state) => RequestTrackingScreen(
+          requestId: state.pathParameters['requestId']!,
+        ),
+      ),
+    ],
   );
 });
+
+/// Notifica al router cada vez que sessionProvider cambia de estado.
+/// Al escuchar sessionProvider directamente (en lugar del authStream subyacente),
+/// el redirect se evalúa cuando la sesión ya resolvió — eliminando la race
+/// condition donde GoRouterRefreshStream disparaba antes de que sessionProvider
+/// saliera de data(null) y el guard redirigía a /login por error.
+class _RouterNotifier extends ChangeNotifier {
+  _RouterNotifier(Ref ref) {
+    notifyListeners();
+    ref.listen(sessionProvider, (_, _) => notifyListeners());
+  }
+}

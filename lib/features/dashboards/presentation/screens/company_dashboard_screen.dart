@@ -30,9 +30,6 @@ class CompanyDashboardScreen extends ConsumerWidget {
         leading: TopBarBranded(
           avatarInitial: _avatarInitialFromUser(sessionAsync.value),
         ),
-        actions: const [
-          TopBarIconButton(icon: Icons.notifications_outlined),
-        ],
       ),
       body: RefreshIndicator(
         onRefresh: () async => ref.refresh(companyRequestsProvider.future),
@@ -300,37 +297,39 @@ class CompanyDashboardScreen extends ConsumerWidget {
             .where((r) => r.status == RequestStatus.published)
             .length;
 
-        return Row(
-          crossAxisAlignment: CrossAxisAlignment.stretch,
-          children: [
-            Expanded(
-              child: StatCard(
-                label: 'Active requests',
-                icon: Icons.pending_outlined,
-                value: active.length.toString(),
-                footer: active.isNotEmpty
-                    ? StatCardProgressFooter(
-                        leftLabel: 'Current stage',
-                        rightLabel: _statusToLabel(active.first.status),
-                        progress: _statusToProgress(active.first.status),
-                      )
-                    : null,
-              ),
-            ),
-            const SizedBox(width: 12),
-            Expanded(
-              child: StatCard(
-                label: 'Issued credits',
-                icon: Icons.water_drop_outlined,
-                iconColor: DashboardTokens.secondaryColor,
-                value: issued.toString(),
-                footer: const StatCardCaption(
-                  icon: Icons.history,
-                  text: 'Next cycle pending',
+        return IntrinsicHeight(
+          child: Row(
+            crossAxisAlignment: CrossAxisAlignment.stretch,
+            children: [
+              Expanded(
+                child: StatCard(
+                  label: 'Active requests',
+                  icon: Icons.pending_outlined,
+                  value: active.length.toString(),
+                  footer: active.isNotEmpty
+                      ? StatCardProgressFooter(
+                          leftLabel: 'Current stage',
+                          rightLabel: _statusToLabel(active.first.status),
+                          progress: _statusToProgress(active.first.status),
+                        )
+                      : null,
                 ),
               ),
-            ),
-          ],
+              const SizedBox(width: 12),
+              Expanded(
+                child: StatCard(
+                  label: 'Issued credits',
+                  icon: Icons.water_drop_outlined,
+                  iconColor: DashboardTokens.secondaryColor,
+                  value: issued.toString(),
+                  footer: const StatCardCaption(
+                    icon: Icons.history,
+                    text: 'Next cycle pending',
+                  ),
+                ),
+              ),
+            ],
+          ),
         );
       },
     );
