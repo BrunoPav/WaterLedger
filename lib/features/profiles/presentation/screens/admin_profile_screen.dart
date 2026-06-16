@@ -149,9 +149,9 @@ class AdminProfileScreen extends ConsumerWidget {
             onTap: () => context.go('/home'),
           ),
           DashboardNavItem(
-            icon: Icons.account_tree_outlined,
-            label: 'Projects',
-            onTap: () => _comingSoon(context, 'Projects'),
+            icon: Icons.pending_actions_outlined,
+            label: 'Requests',
+            onTap: () => _comingSoon(context, 'Requests'),
           ),
           DashboardNavItem(
             icon: Icons.water_drop_outlined,

@@ -7,7 +7,6 @@ import 'package:water_ledger/features/dashboards/presentation/widgets/activity_t
 import 'package:water_ledger/features/dashboards/presentation/widgets/dashboard_bottom_nav.dart';
 import 'package:water_ledger/features/dashboards/presentation/widgets/dashboard_tokens.dart';
 import 'package:water_ledger/features/dashboards/presentation/widgets/dashboard_top_bar.dart';
-import 'package:water_ledger/features/dashboards/presentation/widgets/coming_soon_banner.dart';
 import 'package:water_ledger/features/dashboards/presentation/widgets/section_header.dart';
 
 class RetailDashboardScreen extends ConsumerWidget {
@@ -23,11 +22,6 @@ class RetailDashboardScreen extends ConsumerWidget {
         leading: TopBarBranded(
           avatarInitial: _avatarInitial(sessionAsync.value),
         ),
-        actions: const [
-          TopBarIconButton(icon: Icons.search_outlined),
-          SizedBox(width: 4),
-          TopBarIconButton(icon: Icons.settings_outlined),
-        ],
       ),
       body: SingleChildScrollView(
         padding: const EdgeInsets.fromLTRB(20, 20, 20, 24),
@@ -35,10 +29,6 @@ class RetailDashboardScreen extends ConsumerWidget {
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
             _buildWelcome(sessionAsync),
-            const SizedBox(height: 16),
-            const ComingSoonBanner(
-              feature: 'Marketplace e inversiones',
-            ),
             const SizedBox(height: 20),
             _buildPortfolioCard(),
             const SizedBox(height: 28),
