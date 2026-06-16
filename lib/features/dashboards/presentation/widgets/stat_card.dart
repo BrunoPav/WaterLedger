@@ -10,6 +10,7 @@ class StatCard extends StatelessWidget {
   final Color iconColor;
   final bool isLoading;
   final Widget? footer;
+  final VoidCallback? onMoreTap;
 
   const StatCard({
     super.key,
@@ -19,6 +20,7 @@ class StatCard extends StatelessWidget {
     this.iconColor = DashboardTokens.onPrimaryContainerColor,
     this.isLoading = false,
     this.footer,
+    this.onMoreTap,
   });
 
   @override
@@ -57,7 +59,19 @@ class StatCard extends StatelessWidget {
                   ),
                 ),
               ),
-              Icon(icon, size: 20, color: iconColor),
+              onMoreTap != null
+                  ? MouseRegion(
+                      cursor: SystemMouseCursors.click,
+                      child: GestureDetector(
+                        onTap: onMoreTap,
+                        child: const Icon(
+                          Icons.more_horiz,
+                          size: 20,
+                          color: DashboardTokens.onSurfaceVariantColor,
+                        ),
+                      ),
+                    )
+                  : Icon(icon, size: 20, color: iconColor),
             ],
           ),
           const SizedBox(height: 10),

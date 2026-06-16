@@ -28,6 +28,7 @@ import 'package:water_ledger/features/auth/presentation/screens/forgot_password_
 import 'package:water_ledger/features/auth/presentation/screens/login_screen.dart';
 import 'package:water_ledger/features/auth/presentation/screens/register_screen.dart';
 import 'package:water_ledger/features/shared/presentation/screens/splash_screen.dart';
+import 'package:water_ledger/features/credit_issuance/presentation/screens/company_requests_list_screen.dart';
 import 'package:water_ledger/features/credit_issuance/presentation/screens/credit_issuance_screen.dart';
 import 'package:water_ledger/features/credit_issuance/presentation/screens/submission_confirmation_screen.dart';
 import 'package:water_ledger/features/credit_issuance/presentation/screens/request_tracking_screen.dart';
@@ -201,6 +202,10 @@ final appRouterProvider = Provider<GoRouter>((ref) {
         builder: (context, state) => InsurerRequestDetailScreen(
           requestId: state.pathParameters['requestId']!,
         ),
+      ),
+      GoRoute(
+        path: '/company-requests',
+        builder: (context, state) => const CompanyRequestsListScreen(),
       ),
       GoRoute(
         path: '/credit-issuance',
