@@ -26,10 +26,7 @@ class AuditorProfileScreen extends ConsumerWidget {
           avatarInitial: user.displayName.trim().isEmpty
               ? null
               : user.displayName.trim()[0].toUpperCase(),
-        ),
-        actions: const [
-          TopBarIconButton(icon: Icons.notifications_outlined),
-        ],
+        )
       ),
       body: SingleChildScrollView(
         padding: const EdgeInsets.fromLTRB(20, 24, 20, 24),

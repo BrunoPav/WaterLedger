@@ -37,10 +37,7 @@ class AuditorDashboardScreen extends ConsumerWidget {
     return Scaffold(
       backgroundColor: DashboardTokens.bgColor,
       appBar: DashboardTopBar(
-        leading: const TopBarTitled(title: 'Auditor Dashboard'),
-        actions: const [
-          TopBarIconButton(icon: Icons.notifications_outlined, hasDot: false),
-        ],
+        leading: const TopBarTitled(title: 'Auditor Dashboard')
       ),
       body: RefreshIndicator(
         color: DashboardTokens.secondaryColor,
