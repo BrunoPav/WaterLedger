@@ -80,6 +80,11 @@ class _CorporateOnboardingScreenState
     final password = _passwordController.text;
     final companyName = _companyNameController.text.trim();
     final cuit = _taxIdController.text.trim();
+    // Datos de los pasos 1 y 2 que antes se recolectaban y se descartaban.
+    final legalName = _legalNameController.text.trim();
+    final country = _countryController.text.trim();
+    final phone = _phoneController.text.trim();
+    final address = _addressController.text.trim();
     // 4.1.2.6 + 4.1.2.7 — validación de email, password y CUIT antes de Firebase.
     final error = AuthValidators.firstError([
       () => AuthValidators.required(companyName, 'el nombre de la empresa'),
@@ -98,6 +103,13 @@ class _CorporateOnboardingScreenState
         password: password,
         companyName: companyName,
         cuit: cuit,
+        // Antes estos datos se recolectaban en los pasos 1 y 2 y se descartaban;
+        // ahora viajan al repositorio para guardarse en companyData.
+        legalName: legalName,
+        industry: _selectedIndustry,
+        country: country,
+        phone: phone,
+        address: address,
       );
       if (!mounted) return;
       context.go('/company-register-success');

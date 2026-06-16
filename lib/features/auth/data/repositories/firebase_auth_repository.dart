@@ -41,6 +41,12 @@ class FirebaseAuthRepository implements AuthRepository {
     required String password,
     required String fullName,
     required String dni,
+    // Datos adicionales del inversor retail: antes el form los pedía pero no se
+    // guardaban. Ahora llegan hasta acá y se persisten en retailData.
+    String phone = '',
+    String country = '',
+    List<String> interests = const [],
+    String riskProfile = '',
   }) {
     return _run(() async {
       final credential = await _auth.createUserWithEmailAndPassword(
@@ -59,7 +65,14 @@ class FirebaseAuthRepository implements AuthRepository {
       );
       await _db.collection('users').doc(uid).set({
         ...user.toFirestore(),
-        'retailData': {'fullName': fullName, 'dni': dni},
+        'retailData': {
+          'fullName': fullName,
+          'dni': dni,
+          'phone': phone,
+          'country': country,
+          'interests': interests,
+          'riskProfile': riskProfile,
+        },
       });
       return user;
     });
@@ -71,6 +84,13 @@ class FirebaseAuthRepository implements AuthRepository {
     required String password,
     required String companyName,
     required String cuit,
+    // Datos adicionales del onboarding corporativo: antes el form los pedía pero
+    // no se guardaban. Ahora llegan hasta acá y se persisten en companyData.
+    String legalName = '',
+    String industry = '',
+    String country = '',
+    String phone = '',
+    String address = '',
   }) {
     return _run(() async {
       final credential = await _auth.createUserWithEmailAndPassword(
@@ -89,7 +109,15 @@ class FirebaseAuthRepository implements AuthRepository {
       );
       await _db.collection('users').doc(uid).set({
         ...user.toFirestore(),
-        'companyData': {'companyName': companyName, 'cuit': cuit},
+        'companyData': {
+          'companyName': companyName,
+          'cuit': cuit,
+          'legalName': legalName,
+          'industry': industry,
+          'country': country,
+          'phone': phone,
+          'address': address,
+        },
       });
       return user;
     });

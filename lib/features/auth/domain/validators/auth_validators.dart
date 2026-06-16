@@ -19,6 +19,9 @@ class AuthValidators {
   // Teléfono mínimo: al menos 7 dígitos, opcionalmente con +, espacios, guiones, paréntesis.
   static final _phoneRegex = RegExp(r'^\+?[\d\s\-()]{7,}$');
 
+  // DNI argentino: 7 u 8 dígitos. Los puntos separadores se quitan antes de validar.
+  static final _dniRegex = RegExp(r'^\d{7,8}$');
+
   /// Email obligatorio + formato razonable.
   static String? email(String? value) {
     final v = value?.trim() ?? '';
@@ -74,6 +77,17 @@ class AuthValidators {
     if (v.isEmpty) return 'Ingresá un teléfono.';
     if (!_phoneRegex.hasMatch(v)) {
       return 'El teléfono tiene un formato inválido.';
+    }
+    return null;
+  }
+
+  /// DNI argentino (7 u 8 dígitos, con o sin puntos separadores de miles).
+  static String? dni(String? value) {
+    // Quitamos los puntos para aceptar tanto "12345678" como "12.345.678".
+    final v = (value ?? '').replaceAll('.', '').trim();
+    if (v.isEmpty) return 'Ingresá el DNI.';
+    if (!_dniRegex.hasMatch(v)) {
+      return 'El DNI tiene un formato inválido (7 u 8 dígitos).';
     }
     return null;
   }

@@ -13,6 +13,12 @@ abstract class AuthRepository {
     required String password,
     required String fullName,
     required String dni,
+    // Datos adicionales del inversor retail. Antes se recolectaban en el form
+    // pero se descartaban; ahora se persisten en retailData.
+    String phone = '',
+    String country = '',
+    List<String> interests = const [],
+    String riskProfile = '',
   });
 
   Future<UserModel> registerCompany({
@@ -20,6 +26,14 @@ abstract class AuthRepository {
     required String password,
     required String companyName,
     required String cuit,
+    // Datos adicionales del onboarding corporativo. Antes el form de 3 pasos los
+    // recolectaba (razón social, sector, país, teléfono, dirección) pero se
+    // descartaban; ahora se persisten en companyData.
+    String legalName = '',
+    String industry = '',
+    String country = '',
+    String phone = '',
+    String address = '',
   });
 
   Future<UserModel> registerAuditor({

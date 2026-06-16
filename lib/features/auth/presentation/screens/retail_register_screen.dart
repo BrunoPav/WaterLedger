@@ -18,6 +18,7 @@ class _RetailRegisterScreenState extends ConsumerState<RetailRegisterScreen> {
   final _lastNameController = TextEditingController();
   final _emailController = TextEditingController();
   final _phoneController = TextEditingController();
+  final _dniController = TextEditingController();
   final _passwordController = TextEditingController();
   bool _obscurePassword = true;
 
@@ -44,6 +45,10 @@ class _RetailRegisterScreenState extends ConsumerState<RetailRegisterScreen> {
     'Singapur',
     'Australia',
     'Argentina',
+    'Chile',
+    'Colombia',
+    'Perú',
+    'México',
   ];
 
   // -- Design tokens (consistentes con el resto de auth screens) --
@@ -64,6 +69,7 @@ class _RetailRegisterScreenState extends ConsumerState<RetailRegisterScreen> {
     _lastNameController.dispose();
     _emailController.dispose();
     _phoneController.dispose();
+    _dniController.dispose();
     _passwordController.dispose();
     super.dispose();
   }
@@ -73,6 +79,7 @@ class _RetailRegisterScreenState extends ConsumerState<RetailRegisterScreen> {
     final lastName = _lastNameController.text.trim();
     final email = _emailController.text.trim();
     final phone = _phoneController.text.trim();
+    final dni = _dniController.text.trim();
     final password = _passwordController.text;
 
     // Validación cliente: corta antes del round-trip a Firebase.
@@ -82,6 +89,7 @@ class _RetailRegisterScreenState extends ConsumerState<RetailRegisterScreen> {
       () => AuthValidators.email(email),
       // El phone es opcional en el form actual: solo valida formato si fue cargado.
       () => phone.isEmpty ? null : AuthValidators.phone(phone),
+      () => AuthValidators.dni(dni),
       () => AuthValidators.password(password),
     ]);
     if (error != null) {
@@ -95,7 +103,13 @@ class _RetailRegisterScreenState extends ConsumerState<RetailRegisterScreen> {
         email: email,
         password: password,
         fullName: '$firstName $lastName',
-        dni: '',
+        dni: dni,
+        // Antes estos datos se recolectaban en el form y se descartaban; ahora
+        // viajan al repositorio para guardarse en retailData.
+        phone: phone,
+        country: _selectedCountry,
+        interests: _selectedInterests.toList(),
+        riskProfile: _selectedRisk,
       );
       if (!mounted) return;
       context.go('/retail-register-success');
@@ -424,6 +438,13 @@ class _RetailRegisterScreenState extends ConsumerState<RetailRegisterScreen> {
                 controller: _phoneController,
                 hint: '+54 (11) 0000-0000',
                 keyboardType: TextInputType.phone,
+              ),
+              const SizedBox(height: 16),
+              _buildField(
+                label: 'DNI',
+                controller: _dniController,
+                hint: '12.345.678',
+                keyboardType: TextInputType.number,
               ),
               const SizedBox(height: 16),
               _buildCountryDropdown(),
