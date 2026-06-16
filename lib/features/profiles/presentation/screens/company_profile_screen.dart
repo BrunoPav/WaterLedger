@@ -33,9 +33,6 @@ class CompanyProfileScreen extends ConsumerWidget {
               ? null
               : user.displayName.trim()[0].toUpperCase(),
         ),
-        actions: const [
-          TopBarIconButton(icon: Icons.notifications_outlined),
-        ],
       ),
       body: SingleChildScrollView(
         padding: const EdgeInsets.fromLTRB(20, 24, 20, 24),

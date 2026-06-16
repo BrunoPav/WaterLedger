@@ -2,7 +2,7 @@
 
 > Documento de referencia detallada para el equipo (onboarding + historial).
 > Para la referencia operativa compacta ver [CLAUDE.md](../CLAUDE.md) en la raíz.
-> Última actualización: 2026-06-05.
+> Última actualización: 2026-06-15.
 
 ---
 
@@ -174,3 +174,13 @@ Respaldos: rama `Arquitectura-backup-pre-refactor-2026-06-04` + tag `pre-core-to
 - **C2:** extraer la lógica de upload de los registros B2B (`_uploadFile`/`_mimeType`/`tryUpload`, duplicada en auditor/certifier/insurance) a un servicio compartido
 - **C3:** unificar boilerplate de `HomeDispatcher` y `ProfileDispatcher`
 - **C4 (opcional):** template común para los dashboards
+
+### Bugfixes UI retail + admin (2026-06-15) — rama `fix/retail-dashboard-bugfixes`
+Ajustes de UI para ocultar elementos sin funcionalidad y unificar navegación:
+
+- **Retail dashboard** (`retail_dashboard_screen.dart`): eliminado `ComingSoonBanner` de "Marketplace e inversiones" (+ import sin uso). Removidos los botones de top bar lupa (`search_outlined`) y engranaje (`settings_outlined`).
+- **Retail perfil** (`retail_profile_screen.dart`): removido el botón de notificaciones (`notifications_outlined`) del top bar.
+- **Company perfil** (`company_profile_screen.dart`): removida la campanita de notificaciones (`notifications_outlined`) del top bar, sin función.
+- **Auditor dashboard** (`auditor_dashboard_screen.dart`): eliminado el banner "Eficiencia de Auditoría" del final (placeholder Rendimiento/Capacidad en `—`), junto con su método `_buildEfficiencyCard()` sin uso.
+- **Auditor perfil** (`auditor_profile_screen.dart`): el botón "Audits" del bottom nav mostraba `_comingSoon` en vez de navegar. Ahora hace `context.push('/auditor')` igual que el del dashboard.
+- **Admin navbar unificado**: el 2º ítem del bottom nav del perfil decía "Projects" (`account_tree_outlined`) y no coincidía con el dashboard. Ahora ambos dicen "Requests" (`pending_actions_outlined`, aviso `_comingSoon('Requests')`).

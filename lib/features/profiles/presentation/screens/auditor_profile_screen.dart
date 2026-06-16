@@ -103,7 +103,7 @@ class AuditorProfileScreen extends ConsumerWidget {
           DashboardNavItem(
             icon: Icons.pending_actions_outlined,
             label: 'Audits',
-            onTap: () => _comingSoon(context, 'Audits'),
+            onTap: () => context.push('/auditor'),
           ),
           DashboardNavItem(
             icon: Icons.notifications_outlined,
