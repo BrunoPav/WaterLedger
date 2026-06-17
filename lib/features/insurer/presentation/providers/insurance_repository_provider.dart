@@ -3,15 +3,10 @@ import 'package:water_ledger/features/insurer/data/repositories/firebase_insuran
 import 'package:water_ledger/features/insurer/domain/entities/insurance_plan_entity.dart';
 import 'package:water_ledger/features/insurer/domain/repositories/insurance_repository.dart';
 import 'package:water_ledger/features/insurer/domain/use_cases/create_insurance_plan_use_case.dart';
-import 'package:water_ledger/features/insurer/domain/use_cases/get_insurance_plan_use_case.dart';
 import 'package:water_ledger/features/insurer/domain/use_cases/reject_insurance_use_case.dart';
 
 final insuranceRepositoryProvider = Provider<InsuranceRepository>((ref) {
   return FirebaseInsuranceRepository();
-});
-
-final getInsurancePlanUseCaseProvider = Provider<GetInsurancePlanUseCase>((ref) {
-  return GetInsurancePlanUseCase(ref.watch(insuranceRepositoryProvider));
 });
 
 final createInsurancePlanUseCaseProvider = Provider<CreateInsurancePlanUseCase>((ref) {

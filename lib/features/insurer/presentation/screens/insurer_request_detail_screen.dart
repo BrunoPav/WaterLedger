@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 import 'package:intl/intl.dart';
@@ -7,11 +8,13 @@ import 'package:water_ledger/features/certifier/domain/entities/certification_en
 import 'package:water_ledger/features/certifier/domain/enums/certification_status.dart';
 import 'package:water_ledger/features/certifier/presentation/providers/certification_repository_provider.dart';
 import 'package:water_ledger/features/credit_issuance/domain/entities/credit_request_entity.dart';
+import 'package:water_ledger/features/credit_issuance/presentation/constants/request_status_colors.dart';
 import 'package:water_ledger/features/insurer/domain/entities/insurance_plan_entity.dart';
 import 'package:water_ledger/features/insurer/domain/enums/insurance_plan_status.dart';
 import 'package:water_ledger/features/insurer/domain/enums/insurance_plan_type.dart';
 import 'package:water_ledger/features/insurer/presentation/providers/insurance_repository_provider.dart';
 import 'package:water_ledger/features/insurer/presentation/providers/insurer_provider.dart';
+import 'package:water_ledger/features/shared/domain/validators/field_rules.dart';
 
 // ── Design tokens ─────────────────────────────────────────────────────────────
 const _bgColor               = Color(0xFFF7F9FB);
@@ -23,17 +26,8 @@ const _outlineVariantColor   = Color(0xFFC5C6CD);
 const _surfaceColor          = Color(0xFFFFFFFF);
 const _errorColor            = Color(0xFFC62828);
 const _successColor          = Color(0xFF2E7D32);
-
-const _statusMeta = <String, (String, Color)>{
-  'draft':      ('Borrador',      Color(0xFF9E9E9E)),
-  'pending':    ('Pendiente',     Color(0xFFFF8F00)),
-  'underAudit': ('En auditoría',  Color(0xFF1565C0)),
-  'certified':  ('Aprobado Auditoría', Color(0xFF2E7D32)),
-  'insured':    ('Listo para asegurar', Color(0xFF00695C)),
-  'valued':     ('Valorado',      Color(0xFF6A1B9A)),
-  'published':  ('Publicado',     Color(0xFF1B5E20)),
-  'rejected':   ('Rechazado',     Color(0xFFC62828)),
-};
+const _maxCoverageUsd        = 1000000000;
+const _notesMinLength        = 10;
 
 class InsurerRequestDetailScreen extends ConsumerStatefulWidget {
   const InsurerRequestDetailScreen({super.key, required this.requestId});
@@ -65,22 +59,42 @@ class _InsurerRequestDetailScreenState
   // ── Actions ──────────────────────────────────────────────────────────────────
 
   Future<void> _createPlan() async {
-    final coverage = double.tryParse(_coverageCtrl.text.trim().replaceAll(',', '.'));
-    final premium  = double.tryParse(_premiumCtrl.text.trim().replaceAll(',', '.'));
-    final notes    = _notesCtrl.text.trim();
+    final coverageError = FieldRules.decimalAmount(
+      min: 1,
+      max: _maxCoverageUsd,
+      requiredMessage: 'El monto de cobertura es obligatorio.',
+      belowMinMessage: 'El monto de cobertura debe ser mayor a cero.',
+      aboveMaxMessage: 'El monto de cobertura supera el máximo permitido (USD $_maxCoverageUsd).',
+    )(_coverageCtrl.text);
+    if (coverageError != null) {
+      _showError(coverageError);
+      return;
+    }
 
-    if (coverage == null || coverage <= 0) {
-      _showError('Ingresá un monto de cobertura válido.');
+    final premiumError = FieldRules.decimalAmount(
+      min: 0.01,
+      max: 100,
+      requiredMessage: 'La tasa de prima es obligatoria.',
+      belowMinMessage: 'La tasa de prima debe ser mayor a cero.',
+      aboveMaxMessage: 'La tasa de prima no puede superar 100 %.',
+    )(_premiumCtrl.text);
+    if (premiumError != null) {
+      _showError(premiumError);
       return;
     }
-    if (premium == null || premium <= 0 || premium > 100) {
-      _showError('Ingresá una tasa de prima válida (0–100 %).');
+
+    final notesError = FieldRules.compose([
+      FieldRules.required('Las notas son obligatorias.'),
+      FieldRules.minLength(_notesMinLength, message: 'Las notas deben tener al menos $_notesMinLength caracteres.'),
+    ])(_notesCtrl.text);
+    if (notesError != null) {
+      _showError(notesError);
       return;
     }
-    if (notes.isEmpty) {
-      _showError('Las notas son obligatorias.');
-      return;
-    }
+
+    final coverage = double.parse(_coverageCtrl.text.trim().replaceAll(',', '.'));
+    final premium  = double.parse(_premiumCtrl.text.trim().replaceAll(',', '.'));
+    final notes    = _notesCtrl.text.trim();
 
     final confirmed = await _showConfirmDialog(
       action: 'Crear Plan de Seguro',
@@ -121,11 +135,15 @@ class _InsurerRequestDetailScreenState
   }
 
   Future<void> _rejectInsurance() async {
-    final notes = _notesCtrl.text.trim();
-    if (notes.isEmpty) {
-      _showError('Las notas son obligatorias antes de rechazar.');
+    final notesError = FieldRules.compose([
+      FieldRules.required('Las notas son obligatorias antes de rechazar.'),
+      FieldRules.minLength(_notesMinLength, message: 'Las notas deben tener al menos $_notesMinLength caracteres.'),
+    ])(_notesCtrl.text);
+    if (notesError != null) {
+      _showError(notesError);
       return;
     }
+    final notes = _notesCtrl.text.trim();
 
     final confirmed = await _showConfirmDialog(
       action: 'Rechazar Aseguramiento',
@@ -507,8 +525,8 @@ class _InsurerRequestDetailScreenState
   // ── Request info cards ────────────────────────────────────────────────────────
 
   Widget _buildStatusHeader(CreditRequestEntity request) {
-    final statusKey = request.status.name;
-    final (label, color) = _statusMeta[statusKey] ?? ('Desconocido', const Color(0xFF9E9E9E));
+    final label = request.status.label;
+    final color = requestStatusColor(request.status);
     final date = request.submittedAt ?? request.createdAt;
 
     return Container(
@@ -687,6 +705,7 @@ class _InsurerRequestDetailScreenState
   Widget _numericField(TextEditingController ctrl, String hint) => TextField(
         controller: ctrl,
         keyboardType: const TextInputType.numberWithOptions(decimal: true),
+        inputFormatters: [FilteringTextInputFormatter.allow(RegExp(r'[0-9.,]'))],
         style: const TextStyle(fontFamily: 'Inter', fontSize: 13),
         decoration: _fieldDecoration(hint),
       );

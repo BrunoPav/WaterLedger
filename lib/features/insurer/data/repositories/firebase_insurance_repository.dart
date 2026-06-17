@@ -57,7 +57,7 @@ class FirebaseInsuranceRepository implements InsuranceRepository {
     final batch = FirebaseFirestore.instance.batch();
     batch.set(_plans.doc(requestId), entity.toMap());
     batch.update(_requests.doc(requestId), {
-      'status': RequestStatus.valued.name,
+      'status': RequestStatus.insured.name,
       'updatedAt': FieldValue.serverTimestamp(),
     });
     await batch.commit();
