@@ -5,6 +5,8 @@ import 'package:intl/intl.dart';
 import 'package:water_ledger/features/credit_issuance/domain/entities/credit_request_entity.dart';
 import 'package:water_ledger/features/credit_issuance/domain/enums/request_status.dart';
 import 'package:water_ledger/features/credit_issuance/presentation/providers/company_requests_provider.dart';
+import 'package:water_ledger/features/credit_issuance/presentation/providers/credit_request_notifier.dart';
+import 'package:water_ledger/features/credit_issuance/presentation/providers/repository_provider.dart';
 import 'package:water_ledger/features/dashboards/presentation/widgets/dashboard_tokens.dart';
 
 class CompanyRequestsListScreen extends ConsumerWidget {
@@ -61,6 +63,51 @@ class CompanyRequestsListScreen extends ConsumerWidget {
 
           if (active.isEmpty) return const _EmptyState();
 
+          void continueDraft(CreditRequestEntity draft) {
+            ref.read(creditRequestProvider.notifier).loadDraft(draft);
+            context.push('/credit-issuance');
+          }
+
+          Future<void> deleteDraft(CreditRequestEntity draft) async {
+            final confirmed = await showDialog<bool>(
+              context: context,
+              builder: (_) => AlertDialog(
+                title: const Text(
+                  'Eliminar borrador',
+                  style: TextStyle(fontFamily: 'Manrope', fontWeight: FontWeight.w700),
+                ),
+                content: const Text(
+                  '¿Querés eliminar este borrador? Esta acción no se puede deshacer.',
+                  style: TextStyle(fontFamily: 'Inter'),
+                ),
+                actions: [
+                  TextButton(
+                    onPressed: () => Navigator.pop(context, false),
+                    child: const Text('Cancelar'),
+                  ),
+                  TextButton(
+                    onPressed: () => Navigator.pop(context, true),
+                    child: const Text(
+                      'Eliminar',
+                      style: TextStyle(color: DashboardTokens.errorColor),
+                    ),
+                  ),
+                ],
+              ),
+            );
+            if (confirmed != true) return;
+            try {
+              await ref.read(creditIssuanceRepositoryProvider).deleteDraft(draft.id);
+              ref.invalidate(companyRequestsProvider);
+            } catch (_) {
+              if (context.mounted) {
+                ScaffoldMessenger.of(context).showSnackBar(
+                  const SnackBar(content: Text('No se pudo eliminar el borrador.')),
+                );
+              }
+            }
+          }
+
           return RefreshIndicator(
             color: DashboardTokens.secondaryColor,
             onRefresh: () => ref.refresh(companyRequestsProvider.future),
@@ -68,10 +115,17 @@ class CompanyRequestsListScreen extends ConsumerWidget {
               padding: const EdgeInsets.fromLTRB(16, 16, 16, 32),
               itemCount: active.length,
               separatorBuilder: (_, _) => const SizedBox(height: 12),
-              itemBuilder: (context, i) => _RequestTile(
-                request: active[i],
-                onTap: () => context.push('/request-tracking/${active[i].id}'),
-              ),
+              itemBuilder: (context, i) {
+                final r = active[i];
+                final isDraft = r.status == RequestStatus.draft;
+                return _RequestTile(
+                  request: r,
+                  onTap: isDraft
+                      ? () => continueDraft(r)
+                      : () => context.push('/request-tracking/${r.id}'),
+                  onDelete: isDraft ? () => deleteDraft(r) : null,
+                );
+              },
             ),
           );
         },
@@ -82,10 +136,15 @@ class CompanyRequestsListScreen extends ConsumerWidget {
 
 // ── Tile de request ───────────────────────────────────────────────────────────
 class _RequestTile extends StatelessWidget {
-  const _RequestTile({required this.request, required this.onTap});
+  const _RequestTile({
+    required this.request,
+    required this.onTap,
+    this.onDelete,
+  });
 
   final CreditRequestEntity request;
   final VoidCallback onTap;
+  final VoidCallback? onDelete;
 
   @override
   Widget build(BuildContext context) {
@@ -183,11 +242,19 @@ class _RequestTile extends StatelessWidget {
                 ],
               ),
             ),
-            const Icon(
-              Icons.chevron_right,
-              color: DashboardTokens.onSurfaceVariantColor,
-              size: 20,
-            ),
+            if (onDelete != null)
+              IconButton(
+                icon: const Icon(Icons.delete_outline, size: 20),
+                color: DashboardTokens.errorColor,
+                tooltip: 'Eliminar borrador',
+                onPressed: onDelete,
+              )
+            else
+              const Icon(
+                Icons.chevron_right,
+                color: DashboardTokens.onSurfaceVariantColor,
+                size: 20,
+              ),
           ],
         ),
       ),

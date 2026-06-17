@@ -8,6 +8,7 @@ import 'package:water_ledger/features/credit_issuance/domain/entities/credit_req
 import 'package:water_ledger/features/credit_issuance/domain/enums/request_status.dart';
 import 'package:intl/intl.dart';
 import 'package:water_ledger/features/credit_issuance/presentation/providers/company_requests_provider.dart';
+import 'package:water_ledger/features/credit_issuance/presentation/providers/credit_request_notifier.dart';
 import 'package:water_ledger/features/dashboards/presentation/providers/activity_providers.dart';
 import 'package:water_ledger/features/dashboards/presentation/widgets/activity_tile.dart';
 import 'package:water_ledger/features/dashboards/presentation/widgets/dashboard_bottom_nav.dart';
@@ -187,7 +188,10 @@ class CompanyDashboardScreen extends ConsumerWidget {
   //  CTA PRIMARIO — Request Water Credit Issuance
   // ------------------------------------------------------------------ //
   Widget _buildPrimaryCta(BuildContext context, WidgetRef ref) {
-    return _PrimaryCtaCard(onTap: () => context.push('/credit-issuance'));
+    return _PrimaryCtaCard(onTap: () {
+      ref.read(creditRequestProvider.notifier).reset();
+      context.push('/credit-issuance');
+    });
   }
 
   // ------------------------------------------------------------------ //

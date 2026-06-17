@@ -47,27 +47,6 @@ class _RegisterScreenState extends State<RegisterScreen> {
                 children: [
                   _buildTitleSection(),
                   const SizedBox(height: 32),
-                  // Cards anteriores (2 tipos) — comentados al expandir a 5 tipos:
-                  // _buildCard(
-                  //   type: _AccountType.retailInvestor,
-                  //   icon: Icons.person_outline,
-                  //   title: 'Retail Investor',
-                  //   description: 'Explore and invest in water credits',
-                  //   features: [
-                  //     (Icons.show_chart, 'Micro-investments'),
-                  //     (Icons.account_balance_wallet_outlined, 'Digital Wallet'),
-                  //   ],
-                  // ),
-                  // _buildCard(
-                  //   type: _AccountType.company,
-                  //   icon: Icons.corporate_fare,
-                  //   title: 'Company / Organization',
-                  //   description: 'Buy credits or request issuance for water sustainability projects',
-                  //   features: [
-                  //     (Icons.verified_outlined, 'Project Issuance'),
-                  //     (Icons.pie_chart_outline, 'ESG Reporting'),
-                  //   ],
-                  // ),
                   _buildCard(
                     type: _AccountType.retailInvestor,
                     icon: Icons.person_outline,

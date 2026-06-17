@@ -1,5 +1,6 @@
 import 'dart:ui';
 import 'package:flutter/material.dart';
+import 'package:water_ledger/core/presentation/widgets/date_picker_field.dart';
 
 // ======================================================================
 // TOKENS
@@ -772,15 +773,10 @@ class StepEmpresaForm extends StatelessWidget {
           maxLines: 2,
         ),
         const SizedBox(height: 16),
-        RegisterField(
+        DatePickerField(
           label: 'Fecha de constitución',
           controller: controllers.fechaConstitucion,
-          hint: 'DD/MM/AAAA',
-          suffix: const Icon(
-            Icons.calendar_today_outlined,
-            size: 18,
-            color: RegisterFormTokens.onSurfaceVariantColor,
-          ),
+          lastDate: DateTime.now(),
         ),
         const SizedBox(height: 16),
         RegisterField(

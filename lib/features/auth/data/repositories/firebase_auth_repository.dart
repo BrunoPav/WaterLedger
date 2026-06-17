@@ -31,7 +31,7 @@ class FirebaseAuthRepository implements AuthRepository {
         email: email,
         password: password,
       );
-      return _fetchUserModel(credential.user!.uid);
+      return _fetchUserModelForLogin(credential.user!.uid);
     });
   }
 
@@ -254,47 +254,6 @@ class FirebaseAuthRepository implements AuthRepository {
   }
 
   Future<UserModel> _fetchUserModel(String uid) async {
-    // Versión anterior con polling 3 × 400ms — comentada porque tenía un race
-    // condition durante el registro: createUserWithEmailAndPassword dispara
-    // authStateChanges INMEDIATAMENTE, antes de que el set() del doc termine.
-    // Si Firestore tardaba más de ~1.2s en escribir, _fetchUserModel tiraba
-    // AuthException y dejaba al sessionProvider en error state. El usuario
-    // quedaba logueado en Firebase Auth pero sin UserModel, y el router lo
-    // pateaba a /login en loop.
-    //
-    // const maxAttempts = 3;
-    // for (var attempt = 1; attempt <= maxAttempts; attempt++) {
-    //   try {
-    //     final doc = await _db
-    //         .collection('users')
-    //         .doc(uid)
-    //         .get()
-    //         .timeout(const Duration(seconds: 5));
-    //     if (doc.exists) {
-    //       return UserModel.fromFirestore(doc.data()!, uid);
-    //     }
-    //   } on Exception catch (e) {
-    //     if (attempt == maxAttempts) {
-    //       throw AuthException(
-    //         'No se pudo leer tu perfil. Revisá tu conexión y reintentá. ($e)',
-    //         code: 'user-doc-fetch-failed',
-    //       );
-    //     }
-    //   }
-    //   if (attempt < maxAttempts) {
-    //     await Future.delayed(const Duration(milliseconds: 400));
-    //   }
-    // }
-    // throw AuthException(
-    //   'No se encontró el perfil del usuario. Si te acabás de registrar, esperá unos segundos y reintentá.',
-    //   code: 'user-doc-missing',
-    // );
-
-    // Versión nueva: escuchamos snapshots() en vivo y resolvemos en cuanto el
-    // doc aparece. Esto sirve tanto si el doc ya existe (snapshot inicial) como
-    // si está por escribirse en paralelo (snapshot subsecuente). Timeout de 10s
-    // para no colgarse forever si nunca se materializa el doc (red caída, reglas
-    // bloqueando, etc.).
     try {
       final snap = await _db
           .collection('users')
@@ -308,6 +267,39 @@ class FirebaseAuthRepository implements AuthRepository {
         'No se encontró el perfil del usuario después de 10 segundos. Reintentá iniciando sesión.',
         code: 'user-doc-missing',
       );
+    } on Exception catch (e) {
+      throw AuthException(
+        'No se pudo leer tu perfil. Revisá tu conexión y reintentá. ($e)',
+        code: 'user-doc-fetch-failed',
+      );
+    }
+  }
+
+  /// Para el flujo de login: hace un get() directo sin esperar. Si el doc no
+  /// existe, cierra la sesión de Auth y falla inmediatamente.
+  Future<UserModel> _fetchUserModelForLogin(String uid) async {
+    try {
+      final doc = await _db
+          .collection('users')
+          .doc(uid)
+          .get()
+          .timeout(const Duration(seconds: 10));
+      if (!doc.exists) {
+        await _auth.signOut();
+        throw AuthException(
+          'No se encontró un perfil asociado a esta cuenta.',
+          code: 'user-doc-missing',
+        );
+      }
+      return UserModel.fromFirestore(doc.data()!, uid);
+    } on TimeoutException {
+      await _auth.signOut();
+      throw AuthException(
+        'No se pudo conectar con el servidor. Revisá tu conexión y reintentá.',
+        code: 'user-doc-fetch-timeout',
+      );
+    } on AuthException {
+      rethrow;
     } on Exception catch (e) {
       throw AuthException(
         'No se pudo leer tu perfil. Revisá tu conexión y reintentá. ($e)',
