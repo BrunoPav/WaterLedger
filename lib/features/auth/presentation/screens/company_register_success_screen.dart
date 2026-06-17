@@ -125,8 +125,6 @@ class _CompanyRegisterSuccessScreenState
               _buildBentoGrid(),
               const SizedBox(height: 32),
               _buildPrimaryButton(),
-              const SizedBox(height: 16),
-              _buildSecondaryButton(),
             ],
           ),
         ),
@@ -286,30 +284,6 @@ class _CompanyRegisterSuccessScreenState
     );
   }
 
-  // ------------------------------------------------------------------ //
-  //  BOTÓN SECUNDARIO — Download Onboarding Guide
-  // ------------------------------------------------------------------ //
-  Widget _buildSecondaryButton() {
-    return TextButton(
-      onPressed: () {},
-      style: TextButton.styleFrom(
-        foregroundColor: _onSurfaceVariantColor,
-        padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
-        shape: RoundedRectangleBorder(
-          borderRadius: BorderRadius.circular(99),
-        ),
-      ),
-      child: const Text(
-        'Download Onboarding Guide',
-        style: TextStyle(
-          fontFamily: 'Inter',
-          fontSize: 13,
-          fontWeight: FontWeight.w600,
-          letterSpacing: 0.3,
-        ),
-      ),
-    );
-  }
 }
 
 // ------------------------------------------------------------------ //

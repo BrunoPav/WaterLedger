@@ -1,7 +1,9 @@
 import 'dart:ui';
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
+import 'package:water_ledger/features/credit_issuance/domain/entities/credit_request_entity.dart';
 import 'package:water_ledger/features/credit_issuance/domain/entities/sustainability_goal_entity.dart';
 import 'package:water_ledger/features/credit_issuance/domain/entities/water_project_entity.dart';
 import 'package:water_ledger/features/credit_issuance/domain/entities/roadmap_entity.dart';
@@ -43,7 +45,7 @@ class CreditIssuanceScreen extends ConsumerStatefulWidget {
 }
 
 class _CreditIssuanceScreenState extends ConsumerState<CreditIssuanceScreen> {
-  final _pageController = PageController();
+  late PageController _pageController;
   int _currentStep = 0;
   bool _isLoading = false;
 
@@ -62,6 +64,36 @@ class _CreditIssuanceScreenState extends ConsumerState<CreditIssuanceScreen> {
   final _goalDescCtrl    = TextEditingController();
   final _environmentCtrl = TextEditingController();
   final _creditAmtCtrl   = TextEditingController();
+
+  @override
+  void initState() {
+    super.initState();
+    final existing = ref.read(creditRequestProvider);
+    final startPage = existing.id.isNotEmpty ? 1 : 0;
+    _pageController = PageController(initialPage: startPage);
+    _currentStep = startPage;
+    if (existing.id.isNotEmpty) _prefillFromDraft(existing);
+  }
+
+  void _prefillFromDraft(CreditRequestEntity draft) {
+    final project = draft.project;
+    if (project != null) {
+      _nameCtrl.text = project.name;
+      _locationCtrl.text = project.location;
+      _category = project.category;
+      if (project.estimatedInvestment > 0) {
+        _investmentCtrl.text = project.estimatedInvestment.toStringAsFixed(0);
+      }
+      _summaryCtrl.text = project.summary;
+      _impactCtrl.text = project.expectedWaterImpact;
+      _objectiveCtrl.text = project.sustainabilityGoal.objective;
+      _goalDescCtrl.text = project.sustainabilityGoal.description;
+      _environmentCtrl.text = project.sustainabilityGoal.benefittedEnvironment;
+    }
+    if (draft.creditAmount > 0) {
+      _creditAmtCtrl.text = draft.creditAmount.toStringAsFixed(0);
+    }
+  }
 
   @override
   void dispose() {
@@ -89,6 +121,11 @@ class _CreditIssuanceScreenState extends ConsumerState<CreditIssuanceScreen> {
 
   // ── Step 0: Company Confirmation ────────────────────────────────────────────
   Future<void> _handleStep0Confirm() async {
+    final existing = ref.read(creditRequestProvider);
+    if (existing.id.isNotEmpty) {
+      _goToStep(1);
+      return;
+    }
     final user = ref.read(sessionProvider).value;
     if (user == null) return;
     setState(() => _isLoading = true);
@@ -547,7 +584,7 @@ class _CreditIssuanceScreenState extends ConsumerState<CreditIssuanceScreen> {
                   ),
                   const SizedBox(height: 20),
                   _fieldLabel('Inversión Estimada (USD)'),
-                  _textField(controller: _investmentCtrl, hint: '500,000', prefix: Icons.payments_outlined, type: TextInputType.number),
+                  _textField(controller: _investmentCtrl, hint: '500,000', prefix: Icons.payments_outlined, type: TextInputType.number, numericOnly: true),
                   const SizedBox(height: 20),
                   _fieldLabel('Resumen del Proyecto'),
                   _textField(controller: _summaryCtrl, hint: 'Describí brevemente los objetivos centrales...', maxLines: 4),
@@ -618,6 +655,7 @@ class _CreditIssuanceScreenState extends ConsumerState<CreditIssuanceScreen> {
                     prefix: Icons.water_drop_outlined,
                     type: TextInputType.number,
                     helperText: 'Cada crédito representa 1 m³ de agua conservada o recuperada.',
+                    numericOnly: true,
                   ),
                 ],
               ),
@@ -736,12 +774,23 @@ class _CreditIssuanceScreenState extends ConsumerState<CreditIssuanceScreen> {
     TextInputType? type,
     int maxLines = 1,
     String? helperText,
+    bool numericOnly = false,
   }) {
     return TextFormField(
       controller: controller,
       keyboardType: type,
       maxLines: maxLines,
-      validator: (v) => (v == null || v.trim().isEmpty) ? 'Campo requerido' : null,
+      inputFormatters: numericOnly
+          ? [FilteringTextInputFormatter.allow(RegExp(r'[0-9,]'))]
+          : null,
+      validator: (v) {
+        if (v == null || v.trim().isEmpty) return 'Campo requerido';
+        if (numericOnly) {
+          final parsed = double.tryParse(v.replaceAll(',', ''));
+          if (parsed == null || parsed <= 0) return 'Ingresá un valor numérico válido mayor a cero';
+        }
+        return null;
+      },
       style: const TextStyle(fontFamily: 'Inter', fontSize: 15, color: _onSurfaceColor),
       decoration: _inputDecoration(hint: hint, prefix: prefix, helperText: helperText),
     );
