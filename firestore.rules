@@ -172,6 +172,33 @@ service cloud.firestore {
       allow delete: if isAdmin();
     }
 
+    // ---------- insurancePlans (módulo 4.5) ----------
+    // Un documento por creditRequest (mismo ID). A diferencia de audits, no hay
+    // asegurador asignado 1:1 — cualquier Insurer activo puede tomar una
+    // solicitud en estado 'insured' y crear o rechazar el plan.
+    match /insurancePlans/{requestId} {
+
+      function isActiveInsurer() {
+        return isSignedIn()
+          && callerData().role == 'Insurer'
+          && callerData().status == 'active';
+      }
+
+      // Read: cualquier asegurador activo (para listar/seguir su propia cola) o admin
+      allow read: if isActiveInsurer() || isAdmin();
+
+      // Create: solo el asegurador activo que firma el plan, sobre una solicitud
+      // que esté efectivamente en estado 'insured'
+      allow create: if isActiveInsurer()
+                    && request.resource.data.insurerId == request.auth.uid
+                    && request.resource.data.status in ['active', 'rejected']
+                    && get(/databases/$(database)/documents/creditRequests/$(requestId))
+                         .data.status == 'insured';
+
+      // Update/Delete: el plan es inmutable una vez creado — solo admin
+      allow update, delete: if isAdmin();
+    }
+
     // ---------- projects, certifications, valuations ----------
     // Colecciones referenciadas en KPIs del admin dashboard.
     // Por ahora: solo admin lee/escribe. Las reglas se irán afinando cuando

@@ -1,10 +1,13 @@
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 import 'package:intl/intl.dart';
 import 'package:water_ledger/features/auth/presentation/providers/session_provider.dart';
 import 'package:water_ledger/features/credit_issuance/domain/entities/credit_request_entity.dart';
 import 'package:water_ledger/features/credit_issuance/domain/enums/request_status.dart';
+import 'package:water_ledger/features/credit_issuance/presentation/constants/request_status_colors.dart';
+import 'package:water_ledger/features/shared/domain/validators/field_rules.dart';
 import 'package:water_ledger/features/valuation/domain/entities/valuation_entity.dart';
 import 'package:water_ledger/features/valuation/domain/enums/valuation_status.dart';
 import 'package:water_ledger/features/valuation/presentation/providers/valuation_repository_provider.dart';
@@ -20,18 +23,8 @@ const _errorColor            = Color(0xFFC62828);
 const _successColor          = Color(0xFF2E7D32);
 const _valuedColor           = Color(0xFF6A1B9A);
 const _publishedColor        = Color(0xFF1B5E20);
-const _insuredColor          = Color(0xFF00695C);
-
-const _statusMeta = <String, (String, Color)>{
-  'draft':      ('Borrador',      Color(0xFF9E9E9E)),
-  'pending':    ('Pendiente',     Color(0xFFFF8F00)),
-  'underAudit': ('En auditoría',  Color(0xFF1565C0)),
-  'certified':  ('Certificado',   Color(0xFF2E7D32)),
-  'insured':    ('Asegurado',     _insuredColor),
-  'valued':     ('Valorizado',    _valuedColor),
-  'published':  ('Publicado',     _publishedColor),
-  'rejected':   ('Rechazado',     Color(0xFFC62828)),
-};
+const _maxAssessedValueUsd   = 1000000000;
+const _notesMinLength        = 10;
 
 class AdminValuationDetailScreen extends ConsumerStatefulWidget {
   const AdminValuationDetailScreen({super.key, required this.requestId});
@@ -76,17 +69,30 @@ class _AdminValuationDetailScreenState
   // ── Actions ──────────────────────────────────────────────────────────────────
 
   Future<void> _appraise(CreditRequestEntity request) async {
-    final assessed = _parsedAssessedValue;
-    if (assessed == null || assessed <= 0) {
-      _showError('Ingresá un monto valorizado válido (mayor a 0).');
+    final assessedError = FieldRules.decimalAmount(
+      min: 1,
+      max: _maxAssessedValueUsd,
+      requiredMessage: 'El monto valorizado es obligatorio.',
+      belowMinMessage: 'El monto valorizado debe ser mayor a cero.',
+      aboveMaxMessage: 'El monto valorizado supera el máximo permitido (USD $_maxAssessedValueUsd).',
+    )(_assessedValueCtrl.text);
+    if (assessedError != null) {
+      _showError(assessedError);
       return;
     }
+
+    final notesError = FieldRules.compose([
+      FieldRules.required('Las notas son obligatorias.'),
+      FieldRules.minLength(_notesMinLength, message: 'Las notas deben tener al menos $_notesMinLength caracteres.'),
+    ])(_notesCtrl.text);
+    if (notesError != null) {
+      _showError(notesError);
+      return;
+    }
+
+    final assessed = _parsedAssessedValue!;
     final methodology = _methodologyCtrl.text.trim();
     final notes = _notesCtrl.text.trim();
-    if (notes.isEmpty) {
-      _showError('Las notas son obligatorias.');
-      return;
-    }
 
     final confirmed = await _showConfirmDialog(
       action: 'Confirmar Valorización',
@@ -128,11 +134,15 @@ class _AdminValuationDetailScreenState
   }
 
   Future<void> _reject() async {
-    final notes = _notesCtrl.text.trim();
-    if (notes.isEmpty) {
-      _showError('Las notas son obligatorias antes de rechazar.');
+    final notesError = FieldRules.compose([
+      FieldRules.required('Las notas son obligatorias antes de rechazar.'),
+      FieldRules.minLength(_notesMinLength, message: 'Las notas deben tener al menos $_notesMinLength caracteres.'),
+    ])(_notesCtrl.text);
+    if (notesError != null) {
+      _showError(notesError);
       return;
     }
+    final notes = _notesCtrl.text.trim();
     final confirmed = await _showConfirmDialog(
       action: 'Rechazar Valorización',
       message: '¿Confirmás el rechazo? Esta acción no se puede deshacer.',
@@ -333,9 +343,8 @@ class _AdminValuationDetailScreenState
   // ── Status header ─────────────────────────────────────────────────────────────
 
   Widget _buildStatusHeader(CreditRequestEntity request) {
-    final statusKey = request.status.name;
-    final (label, color) =
-        _statusMeta[statusKey] ?? ('Desconocido', const Color(0xFF9E9E9E));
+    final label = request.status.label;
+    final color = requestStatusColor(request.status);
     final date = request.submittedAt ?? request.createdAt;
 
     return Container(
@@ -588,6 +597,7 @@ class _AdminValuationDetailScreenState
           TextField(
             controller: _assessedValueCtrl,
             keyboardType: const TextInputType.numberWithOptions(decimal: true),
+            inputFormatters: [FilteringTextInputFormatter.allow(RegExp(r'[0-9.,]'))],
             style: const TextStyle(fontFamily: 'Inter', fontSize: 13),
             onChanged: (_) => setState(() {}),
             decoration: _inputDecoration(

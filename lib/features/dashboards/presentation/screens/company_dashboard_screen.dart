@@ -1,4 +1,4 @@
-import 'dart:ui';
+﻿import 'dart:ui';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
@@ -8,6 +8,7 @@ import 'package:water_ledger/features/credit_issuance/domain/entities/credit_req
 import 'package:water_ledger/features/credit_issuance/domain/enums/request_status.dart';
 import 'package:intl/intl.dart';
 import 'package:water_ledger/features/credit_issuance/presentation/providers/company_requests_provider.dart';
+import 'package:water_ledger/features/credit_issuance/presentation/providers/credit_request_notifier.dart';
 import 'package:water_ledger/features/dashboards/presentation/providers/activity_providers.dart';
 import 'package:water_ledger/features/dashboards/presentation/widgets/activity_tile.dart';
 import 'package:water_ledger/features/dashboards/presentation/widgets/dashboard_bottom_nav.dart';
@@ -30,9 +31,6 @@ class CompanyDashboardScreen extends ConsumerWidget {
         leading: TopBarBranded(
           avatarInitial: _avatarInitialFromUser(sessionAsync.value),
         ),
-        actions: const [
-          TopBarIconButton(icon: Icons.notifications_outlined),
-        ],
       ),
       body: RefreshIndicator(
         onRefresh: () async => ref.refresh(companyRequestsProvider.future),
@@ -46,7 +44,7 @@ class CompanyDashboardScreen extends ConsumerWidget {
               const SizedBox(height: 24),
               _buildPrimaryCta(context, ref),
               const SizedBox(height: 16),
-              _buildStatsRow(requestsAsync),
+              _buildStatsRow(context, requestsAsync),
               const SizedBox(height: 16),
               _buildPendingActionCard(requestsAsync),
               const SizedBox(height: 24),
@@ -190,82 +188,16 @@ class CompanyDashboardScreen extends ConsumerWidget {
   //  CTA PRIMARIO — Request Water Credit Issuance
   // ------------------------------------------------------------------ //
   Widget _buildPrimaryCta(BuildContext context, WidgetRef ref) {
-    return GestureDetector(
-      onTap: () => context.push('/credit-issuance'),
-      child: ClipRRect(
-        borderRadius: BorderRadius.circular(16),
-        child: BackdropFilter(
-          filter: ImageFilter.blur(sigmaX: 20, sigmaY: 20),
-          child: Container(
-            padding: const EdgeInsets.all(20),
-            decoration: BoxDecoration(
-              color: Colors.white.withValues(alpha: 0.72),
-              borderRadius: BorderRadius.circular(16),
-              border: Border.all(
-                color: DashboardTokens.outlineVariantColor.withValues(alpha: 0.3),
-              ),
-              boxShadow: [
-                BoxShadow(
-                  color: Colors.black.withValues(alpha: 0.04),
-                  blurRadius: 12,
-                  offset: const Offset(0, 4),
-                ),
-              ],
-            ),
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                Icon(Icons.add_chart_outlined, color: DashboardTokens.secondaryColor, size: 26),
-                const SizedBox(height: 12),
-                const Text(
-                  'Request Water Credit Issuance',
-                  style: TextStyle(
-                    fontFamily: 'Manrope',
-                    fontSize: 20,
-                    fontWeight: FontWeight.w700,
-                    color: DashboardTokens.primaryColor,
-                    letterSpacing: -0.3,
-                    height: 1.2,
-                  ),
-                ),
-                const SizedBox(height: 8),
-                const Text(
-                  'Initiate a new certification cycle for your verified water conservation projects.',
-                  style: TextStyle(
-                    fontFamily: 'Inter',
-                    fontSize: 14,
-                    color: DashboardTokens.onSurfaceVariantColor,
-                    height: 1.5,
-                  ),
-                ),
-                const SizedBox(height: 20),
-                Row(
-                  children: [
-                    const Text(
-                      'Get Started',
-                      style: TextStyle(
-                        fontFamily: 'Inter',
-                        fontSize: 14,
-                        fontWeight: FontWeight.w700,
-                        color: DashboardTokens.primaryColor,
-                      ),
-                    ),
-                    const SizedBox(width: 6),
-                    Icon(Icons.arrow_forward_rounded, size: 18, color: DashboardTokens.primaryColor),
-                  ],
-                ),
-              ],
-            ),
-          ),
-        ),
-      ),
-    );
+    return _PrimaryCtaCard(onTap: () {
+      ref.read(creditRequestProvider.notifier).reset();
+      context.push('/credit-issuance');
+    });
   }
 
   // ------------------------------------------------------------------ //
   //  STATS — Active Requests + Issued Credits
   // ------------------------------------------------------------------ //
-  Widget _buildStatsRow(AsyncValue<List<CreditRequestEntity>> requestsAsync) {
+  Widget _buildStatsRow(BuildContext context, AsyncValue<List<CreditRequestEntity>> requestsAsync) {
     return requestsAsync.when(
       loading: () => Row(
         children: const [
@@ -300,37 +232,40 @@ class CompanyDashboardScreen extends ConsumerWidget {
             .where((r) => r.status == RequestStatus.published)
             .length;
 
-        return Row(
-          crossAxisAlignment: CrossAxisAlignment.stretch,
-          children: [
-            Expanded(
-              child: StatCard(
-                label: 'Active requests',
-                icon: Icons.pending_outlined,
-                value: active.length.toString(),
-                footer: active.isNotEmpty
-                    ? StatCardProgressFooter(
-                        leftLabel: 'Current stage',
-                        rightLabel: _statusToLabel(active.first.status),
-                        progress: _statusToProgress(active.first.status),
-                      )
-                    : null,
-              ),
-            ),
-            const SizedBox(width: 12),
-            Expanded(
-              child: StatCard(
-                label: 'Issued credits',
-                icon: Icons.water_drop_outlined,
-                iconColor: DashboardTokens.secondaryColor,
-                value: issued.toString(),
-                footer: const StatCardCaption(
-                  icon: Icons.history,
-                  text: 'Next cycle pending',
+        return IntrinsicHeight(
+          child: Row(
+            crossAxisAlignment: CrossAxisAlignment.stretch,
+            children: [
+              Expanded(
+                child: StatCard(
+                  label: 'Active requests',
+                  icon: Icons.pending_outlined,
+                  value: active.length.toString(),
+                  onMoreTap: () => context.push('/company-requests'),
+                  footer: active.isNotEmpty
+                      ? StatCardProgressFooter(
+                          leftLabel: 'Current stage',
+                          rightLabel: _statusToLabel(active.first.status),
+                          progress: _statusToProgress(active.first.status),
+                        )
+                      : null,
                 ),
               ),
-            ),
-          ],
+              const SizedBox(width: 12),
+              Expanded(
+                child: StatCard(
+                  label: 'Issued credits',
+                  icon: Icons.water_drop_outlined,
+                  iconColor: DashboardTokens.secondaryColor,
+                  value: issued.toString(),
+                  footer: const StatCardCaption(
+                    icon: Icons.history,
+                    text: 'Next cycle pending',
+                  ),
+                ),
+              ),
+            ],
+          ),
         );
       },
     );
@@ -579,6 +514,102 @@ class CompanyDashboardScreen extends ConsumerWidget {
       SnackBar(
         content: Text('$featureName — pendiente de implementar'),
         duration: const Duration(seconds: 2),
+      ),
+    );
+  }
+}
+
+class _PrimaryCtaCard extends StatefulWidget {
+  final VoidCallback onTap;
+  const _PrimaryCtaCard({required this.onTap});
+
+  @override
+  State<_PrimaryCtaCard> createState() => _PrimaryCtaCardState();
+}
+
+class _PrimaryCtaCardState extends State<_PrimaryCtaCard> {
+  bool _hovered = false;
+
+  @override
+  Widget build(BuildContext context) {
+    return MouseRegion(
+      cursor: SystemMouseCursors.click,
+      onEnter: (_) => setState(() => _hovered = true),
+      onExit: (_) => setState(() => _hovered = false),
+      child: GestureDetector(
+        onTap: widget.onTap,
+        child: ClipRRect(
+          borderRadius: BorderRadius.circular(16),
+          child: BackdropFilter(
+            filter: ImageFilter.blur(sigmaX: 20, sigmaY: 20),
+            child: Container(
+              padding: const EdgeInsets.all(20),
+              decoration: BoxDecoration(
+                color: Colors.white.withValues(alpha: 0.72),
+                borderRadius: BorderRadius.circular(16),
+                border: Border.all(
+                  color: DashboardTokens.outlineVariantColor.withValues(alpha: 0.3),
+                ),
+                boxShadow: [
+                  BoxShadow(
+                    color: Colors.black.withValues(alpha: 0.04),
+                    blurRadius: 12,
+                    offset: const Offset(0, 4),
+                  ),
+                ],
+              ),
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  const Icon(Icons.add_chart_outlined, color: DashboardTokens.secondaryColor, size: 26),
+                  const SizedBox(height: 12),
+                  const Text(
+                    'Request Water Credit Issuance',
+                    style: TextStyle(
+                      fontFamily: 'Manrope',
+                      fontSize: 20,
+                      fontWeight: FontWeight.w700,
+                      color: DashboardTokens.primaryColor,
+                      letterSpacing: -0.3,
+                      height: 1.2,
+                    ),
+                  ),
+                  const SizedBox(height: 8),
+                  const Text(
+                    'Initiate a new certification cycle for your verified water conservation projects.',
+                    style: TextStyle(
+                      fontFamily: 'Inter',
+                      fontSize: 14,
+                      color: DashboardTokens.onSurfaceVariantColor,
+                      height: 1.5,
+                    ),
+                  ),
+                  const SizedBox(height: 20),
+                  Row(
+                    children: [
+                      AnimatedDefaultTextStyle(
+                        duration: const Duration(milliseconds: 150),
+                        style: TextStyle(
+                          fontFamily: 'Inter',
+                          fontSize: _hovered ? 15.5 : 14,
+                          fontWeight: FontWeight.w700,
+                          color: DashboardTokens.primaryColor,
+                        ),
+                        child: const Text('Get Started'),
+                      ),
+                      const SizedBox(width: 6),
+                      AnimatedSlide(
+                        duration: const Duration(milliseconds: 150),
+                        offset: _hovered ? const Offset(0.25, 0) : Offset.zero,
+                        child: const Icon(Icons.arrow_forward_rounded, size: 18, color: DashboardTokens.primaryColor),
+                      ),
+                    ],
+                  ),
+                ],
+              ),
+            ),
+          ),
+        ),
       ),
     );
   }

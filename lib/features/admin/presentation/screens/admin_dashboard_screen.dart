@@ -297,7 +297,7 @@ class AdminDashboardScreen extends ConsumerWidget {
       children: [
         _buildSectionTitle(
           title: 'Pending Approvals',
-          trailing: 'View all',
+          trailing: 'Ver todas',
           onTrailingTap: () => context.push('/admin-pending-approvals'),
         ),
         const SizedBox(height: 14),

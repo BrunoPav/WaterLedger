@@ -37,10 +37,7 @@ class AuditorDashboardScreen extends ConsumerWidget {
     return Scaffold(
       backgroundColor: DashboardTokens.bgColor,
       appBar: DashboardTopBar(
-        leading: const TopBarTitled(title: 'Auditor Dashboard'),
-        actions: const [
-          TopBarIconButton(icon: Icons.notifications_outlined, hasDot: false),
-        ],
+        leading: const TopBarTitled(title: 'Auditor Dashboard')
       ),
       body: RefreshIndicator(
         color: DashboardTokens.secondaryColor,
@@ -64,8 +61,6 @@ class AuditorDashboardScreen extends ConsumerWidget {
               const SizedBox(height: 28),
               const SectionHeader(title: 'Actividad Reciente'),
               _buildRecentActivity(ref, sessionAsync.value?.uid ?? ''),
-              const SizedBox(height: 20),
-              _buildEfficiencyCard(),
             ],
           ),
         ),
@@ -318,42 +313,6 @@ class AuditorDashboardScreen extends ConsumerWidget {
     return DateFormat('d MMM', 'es').format(when);
   }
 
-  Widget _buildEfficiencyCard() {
-    return Container(
-      padding: const EdgeInsets.all(20),
-      decoration: BoxDecoration(
-        color: DashboardTokens.primaryColor,
-        borderRadius: BorderRadius.circular(18),
-      ),
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          const Text(
-            'Eficiencia de Auditoría',
-            style: TextStyle(fontFamily: 'Manrope', fontSize: 18, fontWeight: FontWeight.w700, color: Colors.white, letterSpacing: -0.2),
-          ),
-          const SizedBox(height: 8),
-          Text(
-            'Las métricas de rendimiento estarán disponibles al completar tus primeras auditorías.',
-            style: TextStyle(fontFamily: 'Inter', fontSize: 13, color: Colors.white.withValues(alpha: 0.75), height: 1.5),
-          ),
-          const SizedBox(height: 16),
-          Container(
-            height: 6,
-            decoration: BoxDecoration(color: Colors.white.withValues(alpha: 0.15), borderRadius: BorderRadius.circular(99)),
-          ),
-          const SizedBox(height: 8),
-          Row(
-            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-            children: [
-              Text('Rendimiento: —', style: TextStyle(fontFamily: 'Inter', fontSize: 11, fontWeight: FontWeight.w600, color: Colors.white.withValues(alpha: 0.6), letterSpacing: 0.3)),
-              Text('Capacidad: —', style: TextStyle(fontFamily: 'Inter', fontSize: 11, fontWeight: FontWeight.w600, color: Colors.white.withValues(alpha: 0.6), letterSpacing: 0.3)),
-            ],
-          ),
-        ],
-      ),
-    );
-  }
 }
 
 // ── Compact assignment tile for dashboard preview ────────────────────────────

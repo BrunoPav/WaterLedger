@@ -26,10 +26,7 @@ class AuditorProfileScreen extends ConsumerWidget {
           avatarInitial: user.displayName.trim().isEmpty
               ? null
               : user.displayName.trim()[0].toUpperCase(),
-        ),
-        actions: const [
-          TopBarIconButton(icon: Icons.notifications_outlined),
-        ],
+        )
       ),
       body: SingleChildScrollView(
         padding: const EdgeInsets.fromLTRB(20, 24, 20, 24),
@@ -106,7 +103,7 @@ class AuditorProfileScreen extends ConsumerWidget {
           DashboardNavItem(
             icon: Icons.pending_actions_outlined,
             label: 'Audits',
-            onTap: () => _comingSoon(context, 'Audits'),
+            onTap: () => context.push('/auditor'),
           ),
           DashboardNavItem(
             icon: Icons.notifications_outlined,

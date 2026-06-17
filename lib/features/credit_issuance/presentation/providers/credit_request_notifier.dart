@@ -81,4 +81,12 @@ class CreditRequestNotifier extends Notifier<CreditRequestEntity> {
     final updated = await _submitCreditRequestUseCase(state.id);
     state = updated;
   }
+
+  void loadDraft(CreditRequestEntity draft) {
+    state = draft;
+  }
+
+  void reset() {
+    state = build();
+  }
 }

@@ -8,6 +8,8 @@ import 'package:water_ledger/features/auditor/domain/entities/audit_entity.dart'
 import 'package:water_ledger/features/auditor/domain/enums/audit_recommendation.dart';
 import 'package:water_ledger/features/auditor/domain/enums/audit_status.dart';
 import 'package:water_ledger/features/auditor/presentation/providers/audit_repository_provider.dart';
+import 'package:water_ledger/features/credit_issuance/domain/enums/request_status.dart';
+import 'package:water_ledger/features/credit_issuance/presentation/constants/request_status_colors.dart';
 
 // ── Design tokens ──────────────────────────────────────────────────────────────
 const _bgColor               = Color(0xFFF7F9FB);
@@ -17,17 +19,6 @@ const _onSurfaceColor        = Color(0xFF191C1E);
 const _onSurfaceVariantColor = Color(0xFF44474D);
 const _outlineVariantColor   = Color(0xFFC5C6CD);
 const _surfaceColor          = Color(0xFFFFFFFF);
-
-const _statusMeta = <String, (String, Color)>{
-  'draft':      ('Borrador',      Color(0xFF9E9E9E)),
-  'pending':    ('Pendiente',     Color(0xFFFF8F00)),
-  'underAudit': ('En auditoría',  Color(0xFF1565C0)),
-  'certified':  ('Certificado',   Color(0xFF2E7D32)),
-  'insured':    ('Asegurado',     Color(0xFF00695C)),
-  'valued':     ('Valorado',      Color(0xFF6A1B9A)),
-  'published':  ('Publicado',     Color(0xFF1B5E20)),
-  'rejected':   ('Rechazado',     Color(0xFFC62828)),
-};
 
 /// Pantalla de detalle de una solicitud de crédito para el admin.
 /// Implementa 4.6.3 (ver detalle) y 4.6.2 (asignar auditor).
@@ -123,10 +114,11 @@ class _AdminRequestDetailScreenState
   // ── STATUS HEADER ────────────────────────────────────────────────────────────
   Widget _buildStatusHeader(Map<String, dynamic> req) {
     final id = req['id'] as String? ?? '—';
-    final status = req['status'] as String? ?? 'draft';
+    final status = RequestStatus.fromString(req['status'] as String? ?? 'draft');
     final submittedAt = req['submittedAt'];
     final createdAt = req['createdAt'];
-    final (label, color) = _statusMeta[status] ?? ('Desconocido', const Color(0xFF9E9E9E));
+    final label = status.label;
+    final color = requestStatusColor(status);
 
     return Container(
       padding: const EdgeInsets.all(16),

@@ -24,10 +24,7 @@ class InsurerDashboardScreen extends ConsumerWidget {
       appBar: DashboardTopBar(
         leading: TopBarBranded(
           avatarInitial: _avatarInitial(sessionAsync.value),
-        ),
-        actions: const [
-          TopBarIconButton(icon: Icons.notifications_outlined),
-        ],
+        )
       ),
       body: SingleChildScrollView(
         padding: const EdgeInsets.fromLTRB(20, 16, 20, 24),
@@ -46,8 +43,6 @@ class InsurerDashboardScreen extends ConsumerWidget {
             const SizedBox(height: 28),
             const SectionHeader(title: 'Recent Activity'),
             _buildRecentActivity(ref, sessionAsync.value?.uid ?? ''),
-            const SizedBox(height: 20),
-            _buildSecurityRatingCard(),
           ],
         ),
       ),
@@ -57,7 +52,7 @@ class InsurerDashboardScreen extends ConsumerWidget {
           DashboardNavItem(icon: Icons.dashboard, label: 'Dashboard', onTap: () {}),
           DashboardNavItem(
             icon: Icons.security_outlined,
-            label: 'Requests',
+            label: 'Solicitudes',
             onTap: () => context.push('/insurer'),
           ),
           DashboardNavItem(
@@ -67,7 +62,7 @@ class InsurerDashboardScreen extends ConsumerWidget {
           ),
           DashboardNavItem(
             icon: Icons.person_outline,
-            label: 'Profile',
+            label: 'Perfil',
             onTap: () => context.go('/profile'),
           ),
         ],
@@ -249,52 +244,6 @@ class InsurerDashboardScreen extends ConsumerWidget {
     if (diff.inDays == 1) return 'ayer';
     if (diff.inDays < 7) return 'hace ${diff.inDays} d';
     return DateFormat('d MMM', 'es').format(when);
-  }
-
-  Widget _buildSecurityRatingCard() {
-    return Container(
-      padding: const EdgeInsets.all(20),
-      decoration: BoxDecoration(
-        color: DashboardTokens.primaryContainerColor,
-        borderRadius: BorderRadius.circular(18),
-      ),
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          Row(
-            children: [
-              Icon(Icons.shield_outlined, color: DashboardTokens.cyanDimColor, size: 22),
-              const SizedBox(width: 10),
-              const Text(
-                'Security Rating',
-                style: TextStyle(
-                  fontFamily: 'Manrope',
-                  fontSize: 17,
-                  fontWeight: FontWeight.w700,
-                  color: Colors.white,
-                  letterSpacing: -0.2,
-                ),
-              ),
-            ],
-          ),
-          const SizedBox(height: 12),
-          Text(
-            'Provider security score will be calculated after underwriting metrics are available.',
-            style: TextStyle(
-              fontFamily: 'Inter',
-              fontSize: 13,
-              color: Colors.white.withValues(alpha: 0.75),
-              height: 1.5,
-            ),
-          ),
-          const SizedBox(height: 16),
-          ClipRRect(
-            borderRadius: BorderRadius.circular(99),
-            child: Container(height: 5, color: Colors.white.withValues(alpha: 0.15)),
-          ),
-        ],
-      ),
-    );
   }
 
   String? _avatarInitial(UserModel? user) {

@@ -6,7 +6,6 @@ import 'package:water_ledger/features/shared/domain/entities/user_model.dart';
 import 'package:water_ledger/features/auth/presentation/providers/session_provider.dart';
 import 'package:water_ledger/features/dashboards/presentation/providers/activity_providers.dart';
 import 'package:water_ledger/features/dashboards/presentation/widgets/activity_tile.dart';
-import 'package:water_ledger/features/dashboards/presentation/widgets/coming_soon_banner.dart';
 import 'package:water_ledger/features/dashboards/presentation/widgets/dashboard_bottom_nav.dart';
 import 'package:water_ledger/features/dashboards/presentation/widgets/dashboard_tokens.dart';
 import 'package:water_ledger/features/dashboards/presentation/widgets/dashboard_top_bar.dart';
@@ -26,10 +25,7 @@ class CertifierDashboardScreen extends ConsumerWidget {
         leading: TopBarBranded(
           brandName: 'Water Ledger',
           avatarInitial: _avatarInitial(sessionAsync.value),
-        ),
-        actions: const [
-          TopBarIconButton(icon: Icons.search_outlined),
-        ],
+        )
       ),
       body: SingleChildScrollView(
         padding: const EdgeInsets.fromLTRB(20, 16, 20, 24),
@@ -37,11 +33,6 @@ class CertifierDashboardScreen extends ConsumerWidget {
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
             _buildHeader(sessionAsync),
-            const SizedBox(height: 16),
-            const ComingSoonBanner(
-              feature: 'Certificación',
-              dependsOn: 'Gestión de Auditoría (módulo 4.3)',
-            ),
             const SizedBox(height: 22),
             _buildKpiGrid(),
             const SizedBox(height: 28),

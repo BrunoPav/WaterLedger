@@ -25,10 +25,7 @@ class InsurerProfileScreen extends ConsumerWidget {
           avatarInitial: user.displayName.trim().isEmpty
               ? null
               : user.displayName.trim()[0].toUpperCase(),
-        ),
-        actions: const [
-          TopBarIconButton(icon: Icons.notifications_outlined),
-        ],
+        )
       ),
       body: SingleChildScrollView(
         padding: const EdgeInsets.fromLTRB(20, 24, 20, 24),
@@ -73,29 +70,24 @@ class InsurerProfileScreen extends ConsumerWidget {
         ),
       ),
       bottomNavigationBar: DashboardBottomNav(
-        selectedIndex: 4,
+        selectedIndex: 3,
         items: [
           DashboardNavItem(
-            icon: Icons.home_outlined,
-            label: 'Home',
+            icon: Icons.dashboard,
+            label: 'Dashboard',
             onTap: () => context.go('/home'),
           ),
           DashboardNavItem(
-            icon: Icons.pending_actions_outlined,
-            label: 'Requests',
-            onTap: () => _comingSoon(context, 'Requests'),
+            icon: Icons.security_outlined,
+            label: 'Solicitudes',
+            onTap: () => context.push('/insurer'),
           ),
           DashboardNavItem(
-            icon: Icons.water_drop_outlined,
-            label: 'Credits',
-            onTap: () => _comingSoon(context, 'Credits'),
+            icon: Icons.notifications_outlined,
+            label: 'Alertas',
+            onTap: () => _comingSoon(context, 'Alertas'),
           ),
-          DashboardNavItem(
-            icon: Icons.storefront_outlined,
-            label: 'Market',
-            onTap: () => _comingSoon(context, 'Marketplace'),
-          ),
-          DashboardNavItem(icon: Icons.person, label: 'Profile', onTap: () {}),
+          DashboardNavItem(icon: Icons.person_outline, label: 'Perfil', onTap: () {}),
         ],
       ),
     );
