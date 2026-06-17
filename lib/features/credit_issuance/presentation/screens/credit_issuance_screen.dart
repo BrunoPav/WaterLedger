@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
+import 'package:intl/intl.dart';
 import 'package:water_ledger/features/credit_issuance/domain/entities/credit_request_entity.dart';
 import 'package:water_ledger/features/credit_issuance/domain/entities/sustainability_goal_entity.dart';
 import 'package:water_ledger/features/credit_issuance/domain/entities/water_project_entity.dart';
@@ -11,10 +12,28 @@ import 'package:water_ledger/features/credit_issuance/domain/enums/project_categ
 import 'package:water_ledger/features/credit_issuance/presentation/providers/credit_request_notifier.dart';
 import 'package:water_ledger/features/credit_issuance/presentation/widgets/roadmap_editor_step.dart';
 import 'package:water_ledger/features/credit_issuance/presentation/widgets/document_upload_step.dart';
-import 'package:water_ledger/features/credit_issuance/domain/validators/water_project_validator.dart';
-import 'package:water_ledger/features/credit_issuance/domain/validators/roadmap_validator.dart';
+import 'package:water_ledger/features/shared/domain/validators/field_rules.dart';
+import 'package:water_ledger/features/credit_issuance/domain/validators/request_submission_validator.dart';
 import 'package:water_ledger/features/credit_issuance/domain/validators/document_validator.dart';
 import 'package:water_ledger/features/auth/presentation/providers/session_provider.dart';
+
+class _ThousandsSeparatorFormatter extends TextInputFormatter {
+  static final _format = NumberFormat('#,##0', 'en_US');
+
+  @override
+  TextEditingValue formatEditUpdate(
+    TextEditingValue oldValue,
+    TextEditingValue newValue,
+  ) {
+    final digitsOnly = newValue.text.replaceAll(RegExp(r'[^\d]'), '');
+    if (digitsOnly.isEmpty) return newValue.copyWith(text: '');
+    final formatted = _format.format(int.parse(digitsOnly));
+    return TextEditingValue(
+      text: formatted,
+      selection: TextSelection.collapsed(offset: formatted.length),
+    );
+  }
+}
 
 // ── Design tokens ──────────────────────────────────────────────────────────────
 const _bgColor               = Color(0xFFF7F9FB);
@@ -82,7 +101,7 @@ class _CreditIssuanceScreenState extends ConsumerState<CreditIssuanceScreen> {
       _locationCtrl.text = project.location;
       _category = project.category;
       if (project.estimatedInvestment > 0) {
-        _investmentCtrl.text = project.estimatedInvestment.toStringAsFixed(0);
+        _investmentCtrl.text = NumberFormat('#,##0', 'en_US').format(project.estimatedInvestment);
       }
       _summaryCtrl.text = project.summary;
       _impactCtrl.text = project.expectedWaterImpact;
@@ -91,7 +110,7 @@ class _CreditIssuanceScreenState extends ConsumerState<CreditIssuanceScreen> {
       _environmentCtrl.text = project.sustainabilityGoal.benefittedEnvironment;
     }
     if (draft.creditAmount > 0) {
-      _creditAmtCtrl.text = draft.creditAmount.toStringAsFixed(0);
+      _creditAmtCtrl.text = NumberFormat('#,##0', 'en_US').format(draft.creditAmount);
     }
   }
 
@@ -197,17 +216,14 @@ class _CreditIssuanceScreenState extends ConsumerState<CreditIssuanceScreen> {
   // ── Step 5: Submit ──────────────────────────────────────────────────────────
   Future<void> _handleSubmit() async {
     final request = ref.read(creditRequestProvider);
-    final project = request.project;
-    final roadmap = request.roadmap;
 
     // Safety net bloqueante: proyecto, roadmap y monto
     // (pasos 1–4 ya lo validaron inline; esto cubre navegación directa al paso 5)
-    final blockingErrors = <String>[];
-    if (project == null) blockingErrors.add('Falta información del proyecto (completá el paso 2).');
-    if (roadmap == null) blockingErrors.add('Debe completar el roadmap (completá el paso 4).');
-    if (project != null) blockingErrors.addAll(WaterProjectValidator.validate(project));
-    if (roadmap != null) blockingErrors.addAll(RoadmapValidator.validate(roadmap));
-    if (request.creditAmount <= 0) blockingErrors.add('La cantidad de créditos debe ser mayor a cero.');
+    final blockingErrors = RequestSubmissionValidator.validate(
+      request: request,
+      project: request.project,
+      roadmap: request.roadmap,
+    );
 
     if (blockingErrors.isNotEmpty) {
       _showValidationErrors(blockingErrors);
@@ -570,10 +586,28 @@ class _CreditIssuanceScreenState extends ConsumerState<CreditIssuanceScreen> {
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
                   _fieldLabel('Nombre del Proyecto'),
-                  _textField(controller: _nameCtrl, hint: 'ej. Recuperación Cuenca del Plata'),
+                  _textField(
+                    controller: _nameCtrl,
+                    hint: 'ej. Recuperación Cuenca del Plata',
+                    validator: FieldRules.compose([
+                      FieldRules.required('El nombre del proyecto es obligatorio.'),
+                      FieldRules.minLength(FieldLimits.nameMin, message: 'Usá al menos ${FieldLimits.nameMin} caracteres.'),
+                      FieldRules.maxLength(FieldLimits.nameMax, message: 'No puede superar los ${FieldLimits.nameMax} caracteres.'),
+                      FieldRules.mustContainLetters(message: 'No puede ser solo números o símbolos.'),
+                    ]),
+                  ),
                   const SizedBox(height: 20),
                   _fieldLabel('Ubicación'),
-                  _textField(controller: _locationCtrl, hint: 'Ciudad, región o coordenadas', prefix: Icons.location_on_outlined),
+                  _textField(
+                    controller: _locationCtrl,
+                    hint: 'Ciudad, región o coordenadas',
+                    prefix: Icons.location_on_outlined,
+                    validator: FieldRules.compose([
+                      FieldRules.required('La ubicación es obligatoria.'),
+                      FieldRules.minLength(FieldLimits.locationMin, message: 'Usá al menos ${FieldLimits.locationMin} caracteres.'),
+                      FieldRules.maxLength(FieldLimits.locationMax, message: 'No puede superar los ${FieldLimits.locationMax} caracteres.'),
+                    ]),
+                  ),
                   const SizedBox(height: 20),
                   _fieldLabel('Categoría'),
                   DropdownButtonFormField<ProjectCategory>(
@@ -584,13 +618,44 @@ class _CreditIssuanceScreenState extends ConsumerState<CreditIssuanceScreen> {
                   ),
                   const SizedBox(height: 20),
                   _fieldLabel('Inversión Estimada (USD)'),
-                  _textField(controller: _investmentCtrl, hint: '500,000', prefix: Icons.payments_outlined, type: TextInputType.number, numericOnly: true),
+                  _textField(
+                    controller: _investmentCtrl,
+                    hint: '500,000',
+                    prefix: Icons.payments_outlined,
+                    type: TextInputType.number,
+                    inputFormatters: [_ThousandsSeparatorFormatter()],
+                    validator: FieldRules.positiveAmount(
+                      min: 1,
+                      max: FieldLimits.maxInvestmentUsd,
+                      requiredMessage: 'La inversión estimada es obligatoria.',
+                      belowMinMessage: 'Debe ser mayor a cero.',
+                      aboveMaxMessage: 'Supera el máximo permitido (USD ${FieldLimits.maxInvestmentUsd}).',
+                    ),
+                  ),
                   const SizedBox(height: 20),
                   _fieldLabel('Resumen del Proyecto'),
-                  _textField(controller: _summaryCtrl, hint: 'Describí brevemente los objetivos centrales...', maxLines: 4),
+                  _textField(
+                    controller: _summaryCtrl,
+                    hint: 'Describí brevemente los objetivos centrales...',
+                    maxLines: 4,
+                    validator: FieldRules.compose([
+                      FieldRules.required('El resumen del proyecto es obligatorio.'),
+                      FieldRules.minLength(FieldLimits.summaryMin, message: 'Usá al menos ${FieldLimits.summaryMin} caracteres para que sea descriptivo.'),
+                      FieldRules.maxLength(FieldLimits.summaryMax, message: 'No puede superar los ${FieldLimits.summaryMax} caracteres.'),
+                    ]),
+                  ),
                   const SizedBox(height: 20),
                   _fieldLabel('Impacto Ambiental Esperado'),
-                  _textField(controller: _impactCtrl, hint: 'Cuantificá las metas de ahorro o reposición hídrica...', maxLines: 3),
+                  _textField(
+                    controller: _impactCtrl,
+                    hint: 'Cuantificá las metas de ahorro o reposición hídrica...',
+                    maxLines: 3,
+                    validator: FieldRules.compose([
+                      FieldRules.required('Debe especificarse el impacto hídrico esperado.'),
+                      FieldRules.minLength(FieldLimits.impactMin, message: 'Usá al menos ${FieldLimits.impactMin} caracteres.'),
+                      FieldRules.maxLength(FieldLimits.impactMax, message: 'No puede superar los ${FieldLimits.impactMax} caracteres.'),
+                    ]),
+                  ),
                 ],
               ),
             ),
@@ -635,13 +700,38 @@ class _CreditIssuanceScreenState extends ConsumerState<CreditIssuanceScreen> {
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
                   _fieldLabel('Objetivo Principal'),
-                  _textField(controller: _objectiveCtrl, hint: 'ej. Reducir el consumo de agua en un 30%'),
+                  _textField(
+                    controller: _objectiveCtrl,
+                    hint: 'ej. Reducir el consumo de agua en un 30%',
+                    validator: FieldRules.compose([
+                      FieldRules.required('El objetivo principal es obligatorio.'),
+                      FieldRules.minLength(FieldLimits.objectiveMin, message: 'Usá al menos ${FieldLimits.objectiveMin} caracteres.'),
+                      FieldRules.maxLength(FieldLimits.objectiveMax, message: 'No puede superar los ${FieldLimits.objectiveMax} caracteres.'),
+                    ]),
+                  ),
                   const SizedBox(height: 20),
                   _fieldLabel('Descripción del Objetivo'),
-                  _textField(controller: _goalDescCtrl, hint: 'Explicá cómo se alcanzará el objetivo...', maxLines: 3),
+                  _textField(
+                    controller: _goalDescCtrl,
+                    hint: 'Explicá cómo se alcanzará el objetivo...',
+                    maxLines: 3,
+                    validator: FieldRules.compose([
+                      FieldRules.required('La descripción del objetivo es obligatoria.'),
+                      FieldRules.minLength(FieldLimits.goalDescMin, message: 'Usá al menos ${FieldLimits.goalDescMin} caracteres.'),
+                      FieldRules.maxLength(FieldLimits.goalDescMax, message: 'No puede superar los ${FieldLimits.goalDescMax} caracteres.'),
+                    ]),
+                  ),
                   const SizedBox(height: 20),
                   _fieldLabel('Entorno Ambiental Beneficiado'),
-                  _textField(controller: _environmentCtrl, hint: 'ej. Cuenca del Río Paraná, ecosistemas ribereños'),
+                  _textField(
+                    controller: _environmentCtrl,
+                    hint: 'ej. Cuenca del Río Paraná, ecosistemas ribereños',
+                    validator: FieldRules.compose([
+                      FieldRules.required('Debe especificarse el entorno ambiental beneficiado.'),
+                      FieldRules.minLength(FieldLimits.environmentMin, message: 'Usá al menos ${FieldLimits.environmentMin} caracteres.'),
+                      FieldRules.maxLength(FieldLimits.environmentMax, message: 'No puede superar los ${FieldLimits.environmentMax} caracteres.'),
+                    ]),
+                  ),
                   const SizedBox(height: 28),
                   Container(
                     height: 1,
@@ -655,7 +745,14 @@ class _CreditIssuanceScreenState extends ConsumerState<CreditIssuanceScreen> {
                     prefix: Icons.water_drop_outlined,
                     type: TextInputType.number,
                     helperText: 'Cada crédito representa 1 m³ de agua conservada o recuperada.',
-                    numericOnly: true,
+                    inputFormatters: [_ThousandsSeparatorFormatter()],
+                    validator: FieldRules.positiveAmount(
+                      min: 1,
+                      max: FieldLimits.maxCreditAmount,
+                      requiredMessage: 'La cantidad de créditos es obligatoria.',
+                      belowMinMessage: 'Debe ser mayor a cero.',
+                      aboveMaxMessage: 'Supera el máximo permitido (${FieldLimits.maxCreditAmount} créditos).',
+                    ),
                   ),
                 ],
               ),
@@ -774,23 +871,15 @@ class _CreditIssuanceScreenState extends ConsumerState<CreditIssuanceScreen> {
     TextInputType? type,
     int maxLines = 1,
     String? helperText,
-    bool numericOnly = false,
+    List<TextInputFormatter>? inputFormatters,
+    String? Function(String?)? validator,
   }) {
     return TextFormField(
       controller: controller,
       keyboardType: type,
       maxLines: maxLines,
-      inputFormatters: numericOnly
-          ? [FilteringTextInputFormatter.allow(RegExp(r'[0-9,]'))]
-          : null,
-      validator: (v) {
-        if (v == null || v.trim().isEmpty) return 'Campo requerido';
-        if (numericOnly) {
-          final parsed = double.tryParse(v.replaceAll(',', ''));
-          if (parsed == null || parsed <= 0) return 'Ingresá un valor numérico válido mayor a cero';
-        }
-        return null;
-      },
+      inputFormatters: inputFormatters,
+      validator: validator ?? FieldRules.required(),
       style: const TextStyle(fontFamily: 'Inter', fontSize: 15, color: _onSurfaceColor),
       decoration: _inputDecoration(hint: hint, prefix: prefix, helperText: helperText),
     );

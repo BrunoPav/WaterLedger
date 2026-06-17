@@ -13,6 +13,16 @@ class RoadmapValidator {
       errors.addAll(PhaseValidator.validate(phase));
     }
 
+    final seenNames = <String>{};
+    for (final phase in roadmap.phases) {
+      final key = phase.name.trim().toLowerCase();
+      if (key.isEmpty || !seenNames.add(key)) {
+        if (key.isNotEmpty) {
+          errors.add('Hay más de una fase llamada "${phase.name}". Usá nombres distintos para cada fase.');
+        }
+      }
+    }
+
     return errors;
   }
 }

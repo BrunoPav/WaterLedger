@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:water_ledger/features/credit_issuance/domain/entities/project_phase_entity.dart';
 import 'package:water_ledger/features/credit_issuance/domain/entities/roadmap_entity.dart';
 import 'package:water_ledger/features/credit_issuance/domain/enums/milestones.dart';
+import 'package:water_ledger/features/shared/domain/validators/field_rules.dart';
 import 'package:water_ledger/features/credit_issuance/domain/validators/roadmap_validator.dart';
 
 const Map<Milestones, String> kMilestoneLabels = {
@@ -63,26 +64,41 @@ class _RoadmapEditorStepState extends State<RoadmapEditorStep> {
     super.dispose();
   }
 
+  void _showPhaseError(String message) {
+    ScaffoldMessenger.of(context).showSnackBar(
+      SnackBar(content: Text(message), duration: const Duration(seconds: 2)),
+    );
+  }
+
   void _addPhase() {
     final name = _phaseNameController.text.trim();
-    if (name.isEmpty || _startDate == null || _endDate == null || _selectedMilestones.isEmpty) {
-      ScaffoldMessenger.of(context).showSnackBar(
-        const SnackBar(
-          content: Text('Completá nombre, fechas y al menos un hito.'),
-          duration: Duration(seconds: 2),
-        ),
-      );
+    if (_startDate == null || _endDate == null || _selectedMilestones.isEmpty) {
+      _showPhaseError('Completá nombre, fechas y al menos un hito.');
       return;
     }
-    if (_startDate!.isAfter(_endDate!)) {
-      ScaffoldMessenger.of(context).showSnackBar(
-        const SnackBar(
-          content: Text('La fecha de inicio no puede ser posterior a la de fin.'),
-          duration: Duration(seconds: 2),
-        ),
-      );
+
+    final nameError = FieldRules.compose([
+      FieldRules.required('El nombre de la fase es obligatorio.'),
+      FieldRules.minLength(FieldLimits.phaseNameMin, message: 'El nombre de la fase debe tener al menos ${FieldLimits.phaseNameMin} caracteres.'),
+      FieldRules.maxLength(FieldLimits.phaseNameMax, message: 'El nombre de la fase no puede superar los ${FieldLimits.phaseNameMax} caracteres.'),
+      FieldRules.mustContainLetters(message: 'El nombre de la fase no puede ser solo números o símbolos.'),
+    ])(name);
+    if (nameError != null) {
+      _showPhaseError(nameError);
       return;
     }
+
+    if (!_endDate!.isAfter(_startDate!)) {
+      _showPhaseError('La fecha de fin debe ser posterior a la de inicio.');
+      return;
+    }
+
+    final duplicate = _phases.any((p) => p.name.trim().toLowerCase() == name.toLowerCase());
+    if (duplicate) {
+      _showPhaseError('Ya existe una fase llamada "$name". Usá un nombre distinto.');
+      return;
+    }
+
     setState(() {
       _phases.add(PhaseEntity(
         name: name,
