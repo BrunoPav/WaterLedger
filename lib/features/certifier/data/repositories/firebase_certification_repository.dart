@@ -32,6 +32,18 @@ class FirebaseCertificationRepository implements CertificationRepository {
   }
 
   @override
+  Future<List<CertificationEntity>> getCertifierCertifications(String certifierId) async {
+    final snap = await _certifications
+        .where('certifierId', isEqualTo: certifierId)
+        .get();
+    final entities = snap.docs
+        .map((d) => CertificationEntity.fromMap(_normalize(d.data())))
+        .toList();
+    entities.sort((a, b) => b.updatedAt.compareTo(a.updatedAt));
+    return entities;
+  }
+
+  @override
   Future<void> issueCertificate({
     required String requestId,
     required String certifierId,

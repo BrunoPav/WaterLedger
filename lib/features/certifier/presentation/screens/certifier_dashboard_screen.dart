@@ -4,6 +4,8 @@ import 'package:go_router/go_router.dart';
 import 'package:intl/intl.dart';
 import 'package:water_ledger/features/shared/domain/entities/user_model.dart';
 import 'package:water_ledger/features/auth/presentation/providers/session_provider.dart';
+import 'package:water_ledger/features/certifier/presentation/providers/certifier_provider.dart';
+import 'package:water_ledger/features/credit_issuance/domain/entities/credit_request_entity.dart';
 import 'package:water_ledger/features/dashboards/presentation/providers/activity_providers.dart';
 import 'package:water_ledger/features/dashboards/presentation/widgets/activity_tile.dart';
 import 'package:water_ledger/features/dashboards/presentation/widgets/dashboard_bottom_nav.dart';
@@ -34,13 +36,14 @@ class CertifierDashboardScreen extends ConsumerWidget {
           children: [
             _buildHeader(sessionAsync),
             const SizedBox(height: 22),
-            _buildKpiGrid(),
+            _buildKpiGrid(ref),
             const SizedBox(height: 28),
-            const SectionHeader(
+            SectionHeader(
               title: 'Projects Awaiting Certification',
               actionLabel: 'View all',
+              onActionTap: () => context.push('/certifier'),
             ),
-            _buildEmptyProjects(),
+            _buildProjects(context, ref),
             const SizedBox(height: 28),
             const SectionHeader(title: 'Recent Activity'),
             _buildRecentActivity(ref, sessionAsync.value?.uid ?? ''),
@@ -113,9 +116,14 @@ class CertifierDashboardScreen extends ConsumerWidget {
     );
   }
 
-  Widget _buildKpiGrid() {
+  Widget _buildKpiGrid(WidgetRef ref) {
+    final statsAsync = ref.watch(certifierStatsProvider);
+    final stats = statsAsync.value;
+    final loading = statsAsync.isLoading;
+    String v(int? n) => n?.toString() ?? '—';
+
     return Column(
-      children: const [
+      children: [
         Row(
           children: [
             Expanded(
@@ -123,21 +131,23 @@ class CertifierDashboardScreen extends ConsumerWidget {
                 label: 'Pending',
                 icon: Icons.pending_actions_outlined,
                 iconColor: DashboardTokens.secondaryColor,
-                value: '—',
+                isLoading: loading,
+                value: v(stats?.pending),
               ),
             ),
-            SizedBox(width: 12),
+            const SizedBox(width: 12),
             Expanded(
               child: StatCard(
                 label: 'Approved',
                 icon: Icons.verified_rounded,
                 iconColor: DashboardTokens.onTertiaryContainerColor,
-                value: '—',
+                isLoading: loading,
+                value: v(stats?.approved),
               ),
             ),
           ],
         ),
-        SizedBox(height: 12),
+        const SizedBox(height: 12),
         Row(
           children: [
             Expanded(
@@ -145,16 +155,18 @@ class CertifierDashboardScreen extends ConsumerWidget {
                 label: 'Rejected',
                 icon: Icons.cancel_outlined,
                 iconColor: DashboardTokens.errorColor,
-                value: '—',
+                isLoading: loading,
+                value: v(stats?.rejected),
               ),
             ),
-            SizedBox(width: 12),
+            const SizedBox(width: 12),
             Expanded(
               child: StatCard(
                 label: 'Today',
                 icon: Icons.analytics_outlined,
                 iconColor: DashboardTokens.primaryColor,
-                value: '—',
+                isLoading: loading,
+                value: v(stats?.today),
               ),
             ),
           ],
@@ -163,10 +175,46 @@ class CertifierDashboardScreen extends ConsumerWidget {
     );
   }
 
-  Widget _buildEmptyProjects() {
+  Widget _buildProjects(BuildContext context, WidgetRef ref) {
+    final requestsAsync = ref.watch(certifiedRequestsProvider);
+    return requestsAsync.when(
+      loading: () => _projectsCard(
+        child: const Padding(
+          padding: EdgeInsets.symmetric(vertical: 28),
+          child: Center(
+            child: SizedBox(
+              width: 22,
+              height: 22,
+              child: CircularProgressIndicator(strokeWidth: 2, color: DashboardTokens.secondaryColor),
+            ),
+          ),
+        ),
+      ),
+      error: (_, _) => _buildEmptyProjects(),
+      data: (requests) {
+        if (requests.isEmpty) return _buildEmptyProjects();
+        final shown = requests.take(3).toList();
+        return _projectsCard(
+          padding: EdgeInsets.zero,
+          child: Column(
+            children: [
+              for (var i = 0; i < shown.length; i++)
+                _ProjectTile(
+                  request: shown[i],
+                  isLast: i == shown.length - 1,
+                  onTap: () => context.push('/certifier-request-detail/${shown[i].id}'),
+                ),
+            ],
+          ),
+        );
+      },
+    );
+  }
+
+  Widget _projectsCard({required Widget child, EdgeInsets? padding}) {
     return Container(
       width: double.infinity,
-      padding: const EdgeInsets.all(28),
+      padding: padding ?? const EdgeInsets.all(28),
       decoration: BoxDecoration(
         color: DashboardTokens.surfaceLowestColor,
         borderRadius: BorderRadius.circular(14),
@@ -174,6 +222,12 @@ class CertifierDashboardScreen extends ConsumerWidget {
           color: DashboardTokens.outlineVariantColor.withValues(alpha: 0.3),
         ),
       ),
+      child: child,
+    );
+  }
+
+  Widget _buildEmptyProjects() {
+    return _projectsCard(
       child: Column(
         children: [
           Icon(
@@ -261,6 +315,85 @@ class CertifierDashboardScreen extends ConsumerWidget {
       SnackBar(
         content: Text('$featureName — pendiente de implementar'),
         duration: const Duration(seconds: 2),
+      ),
+    );
+  }
+}
+
+// ── Project tile (compacto, para el dashboard) ────────────────────────────────
+class _ProjectTile extends StatelessWidget {
+  const _ProjectTile({
+    required this.request,
+    required this.isLast,
+    required this.onTap,
+  });
+
+  final CreditRequestEntity request;
+  final bool isLast;
+  final VoidCallback onTap;
+
+  @override
+  Widget build(BuildContext context) {
+    final projectName = request.project?.name;
+    return InkWell(
+      onTap: onTap,
+      child: Container(
+        padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 14),
+        decoration: BoxDecoration(
+          border: isLast
+              ? null
+              : Border(
+                  bottom: BorderSide(
+                    color: DashboardTokens.outlineVariantColor.withValues(alpha: 0.25),
+                  ),
+                ),
+        ),
+        child: Row(
+          children: [
+            Container(
+              width: 40,
+              height: 40,
+              decoration: BoxDecoration(
+                color: DashboardTokens.secondaryColor.withValues(alpha: 0.1),
+                shape: BoxShape.circle,
+              ),
+              child: const Icon(Icons.verified_user_outlined,
+                  color: DashboardTokens.secondaryColor, size: 20),
+            ),
+            const SizedBox(width: 12),
+            Expanded(
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Text(
+                    projectName ?? 'Sin nombre de proyecto',
+                    style: TextStyle(
+                      fontFamily: 'Manrope',
+                      fontSize: 14,
+                      fontWeight: FontWeight.w700,
+                      color: projectName != null
+                          ? DashboardTokens.onSurfaceColor
+                          : DashboardTokens.onSurfaceVariantColor,
+                    ),
+                    maxLines: 1,
+                    overflow: TextOverflow.ellipsis,
+                  ),
+                  const SizedBox(height: 3),
+                  Text(
+                    request.id,
+                    style: const TextStyle(
+                      fontFamily: 'Inter',
+                      fontSize: 11,
+                      color: DashboardTokens.onSurfaceVariantColor,
+                    ),
+                  ),
+                ],
+              ),
+            ),
+            const Icon(Icons.chevron_right,
+                color: DashboardTokens.onSurfaceVariantColor, size: 20),
+          ],
+        ),
       ),
     );
   }

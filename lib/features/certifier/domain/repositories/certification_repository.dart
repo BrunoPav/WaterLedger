@@ -5,6 +5,9 @@ abstract class CertificationRepository {
 
   Stream<CertificationEntity?> certificationStream(String requestId);
 
+  /// Todas las certificaciones (emitidas o rechazadas) por un certificador.
+  Future<List<CertificationEntity>> getCertifierCertifications(String certifierId);
+
   /// Emite el certificado y transiciona creditRequest → 'insured'.
   Future<void> issueCertificate({
     required String requestId,
