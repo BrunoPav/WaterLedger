@@ -22,10 +22,7 @@ class FirebaseAuthRepository implements AuthRepository {
   }
 
   @override
-  Future<UserModel> login({
-    required String email,
-    required String password,
-  }) {
+  Future<UserModel> login({required String email,required String password,}) {
     return _run(() async {
       final credential = await _auth.signInWithEmailAndPassword(
         email: email,

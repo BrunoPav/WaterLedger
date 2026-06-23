@@ -42,8 +42,8 @@ class _LoginScreenState extends ConsumerState<LoginScreen> {
   Future<void> _handleLogin() async {
     final email = _emailController.text.trim();
     final password = _passwordController.text;
+
     // Validación cliente: formato email + longitud mínima de password.
-    // Atrapa errores triviales antes de hacer round-trip a Firebase.
     final error = AuthValidators.firstError([
       () => AuthValidators.email(email),
       () => AuthValidators.password(password),
@@ -71,7 +71,6 @@ class _LoginScreenState extends ConsumerState<LoginScreen> {
       ref.invalidate(sessionProvider);
       context.go('/home');
     } on AuthException catch (e) {
-      // Mensaje user-friendly traducido del código de FirebaseAuthException
       if (!mounted) return;
       ScaffoldMessenger.of(context).showSnackBar(
         SnackBar(content: Text(e.message)),

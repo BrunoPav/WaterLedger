@@ -114,7 +114,6 @@ class _RetailRegisterScreenState extends ConsumerState<RetailRegisterScreen> {
       if (!mounted) return;
       context.go('/retail-register-success');
     } on AuthException catch (e) {
-      // Mensaje user-friendly traducido del código de Firebase
       if (!mounted) return;
       ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text(e.message)));
     } catch (e) {
