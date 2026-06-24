@@ -30,11 +30,17 @@ class RoadmapEditorStep extends StatefulWidget {
     required this.onSaved,
     required this.onBack,
     this.onSubmit,
+    this.initialPhases = const [],
   });
 
   final Future<void> Function(RoadmapEntity) onSaved;
   final VoidCallback onBack;
   final Future<void> Function()? onSubmit;
+
+  /// Fases ya guardadas en el draft. Permiten rehidratar el editor al retomar
+  /// una solicitud en borrador (antes arrancaba siempre vacío y por eso parecía
+  /// que el roadmap no se había guardado, aunque sí estaba en Firestore).
+  final List<PhaseEntity> initialPhases;
 
   @override
   State<RoadmapEditorStep> createState() => _RoadmapEditorStepState();
@@ -57,6 +63,14 @@ class _RoadmapEditorStepState extends State<RoadmapEditorStep> {
   static const _surfaceContainerHighColor = Color(0xFFE6E8EA);
   static const _outlineVariantColor = Color(0xFFC5C6CD);
   static const _primaryContainerColor = Color(0xFF0D1C32);
+
+  @override
+  void initState() {
+    super.initState();
+    // Rehidratar las fases ya guardadas del draft (si las hay), para que al
+    // retomar una solicitud en borrador el roadmap no aparezca vacío.
+    _phases.addAll(widget.initialPhases);
+  }
 
   @override
   void dispose() {

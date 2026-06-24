@@ -287,6 +287,12 @@ class CompanyDashboardScreen extends ConsumerWidget {
     if (actionable.isEmpty) return const SizedBox.shrink();
 
     final draft = actionable.first;
+    // El ID truncado a 8 chars ("REQ_2026") era idéntico para toda solicitud de
+    // 2026, por eso confundía con otras requests. Mostramos el nombre del
+    // proyecto si lo tiene; si no, el ID completo (que sí es único). Así se
+    // distingue exactamente de qué draft habla el banner.
+    final projectName = draft.project?.name.trim() ?? '';
+    final draftLabel = projectName.isNotEmpty ? '"$projectName"' : '#${draft.id}';
     return Container(
       padding: const EdgeInsets.all(20),
       decoration: BoxDecoration(
@@ -325,7 +331,9 @@ class CompanyDashboardScreen extends ConsumerWidget {
           ),
           const SizedBox(height: 6),
           Text(
-            'Draft #${draft.id.substring(0, draft.id.length.clamp(0, 8))} is ready to be filled out and submitted for review.',
+            // Versión anterior (ID truncado a 8 chars → siempre "REQ_2026", indistinguible):
+            // 'Draft #${draft.id.substring(0, draft.id.length.clamp(0, 8))} is ready to be filled out and submitted for review.',
+            'Draft $draftLabel is ready to be filled out and submitted for review.',
             style: TextStyle(
               fontFamily: 'Inter',
               fontSize: 14,

@@ -421,6 +421,9 @@ class _CreditIssuanceScreenState extends ConsumerState<CreditIssuanceScreen> {
                 RoadmapEditorStep(
                   onBack: () => _goToStep(2),
                   onSaved: _handleRoadmapSaved,
+                  // Si el draft ya tenía un roadmap guardado, lo precargamos
+                  // para que las fases no aparezcan vacías al retomarlo.
+                  initialPhases: ref.read(creditRequestProvider).roadmap?.phases ?? const [],
                 ),
                 DocumentUploadStep(
                   onBack: () => _goToStep(3),

@@ -120,6 +120,23 @@ class FirebaseCreditIssuanceRepository implements CreditIssuanceRepository {
     return entities;
   }
 
+  // Variante en tiempo real de getCompanyRequests: en lugar de un get() único,
+  // escucha snapshots() para que el dashboard reaccione a cambios de estado
+  // (ej: draft -> pending al enviar) sin necesidad de refrescar manualmente.
+  @override
+  Stream<List<CreditRequestEntity>> watchCompanyRequests(String companyId) {
+    return _col
+        .where('issuerCompanyId', isEqualTo: companyId)
+        .snapshots()
+        .map((snap) {
+      final entities = snap.docs
+          .map((d) => CreditRequestEntity.fromMap(_normalize(d.data())))
+          .toList();
+      entities.sort((a, b) => b.createdAt.compareTo(a.createdAt));
+      return entities;
+    });
+  }
+
   @override
   Future<void> updateCreditAmount({
     required String requestId,

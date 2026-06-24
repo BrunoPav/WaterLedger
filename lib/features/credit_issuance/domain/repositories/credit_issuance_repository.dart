@@ -34,6 +34,11 @@ abstract class CreditIssuanceRepository {
 
   Future<List<CreditRequestEntity>> getCompanyRequests(String companyId);
 
+  /// Versión en tiempo real de [getCompanyRequests]: emite la lista cada vez
+  /// que cambia alguna solicitud de la empresa en Firestore. Usado por el
+  /// dashboard para que el banner/stats se actualicen solos al enviar un draft.
+  Stream<List<CreditRequestEntity>> watchCompanyRequests(String companyId);
+
   Future<void> updateCreditAmount({
     required String requestId,
     required double amount,

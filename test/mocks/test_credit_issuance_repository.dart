@@ -72,6 +72,12 @@ class TestCreditIssuanceRepository implements CreditIssuanceRepository {
       _requests.where((r) => r.issuerCompanyId == companyId).toList();
 
   @override
+  Stream<List<CreditRequestEntity>> watchCompanyRequests(String companyId) =>
+      Stream.value(
+        _requests.where((r) => r.issuerCompanyId == companyId).toList(),
+      );
+
+  @override
   Future<void> updateCreditAmount({
     required String requestId,
     required double amount,
