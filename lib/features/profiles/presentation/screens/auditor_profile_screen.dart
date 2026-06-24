@@ -37,12 +37,12 @@ class AuditorProfileScreen extends ConsumerWidget {
               name: user.displayName,
               badges: [
                 const ProfileBadge(
-                  label: 'Certified Auditor',
+                  label: 'Auditor certificado',
                   style: ProfileBadgeStyle.primary,
                 ),
                 if (user.isActive)
                   const ProfileBadge(
-                    label: 'Verified',
+                    label: 'Verificado',
                     style: ProfileBadgeStyle.positive,
                     icon: Icons.verified_outlined,
                   )
@@ -55,18 +55,18 @@ class AuditorProfileScreen extends ConsumerWidget {
               ],
             ),
             const SizedBox(height: 28),
-            const _Label('ACCOUNT INFORMATION'),
+            const _Label('INFORMACION DE CUENTA'),
             const SizedBox(height: 8),
             ProfileInfoCard(user: user),
             const SizedBox(height: 24),
-            const _Label('EXPERTISE & METRICS'),
+            const _Label('EXPERTISE Y METRICAS'),
             const SizedBox(height: 8),
             Row(
               children: const [
                 // TODO: cuando exista módulo de AuditAssignment, traer counts reales
                 Expanded(
                   child: StatCard(
-                    label: 'Completed audits',
+                    label: 'Auditorias completadas',
                     icon: Icons.fact_check_outlined,
                     iconColor: DashboardTokens.secondaryColor,
                     value: '—',
@@ -75,7 +75,7 @@ class AuditorProfileScreen extends ConsumerWidget {
                 SizedBox(width: 12),
                 Expanded(
                   child: StatCard(
-                    label: 'Assigned projects',
+                    label: 'Proyectos asignados',
                     icon: Icons.assignment_outlined,
                     iconColor: DashboardTokens.secondaryColor,
                     value: '—',
@@ -86,7 +86,7 @@ class AuditorProfileScreen extends ConsumerWidget {
             const SizedBox(height: 12),
             _buildExpertiseCard(),
             const SizedBox(height: 28),
-            const SectionHeader(title: 'Recent Activity'),
+            const SectionHeader(title: 'Actividad Reciente'),
             // TODO: reemplazar empty state cuando exista módulo Activity Log
             _buildEmptyActivity(),
           ],
@@ -102,7 +102,7 @@ class AuditorProfileScreen extends ConsumerWidget {
           ),
           DashboardNavItem(
             icon: Icons.pending_actions_outlined,
-            label: 'Audits',
+            label: 'Auditaciones',
             onTap: () => context.push('/auditor'),
           ),
           DashboardNavItem(
@@ -110,7 +110,7 @@ class AuditorProfileScreen extends ConsumerWidget {
             label: 'Alertas',
             onTap: () => _comingSoon(context, 'Alertas'),
           ),
-          DashboardNavItem(icon: Icons.person, label: 'Profile', onTap: () {}),
+          DashboardNavItem(icon: Icons.person, label: 'Perfil', onTap: () {}),
         ],
       ),
     );
@@ -130,7 +130,7 @@ class AuditorProfileScreen extends ConsumerWidget {
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
           const Text(
-            'Audit Specializations',
+            'Especializaciones',
             style: TextStyle(
               fontFamily: 'Inter',
               fontSize: 13,
@@ -142,7 +142,7 @@ class AuditorProfileScreen extends ConsumerWidget {
           // TODO: cuando UserModel exponga las specializations + certifications
           // del auditorRoleData en Firestore, reemplazar este empty state por chips reales
           Text(
-            'Specializations not loaded',
+            'Especializaciones no cargadas',
             style: TextStyle(
               fontFamily: 'Inter',
               fontSize: 12,
@@ -151,7 +151,7 @@ class AuditorProfileScreen extends ConsumerWidget {
           ),
           const Divider(height: 22, color: DashboardTokens.outlineVariantColor),
           const Text(
-            'Certifications',
+            'Certificaciones',
             style: TextStyle(
               fontFamily: 'Inter',
               fontSize: 13,
@@ -161,7 +161,7 @@ class AuditorProfileScreen extends ConsumerWidget {
           ),
           const SizedBox(height: 8),
           Text(
-            'Certifications not loaded',
+            'Certificaciones no cargadas',
             style: TextStyle(
               fontFamily: 'Inter',
               fontSize: 12,

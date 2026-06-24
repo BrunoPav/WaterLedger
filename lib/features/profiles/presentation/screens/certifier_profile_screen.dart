@@ -37,12 +37,12 @@ class CertifierProfileScreen extends ConsumerWidget {
               name: user.displayName,
               badges: [
                 const ProfileBadge(
-                  label: 'Certification Entity',
+                  label: 'Entidad Certificadora',
                   style: ProfileBadgeStyle.primary,
                 ),
                 if (user.isActive)
                   const ProfileBadge(
-                    label: 'Verified',
+                    label: 'Verificado',
                     style: ProfileBadgeStyle.positive,
                     icon: Icons.verified_outlined,
                   )
@@ -55,21 +55,21 @@ class CertifierProfileScreen extends ConsumerWidget {
               ],
             ),
             const SizedBox(height: 28),
-            const _Label('ENTITY VERIFICATION'),
+            const _Label('INFORMACION DE CUENTA'),
             const SizedBox(height: 8),
             ProfileInfoCard(
               user: user,
               statusLabelOverride: user.isActive ? 'Authorized' : null,
             ),
             const SizedBox(height: 24),
-            const _Label('OPERATIONAL SCOPE'),
+            const _Label('ALCANCE OPERATIVO'),
             const SizedBox(height: 8),
             Row(
               children: const [
                 // TODO: cuando exista módulo Certifications, traer counts reales
                 Expanded(
                   child: StatCard(
-                    label: 'Approved certs',
+                    label: 'Certificados aprobados',
                     icon: Icons.verified_user_outlined,
                     iconColor: DashboardTokens.secondaryColor,
                     value: '—',
@@ -78,7 +78,7 @@ class CertifierProfileScreen extends ConsumerWidget {
                 SizedBox(width: 12),
                 Expanded(
                   child: StatCard(
-                    label: 'Active reviews',
+                    label: 'Revisiones activas',
                     icon: Icons.analytics_outlined,
                     iconColor: DashboardTokens.secondaryColor,
                     value: '—',
@@ -89,7 +89,7 @@ class CertifierProfileScreen extends ConsumerWidget {
             const SizedBox(height: 12),
             _buildCertificationAreasCard(),
             const SizedBox(height: 28),
-            const SectionHeader(title: 'Institutional Activity'),
+            const SectionHeader(title: 'Actividad Institucional'),
             // TODO: reemplazar empty state cuando exista módulo Activity Log
             _buildEmptyActivity(),
           ],
@@ -105,7 +105,7 @@ class CertifierProfileScreen extends ConsumerWidget {
           ),
           DashboardNavItem(
             icon: Icons.verified_user_outlined,
-            label: 'Certifications',
+            label: 'Certificaciones',
             onTap: () => context.push('/certifier'),
           ),
           DashboardNavItem(
@@ -113,7 +113,7 @@ class CertifierProfileScreen extends ConsumerWidget {
             label: 'Alertas',
             onTap: () => _comingSoon(context, 'Alertas'),
           ),
-          DashboardNavItem(icon: Icons.person, label: 'Profile', onTap: () {}),
+          DashboardNavItem(icon: Icons.person, label: 'Perfil', onTap: () {}),
         ],
       ),
     );
@@ -135,7 +135,7 @@ class CertifierProfileScreen extends ConsumerWidget {
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: const [
               Text(
-                'Certification Areas',
+                'Áreas de Certificación',
                 style: TextStyle(
                   fontFamily: 'Inter',
                   fontSize: 13,
@@ -144,7 +144,7 @@ class CertifierProfileScreen extends ConsumerWidget {
                 ),
               ),
               Text(
-                'Scope',
+                'Alcance',
                 style: TextStyle(
                   fontFamily: 'Inter',
                   fontSize: 11,
@@ -159,7 +159,7 @@ class CertifierProfileScreen extends ConsumerWidget {
           // TODO: cuando UserModel exponga certifierRoleData (areas + alcance),
           // reemplazar este empty state con los chips reales
           Text(
-            'Certification scope not loaded',
+            'Alcance de certificación no cargado',
             style: TextStyle(
               fontFamily: 'Inter',
               fontSize: 12,
@@ -176,7 +176,7 @@ class CertifierProfileScreen extends ConsumerWidget {
           ),
           const SizedBox(height: 6),
           Text(
-            '— target reached',
+            '— objetivo alcanzado',
             style: TextStyle(
               fontFamily: 'Inter',
               fontSize: 11,

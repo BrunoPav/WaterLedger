@@ -84,7 +84,7 @@ class CompanyProfileScreen extends ConsumerWidget {
           ),
           DashboardNavItem(
             icon: Icons.pending_actions_outlined,
-            label: 'Requests',
+            label: 'Solicitudes',
             onTap: () => context.push('/company-requests'),
           ),          
           DashboardNavItem(
@@ -92,7 +92,7 @@ class CompanyProfileScreen extends ConsumerWidget {
             label: 'Market',
             onTap: () => _comingSoon(context, 'Marketplace'),
           ),
-          DashboardNavItem(icon: Icons.person, label: 'Profile', onTap: () {}),
+          DashboardNavItem(icon: Icons.person, label: 'Perfil', onTap: () {}),
         ],
       ),
     );
@@ -176,7 +176,7 @@ class CompanyProfileScreen extends ConsumerWidget {
               const SizedBox(width: 10),
               const Expanded(
                 child: Text(
-                  'Total Issued Credits',
+                  'Total de creditos emitidos',
                   style: TextStyle(
                     fontFamily: 'Inter',
                     fontSize: 13,
@@ -239,7 +239,7 @@ class CompanyProfileScreen extends ConsumerWidget {
           const SizedBox(width: 12),
           const Expanded(
             child: Text(
-              'Insurance Status',
+              'Estado de Seguro',
               style: TextStyle(
                 fontFamily: 'Inter',
                 fontSize: 13,
@@ -256,7 +256,7 @@ class CompanyProfileScreen extends ConsumerWidget {
               borderRadius: BorderRadius.circular(99),
             ),
             child: const Text(
-              'Not available',
+              'No habilitado',
               style: TextStyle(
                 fontFamily: 'Inter',
                 fontSize: 11,

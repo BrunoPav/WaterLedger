@@ -71,7 +71,7 @@ class AuditorDashboardScreen extends ConsumerWidget {
           DashboardNavItem(icon: Icons.dashboard, label: 'Dashboard', onTap: () {}),
           DashboardNavItem(
             icon: Icons.pending_actions_outlined,
-            label: 'Audits',
+            label: 'Auditaciones',
             onTap: () => context.push('/auditor'),
           ),
           DashboardNavItem(
@@ -83,7 +83,7 @@ class AuditorDashboardScreen extends ConsumerWidget {
           ),
           DashboardNavItem(
             icon: Icons.person_outline,
-            label: 'Profile',
+            label: 'Perfil',
             onTap: () => context.go('/profile'),
           ),
         ],
@@ -217,19 +217,7 @@ class AuditorDashboardScreen extends ConsumerWidget {
             )),
             if (assignments.length > 3)
               Padding(
-                padding: const EdgeInsets.only(top: 4),
-                child: GestureDetector(
-                  onTap: () => context.push('/auditor'),
-                  child: const Text(
-                    'Ver todas las asignaciones →',
-                    style: TextStyle(
-                      fontFamily: 'Inter',
-                      fontSize: 13,
-                      fontWeight: FontWeight.w600,
-                      color: DashboardTokens.secondaryColor,
-                    ),
-                  ),
-                ),
+                padding: const EdgeInsets.only(top: 4),                
               ),
           ],
         );

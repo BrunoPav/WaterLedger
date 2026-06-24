@@ -63,7 +63,7 @@ class InsurerProfileScreen extends ConsumerWidget {
             const SizedBox(height: 12),
             _buildCoverageTagsCard(),
             const SizedBox(height: 28),
-            const SectionHeader(title: 'Actividad Reciente', actionLabel: 'Ver todas'),
+            const SectionHeader(title: 'Actividad Reciente'),
             // TODO: reemplazar empty state cuando exista módulo Activity Log
             _buildEmptyActivity(),
           ],
