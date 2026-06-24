@@ -4,6 +4,8 @@ import 'package:go_router/go_router.dart';
 import 'package:intl/intl.dart';
 import 'package:water_ledger/features/shared/domain/entities/user_model.dart';
 import 'package:water_ledger/features/auth/presentation/providers/session_provider.dart';
+import 'package:water_ledger/features/certifier/presentation/providers/certifier_provider.dart';
+import 'package:water_ledger/features/credit_issuance/domain/entities/credit_request_entity.dart';
 import 'package:water_ledger/features/dashboards/presentation/providers/activity_providers.dart';
 import 'package:water_ledger/features/dashboards/presentation/widgets/activity_tile.dart';
 import 'package:water_ledger/features/dashboards/presentation/widgets/dashboard_bottom_nav.dart';
@@ -18,6 +20,9 @@ class CertifierDashboardScreen extends ConsumerWidget {
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final sessionAsync = ref.watch(sessionProvider);
+    final uid = sessionAsync.value?.uid ?? '';
+    final requestsAsync = ref.watch(certifiedRequestsProvider);
+    final statsAsync = ref.watch(certifierStatsProvider(uid));
 
     return Scaffold(
       backgroundColor: DashboardTokens.bgColor,
@@ -27,24 +32,29 @@ class CertifierDashboardScreen extends ConsumerWidget {
           avatarInitial: _avatarInitial(sessionAsync.value),
         )
       ),
-      body: SingleChildScrollView(
-        padding: const EdgeInsets.fromLTRB(20, 16, 20, 24),
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            _buildHeader(sessionAsync),
-            const SizedBox(height: 22),
-            _buildKpiGrid(),
-            const SizedBox(height: 28),
-            const SectionHeader(
-              title: 'Projects Awaiting Certification',
-              actionLabel: 'View all',
-            ),
-            _buildEmptyProjects(),
-            const SizedBox(height: 28),
-            const SectionHeader(title: 'Recent Activity'),
-            _buildRecentActivity(ref, sessionAsync.value?.uid ?? ''),
-          ],
+      body: RefreshIndicator(
+        onRefresh: () => ref.refresh(certifiedRequestsProvider.future),
+        child: SingleChildScrollView(
+          physics: const AlwaysScrollableScrollPhysics(),
+          padding: const EdgeInsets.fromLTRB(20, 16, 20, 24),
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              _buildHeader(sessionAsync),
+              const SizedBox(height: 22),
+              _buildKpiGrid(requestsAsync, statsAsync),
+              const SizedBox(height: 28),
+              SectionHeader(
+                title: 'Solicitudes a Certificar',
+                actionLabel: 'Ver todas',
+                onActionTap: () => context.push('/certifier'),
+              ),
+              _buildAwaitingCertification(context, requestsAsync),
+              const SizedBox(height: 28),
+              const SectionHeader(title: 'Actividad Reciente'),
+              _buildRecentActivity(ref, uid),
+            ],
+          ),
         ),
       ),
       bottomNavigationBar: DashboardBottomNav(
@@ -53,7 +63,7 @@ class CertifierDashboardScreen extends ConsumerWidget {
           DashboardNavItem(icon: Icons.dashboard, label: 'Dashboard', onTap: () {}),
           DashboardNavItem(
             icon: Icons.verified_user_outlined,
-            label: 'Certifications',
+            label: 'Certificaciones',
             onTap: () => context.push('/certifier'),
           ),
           DashboardNavItem(
@@ -63,7 +73,7 @@ class CertifierDashboardScreen extends ConsumerWidget {
           ),
           DashboardNavItem(
             icon: Icons.person_outline,
-            label: 'Profile',
+            label: 'Perfil',
             onTap: () => context.go('/profile'),
           ),
         ],
@@ -85,7 +95,7 @@ class CertifierDashboardScreen extends ConsumerWidget {
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
             const Text(
-              'Certification Dashboard',
+              'Panel de Certificación',
               style: TextStyle(
                 fontFamily: 'Manrope',
                 fontSize: 30,
@@ -98,8 +108,8 @@ class CertifierDashboardScreen extends ConsumerWidget {
             const SizedBox(height: 6),
             Text(
               name.isEmpty
-                  ? 'Review approved audit projects and manage certification decisions.'
-                  : 'Welcome, $name. Review approved audit projects and manage certification decisions.',
+                  ? 'Revisá los proyectos aprobados por auditoría y gestioná las decisiones de certificación.'
+                  : 'Bienvenido, $name. Revisá los proyectos aprobados por auditoría y gestioná las decisiones de certificación.',
               style: const TextStyle(
                 fontFamily: 'Inter',
                 fontSize: 14,
@@ -113,53 +123,129 @@ class CertifierDashboardScreen extends ConsumerWidget {
     );
   }
 
-  Widget _buildKpiGrid() {
+  Widget _buildKpiGrid(
+    AsyncValue<List<CreditRequestEntity>> requestsAsync,
+    AsyncValue<CertifierStats> statsAsync,
+  ) {
+    final pendingLoading = requestsAsync.isLoading;
+    final pending = requestsAsync.asData?.value.length;
+    final statsLoading = statsAsync.isLoading;
+    final stats = statsAsync.asData?.value;
+
     return Column(
-      children: const [
+      children: [
         Row(
           children: [
             Expanded(
               child: StatCard(
-                label: 'Pending',
+                label: 'Pendientes',
                 icon: Icons.pending_actions_outlined,
                 iconColor: DashboardTokens.secondaryColor,
-                value: '—',
+                value: pendingLoading ? null : '${pending ?? 0}',
+                isLoading: pendingLoading,
               ),
             ),
-            SizedBox(width: 12),
+            const SizedBox(width: 12),
             Expanded(
               child: StatCard(
-                label: 'Approved',
+                label: 'Aprobados',
                 icon: Icons.verified_rounded,
                 iconColor: DashboardTokens.onTertiaryContainerColor,
-                value: '—',
+                value: statsLoading ? null : '${stats?.approved ?? 0}',
+                isLoading: statsLoading,
               ),
             ),
           ],
         ),
-        SizedBox(height: 12),
+        const SizedBox(height: 12),
         Row(
           children: [
             Expanded(
               child: StatCard(
-                label: 'Rejected',
+                label: 'Rechazados',
                 icon: Icons.cancel_outlined,
                 iconColor: DashboardTokens.errorColor,
-                value: '—',
+                value: statsLoading ? null : '${stats?.rejected ?? 0}',
+                isLoading: statsLoading,
               ),
             ),
-            SizedBox(width: 12),
+            const SizedBox(width: 12),
             Expanded(
               child: StatCard(
-                label: 'Today',
+                label: 'Hoy',
                 icon: Icons.analytics_outlined,
                 iconColor: DashboardTokens.primaryColor,
-                value: '—',
+                value: statsLoading ? null : '${stats?.today ?? 0}',
+                isLoading: statsLoading,
               ),
             ),
           ],
         ),
       ],
+    );
+  }
+
+  Widget _buildAwaitingCertification(
+    BuildContext context,
+    AsyncValue<List<CreditRequestEntity>> requestsAsync,
+  ) {
+    return requestsAsync.when(
+      loading: () => const Center(
+        child: Padding(
+          padding: EdgeInsets.all(24),
+          child: CircularProgressIndicator(color: DashboardTokens.secondaryColor),
+        ),
+      ),
+      error: (e, _) => Container(
+        padding: const EdgeInsets.all(16),
+        decoration: BoxDecoration(
+          color: const Color(0xFFFFDAD6),
+          borderRadius: BorderRadius.circular(12),
+        ),
+        child: const Row(
+          children: [
+            Icon(Icons.error_outline, color: Color(0xFF93000A), size: 18),
+            SizedBox(width: 8),
+            Expanded(
+              child: Text(
+                'No se pudieron cargar las solicitudes.',
+                style: TextStyle(fontFamily: 'Inter', fontSize: 13, color: Color(0xFF93000A)),
+              ),
+            ),
+          ],
+        ),
+      ),
+      data: (requests) {
+        if (requests.isEmpty) return _buildEmptyProjects();
+        final preview = requests.take(3).toList();
+        return Column(
+          children: [
+            ...preview.map((r) => Padding(
+              padding: const EdgeInsets.only(bottom: 10),
+              child: _CertificationTile(
+                request: r,
+                onTap: () => context.push('/certifier-request-detail/${r.id}'),
+              ),
+            )),
+            if (requests.length > 3)
+              Padding(
+                padding: const EdgeInsets.only(top: 4),
+                child: GestureDetector(
+                  onTap: () => context.push('/certifier'),
+                  child: const Text(
+                    'Ver todas las solicitudes →',
+                    style: TextStyle(
+                      fontFamily: 'Inter',
+                      fontSize: 13,
+                      fontWeight: FontWeight.w600,
+                      color: DashboardTokens.secondaryColor,
+                    ),
+                  ),
+                ),
+              ),
+          ],
+        );
+      },
     );
   }
 
@@ -183,7 +269,7 @@ class CertifierDashboardScreen extends ConsumerWidget {
           ),
           const SizedBox(height: 10),
           const Text(
-            'No projects awaiting certification',
+            'Sin solicitudes por certificar',
             style: TextStyle(
               fontFamily: 'Manrope',
               fontSize: 16,
@@ -193,7 +279,7 @@ class CertifierDashboardScreen extends ConsumerWidget {
           ),
           const SizedBox(height: 6),
           Text(
-            'Approved audits will appear here once they reach the certification stage.',
+            'Las auditorías aprobadas aparecerán acá al llegar a la etapa de certificación.',
             textAlign: TextAlign.center,
             style: TextStyle(
               fontFamily: 'Inter',
@@ -261,6 +347,80 @@ class CertifierDashboardScreen extends ConsumerWidget {
       SnackBar(
         content: Text('$featureName — pendiente de implementar'),
         duration: const Duration(seconds: 2),
+      ),
+    );
+  }
+}
+
+// ── Compact tile for dashboard preview ───────────────────────────────────────
+class _CertificationTile extends StatelessWidget {
+  const _CertificationTile({required this.request, required this.onTap});
+
+  final CreditRequestEntity request;
+  final VoidCallback onTap;
+
+  @override
+  Widget build(BuildContext context) {
+    const color = Color(0xFF2E7D32);
+    final projectName = request.project?.name;
+    final date = request.submittedAt ?? request.createdAt;
+
+    return GestureDetector(
+      onTap: onTap,
+      child: Container(
+        padding: const EdgeInsets.all(14),
+        decoration: BoxDecoration(
+          color: DashboardTokens.surfaceLowestColor,
+          borderRadius: BorderRadius.circular(12),
+          border: Border.all(color: DashboardTokens.outlineVariantColor.withValues(alpha: 0.3)),
+          boxShadow: [BoxShadow(color: Colors.black.withValues(alpha: 0.025), blurRadius: 6, offset: const Offset(0, 2))],
+        ),
+        child: Row(
+          children: [
+            Container(
+              width: 40, height: 40,
+              decoration: BoxDecoration(color: color.withValues(alpha: 0.1), shape: BoxShape.circle),
+              child: const Icon(Icons.verified_user_outlined, color: color, size: 20),
+            ),
+            const SizedBox(width: 12),
+            Expanded(
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Text(
+                    projectName ?? 'Sin nombre de proyecto',
+                    style: TextStyle(
+                      fontFamily: 'Manrope', fontSize: 13, fontWeight: FontWeight.w700,
+                      color: projectName != null ? DashboardTokens.onSurfaceColor : DashboardTokens.onSurfaceVariantColor,
+                    ),
+                    maxLines: 1,
+                    overflow: TextOverflow.ellipsis,
+                  ),
+                  const SizedBox(height: 4),
+                  Row(
+                    children: [
+                      Container(
+                        padding: const EdgeInsets.symmetric(horizontal: 7, vertical: 2),
+                        decoration: BoxDecoration(
+                          color: color.withValues(alpha: 0.1),
+                          borderRadius: BorderRadius.circular(99),
+                          border: Border.all(color: color.withValues(alpha: 0.25)),
+                        ),
+                        child: const Text('Aprobado por Auditoría', style: TextStyle(fontFamily: 'Inter', fontSize: 10, fontWeight: FontWeight.w600, color: color)),
+                      ),
+                      const SizedBox(width: 8),
+                      Text(
+                        DateFormat('d MMM yyyy', 'es').format(date),
+                        style: TextStyle(fontFamily: 'Inter', fontSize: 11, color: DashboardTokens.onSurfaceVariantColor.withValues(alpha: 0.7)),
+                      ),
+                    ],
+                  ),
+                ],
+              ),
+            ),
+            const Icon(Icons.chevron_right, color: DashboardTokens.onSurfaceVariantColor, size: 18),
+          ],
+        ),
       ),
     );
   }

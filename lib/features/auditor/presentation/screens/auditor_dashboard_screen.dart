@@ -19,7 +19,7 @@ const _statusMeta = <String, (String, Color)>{
   'draft':      ('Borrador',      Color(0xFF9E9E9E)),
   'pending':    ('Pendiente',     Color(0xFFFF8F00)),
   'underAudit': ('En auditoría',  Color(0xFF1565C0)),
-  'certified':  ('Certificado',   Color(0xFF2E7D32)),
+  'certified':  ('En Certificación', Color(0xFF2E7D32)),
   'insured':    ('Asegurado',     Color(0xFF00695C)),
   'valued':     ('Valorado',      Color(0xFF6A1B9A)),
   'published':  ('Publicado',     Color(0xFF1B5E20)),

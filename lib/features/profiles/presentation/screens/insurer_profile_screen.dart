@@ -36,12 +36,12 @@ class InsurerProfileScreen extends ConsumerWidget {
               name: user.displayName,
               badges: [
                 const ProfileBadge(
-                  label: 'Insurance Provider',
+                  label: 'Aseguradora',
                   style: ProfileBadgeStyle.primary,
                 ),
                 if (user.isActive)
                   const ProfileBadge(
-                    label: 'Active',
+                    label: 'Activo',
                     style: ProfileBadgeStyle.positive,
                   )
                 else
@@ -53,17 +53,17 @@ class InsurerProfileScreen extends ConsumerWidget {
               ],
             ),
             const SizedBox(height: 28),
-            const _Label('ACCOUNT INFORMATION'),
+            const _Label('INFORMACIÓN DE LA CUENTA'),
             const SizedBox(height: 8),
             ProfileInfoCard(user: user),
             const SizedBox(height: 24),
-            const _Label('PORTFOLIO INSIGHTS'),
+            const _Label('RESUMEN DE CARTERA'),
             const SizedBox(height: 8),
             _buildCoveragesCard(),
             const SizedBox(height: 12),
             _buildCoverageTagsCard(),
             const SizedBox(height: 28),
-            const SectionHeader(title: 'Recent Activity', actionLabel: 'View All'),
+            const SectionHeader(title: 'Actividad Reciente', actionLabel: 'Ver todas'),
             // TODO: reemplazar empty state cuando exista módulo Activity Log
             _buildEmptyActivity(),
           ],
@@ -108,7 +108,7 @@ class InsurerProfileScreen extends ConsumerWidget {
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
                 Text(
-                  'ACTIVE COVERAGES',
+                  'COBERTURAS ACTIVAS',
                   style: TextStyle(
                     fontFamily: 'Inter',
                     fontSize: 10,
@@ -135,7 +135,7 @@ class InsurerProfileScreen extends ConsumerWidget {
             crossAxisAlignment: CrossAxisAlignment.end,
             children: [
               Text(
-                'Risk Category',
+                'Categoría de Riesgo',
                 style: TextStyle(
                   fontFamily: 'Inter',
                   fontSize: 11,
@@ -186,7 +186,7 @@ class InsurerProfileScreen extends ConsumerWidget {
                     Icon(Icons.water_drop_outlined, size: 16, color: DashboardTokens.secondaryColor),
                     const SizedBox(width: 6),
                     const Text(
-                      'Coverage',
+                      'Cobertura',
                       style: TextStyle(
                         fontFamily: 'Inter',
                         fontSize: 12,
@@ -200,7 +200,7 @@ class InsurerProfileScreen extends ConsumerWidget {
                 // TODO: cuando UserModel exponga insurerRoleData (tipos de cobertura),
                 // reemplazar este placeholder con los chips reales
                 Text(
-                  'Not loaded',
+                  'No disponible',
                   style: TextStyle(
                     fontFamily: 'Inter',
                     fontSize: 12,
@@ -219,7 +219,7 @@ class InsurerProfileScreen extends ConsumerWidget {
                   Icon(Icons.description_outlined, size: 16, color: DashboardTokens.secondaryColor),
                   const SizedBox(width: 6),
                   const Text(
-                    'Plans',
+                    'Planes',
                     style: TextStyle(
                       fontFamily: 'Inter',
                       fontSize: 12,

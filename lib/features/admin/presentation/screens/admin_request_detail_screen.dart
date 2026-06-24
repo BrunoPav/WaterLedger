@@ -10,6 +10,8 @@ import 'package:water_ledger/features/auditor/domain/enums/audit_status.dart';
 import 'package:water_ledger/features/auditor/presentation/providers/audit_repository_provider.dart';
 import 'package:water_ledger/features/credit_issuance/domain/enums/request_status.dart';
 import 'package:water_ledger/features/credit_issuance/presentation/constants/request_status_colors.dart';
+import 'package:water_ledger/features/insurer/domain/enums/insurance_plan_status.dart';
+import 'package:water_ledger/features/insurer/presentation/providers/insurance_repository_provider.dart';
 
 // ── Design tokens ──────────────────────────────────────────────────────────────
 const _bgColor               = Color(0xFFF7F9FB);
@@ -117,8 +119,16 @@ class _AdminRequestDetailScreenState
     final status = RequestStatus.fromString(req['status'] as String? ?? 'draft');
     final submittedAt = req['submittedAt'];
     final createdAt = req['createdAt'];
-    final label = status.label;
+    var label = status.label;
     final color = requestStatusColor(status);
+
+    // Mismo chequeo que en admin_dashboard_screen.dart: 'insured' no distingue
+    // si el asegurador ya creó el plan o sigue pendiente.
+    if (status == RequestStatus.insured) {
+      final plan = ref.watch(insurancePlanStreamProvider(id)).asData?.value;
+      final isInsured = plan != null && plan.status == InsurancePlanStatus.active;
+      label = isInsured ? 'Asegurado' : 'Pend. asegurar';
+    }
 
     return Container(
       padding: const EdgeInsets.all(16),
@@ -375,7 +385,7 @@ class _AdminRequestDetailScreenState
                   SizedBox(width: 8),
                   Expanded(
                     child: Text(
-                      'No hay auditores activos disponibles. Aprobá un auditor primero desde la sección "Pending Approvals".',
+                      'No hay auditores activos disponibles. Aprobá un auditor primero desde la sección "Aprobaciones Pendientes".',
                       style: TextStyle(fontFamily: 'Inter', fontSize: 13, color: Color(0xFFE65100)),
                     ),
                   ),

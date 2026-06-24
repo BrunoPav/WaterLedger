@@ -87,7 +87,7 @@ class PendingApprovalsListScreen extends ConsumerWidget {
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
                   const Text(
-                    'Pending approvals',
+                    'Aprobaciones pendientes',
                     style: TextStyle(
                       fontFamily: 'Manrope',
                       fontSize: 20,
@@ -171,7 +171,7 @@ class PendingApprovalsListScreen extends ConsumerWidget {
                       borderRadius: BorderRadius.circular(99),
                     ),
                     child: const Text(
-                      'PENDING',
+                      'PENDIENTE',
                       style: TextStyle(
                         fontFamily: 'Inter',
                         fontSize: 10,

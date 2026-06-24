@@ -265,7 +265,7 @@ class _RequestTile extends StatelessWidget {
         RequestStatus.draft      => ('Borrador',      const Color(0xFF78909C)),
         RequestStatus.pending    => ('Pendiente',     const Color(0xFFF57C00)),
         RequestStatus.underAudit => ('En auditoría',  const Color(0xFF1565C0)),
-        RequestStatus.certified  => ('Certificado',   const Color(0xFF2E7D32)),
+        RequestStatus.certified  => ('En Certificación', const Color(0xFF2E7D32)),
         RequestStatus.insured    => ('Asegurado',     const Color(0xFF00695C)),
         RequestStatus.valued     => ('Valorizado',    const Color(0xFF6A1B9A)),
         RequestStatus.published  => ('Publicado',     const Color(0xFF006875)),

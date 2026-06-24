@@ -161,18 +161,12 @@ class _CreditIssuanceScreenState extends ConsumerState<CreditIssuanceScreen> {
     }
   }
 
-  // ── Step 1: Project Info ────────────────────────────────────────────────────
-  void _handleStep1Next() {
-    if (!_formKey1.currentState!.validate()) return;
-    _goToStep(2);
-  }
-
-  // ── Step 2: Objectives + Credit Amount ─────────────────────────────────────
-  Future<void> _handleStep2Save() async {
-    if (!_formKey2.currentState!.validate()) return;
-    final request = ref.read(creditRequestProvider);
-    final project = WaterProjectEntity(
-      id: request.id,
+  // Construye el WaterProjectEntity con los controllers de Paso 2 (info básica)
+  // y Paso 3 (objetivos). Se usa en ambos pasos para que el Paso 2 ya quede
+  // persistido aunque el usuario todavía no haya completado el Paso 3.
+  WaterProjectEntity _buildProjectFromControllers(String requestId) {
+    return WaterProjectEntity(
+      id: requestId,
       name: _nameCtrl.text.trim(),
       location: _locationCtrl.text.trim(),
       category: _category,
@@ -185,6 +179,34 @@ class _CreditIssuanceScreenState extends ConsumerState<CreditIssuanceScreen> {
         benefittedEnvironment: _environmentCtrl.text.trim(),
       ),
     );
+  }
+
+  // ── Step 1: Project Info ────────────────────────────────────────────────────
+  Future<void> _handleStep1Next() async {
+    if (!_formKey1.currentState!.validate()) return;
+    final request = ref.read(creditRequestProvider);
+
+    setState(() => _isLoading = true);
+    try {
+      await ref.read(creditRequestProvider.notifier).updateProjectInfo(
+        _buildProjectFromControllers(request.id),
+      );
+      _goToStep(2);
+    } catch (e) {
+      if (!mounted) return;
+      ScaffoldMessenger.of(context).showSnackBar(
+        const SnackBar(content: Text('No se pudo guardar. Verificá tu conexión e intentá nuevamente.')),
+      );
+    } finally {
+      if (mounted) setState(() => _isLoading = false);
+    }
+  }
+
+  // ── Step 2: Objectives + Credit Amount ─────────────────────────────────────
+  Future<void> _handleStep2Save() async {
+    if (!_formKey2.currentState!.validate()) return;
+    final request = ref.read(creditRequestProvider);
+    final project = _buildProjectFromControllers(request.id);
     final amount = double.tryParse(_creditAmtCtrl.text.replaceAll(',', '')) ?? 0;
 
     setState(() => _isLoading = true);
@@ -664,20 +686,22 @@ class _CreditIssuanceScreenState extends ConsumerState<CreditIssuanceScreen> {
             ),
             const SizedBox(height: 24),
             ElevatedButton(
-              onPressed: _handleStep1Next,
+              onPressed: _isLoading ? null : _handleStep1Next,
               style: ElevatedButton.styleFrom(
                 backgroundColor: _primaryColor, foregroundColor: Colors.white,
                 padding: const EdgeInsets.symmetric(vertical: 16),
                 shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
               ),
-              child: const Row(
-                mainAxisAlignment: MainAxisAlignment.center,
-                children: [
-                  Text('Guardar y Continuar', style: TextStyle(fontFamily: 'Manrope', fontSize: 16, fontWeight: FontWeight.w700)),
-                  SizedBox(width: 8),
-                  Icon(Icons.arrow_forward, size: 20),
-                ],
-              ),
+              child: _isLoading
+                  ? const SizedBox(width: 20, height: 20, child: CircularProgressIndicator(strokeWidth: 2, color: Colors.white))
+                  : const Row(
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      children: [
+                        Text('Guardar y Continuar', style: TextStyle(fontFamily: 'Manrope', fontSize: 16, fontWeight: FontWeight.w700)),
+                        SizedBox(width: 8),
+                        Icon(Icons.arrow_forward, size: 20),
+                      ],
+                    ),
             ),
           ],
         ),

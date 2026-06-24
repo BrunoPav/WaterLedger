@@ -88,7 +88,7 @@ class ActivityEmptyState extends StatelessWidget {
 
   const ActivityEmptyState({
     super.key,
-    this.message = 'No activity yet',
+    this.message = 'Todavía no hay actividad.',
   });
 
   @override

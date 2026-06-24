@@ -2,7 +2,7 @@
 
 > Documento de referencia detallada para el equipo (onboarding + historial).
 > Para la referencia operativa compacta ver [CLAUDE.md](../CLAUDE.md) en la raíz.
-> Última actualización: 2026-06-15.
+> Última actualización: 2026-06-24.
 
 ---
 
@@ -17,7 +17,7 @@
 | 4.1.3 Inicio de sesión | ✅ COMPLETO | Auth con retry (3 intentos, backoff 400ms), errores en español, recovery, logout |
 | 4.1.4 Roles y permisos | ✅ COMPLETO | Enums, UserModel, route guards con `roleHasAccess()`, HomeDispatcher, ProfileDispatcher |
 | 4.1.5 Perfiles de usuario | ⚠️ PARCIAL | Pantallas read-only para todos los roles ✅ — edición limitada a `displayName`. Datos institucionales (CUIT, representante) no editables |
-| 4.1.6 Dashboard inicial | ⚠️ PARCIAL | Admin y Company: datos reales. Resto: `ComingSoonBanner` + actividad real, KPIs aún en placeholder |
+| 4.1.6 Dashboard inicial | ⚠️ PARCIAL | Admin, Company, Certifier e Insurer: datos reales con KPIs y listas en `StreamProvider` (sin refresh manual). Retail: `ComingSoonBanner` + actividad real, KPIs aún en placeholder |
 
 **Huecos funcionales:**
 - Email verification ausente: cuentas operativas con emails no confirmados
@@ -58,12 +58,17 @@ Infra: `createDraft(uid)` en paso 0 (ID `REQ_YYYYMMDD_XXXXXX`), auto-save al ava
 Feature `certifier/` completo: `CertificationEntity`, `CertificationStatus`,
 `FirebaseCertificationRepository`, use cases (`GetCertification`, `GetCertifiedRequests`,
 `IssueCertificate`, `RejectCertification`), providers y screens (dashboard, lista, detalle).
+Dashboard (2026-06-24): KPIs reales (pendientes/aprobados/rechazados/hoy) vía
+`certifierStatsProvider`, cola de certificación en `StreamProvider` (sin refresh manual),
+traducido al español.
 
 ### 4.5 Gestión de Seguros → **IMPLEMENTADO**
 
 Feature `insurer/` completo: `InsurancePlanEntity`, enums de tipo/estado,
 `FirebaseInsuranceRepository`, use cases (`CreateInsurancePlan`, `GetInsurancePlan`,
 `GetInsuredRequests`, `RejectInsurance`), providers y screens.
+Dashboard y perfil (2026-06-24): KPIs reales vía `insurerStatsProvider`, cola de
+asegurables en `StreamProvider`, ambos traducidos al español.
 
 ---
 
@@ -99,7 +104,7 @@ Feature `insurer/` completo: `InsurancePlanEntity`, enums de tipo/estado,
 | P5 | ✅ HECHO | infra | Limpieza de rutas QA + mock movido a `test/mocks/` |
 | P6 | ⏭️ SKIP | 4.1.2 | File upload institucional (plan base Firebase) |
 | P7 | ✅ HECHO | 4.6 | Feature flags / "coming soon" en dashboards |
-| P8 | ⏭️ SKIP | firestore | Validar transiciones de estado (rules nunca deployadas) |
+| P8 | ✅ HECHO | firestore | Rules deployadas (2026-06-23) + cascada de permisos faltantes para certifier/insurer corregida (2026-06-24) |
 | P9 | ✅ HECHO | 4.4 | Certificación |
 | P10 | ✅ HECHO | 4.5 | Gestión de seguros |
 | P11 | ✅ HECHO | 4.6.4+4.6.5 | Valorización y publicación |
@@ -114,7 +119,8 @@ Feature `insurer/` completo: `InsurancePlanEntity`, enums de tipo/estado,
 
 | Item | Estado |
 |------|--------|
-| `firestore.rules` / `storage.rules` | ⚠️ Nunca deployadas — proyecto en test mode, archivos son solo documentación |
+| `firestore.rules` | ✅ Deployadas en producción desde 2026-06-23 (`waterledger-e7544`). Ya no es test mode — verificar reglas antes de agregar queries/writes para roles no-admin |
+| `storage.rules` | ⚠️ Nunca deployadas — archivo es solo documentación |
 | `callerData().role == 'Company'` — string literal vs enum | ⚠️ Riesgo de typo |
 | Sin paginación en queries Firestore | 🟡 Baja (escala actual) |
 | Sin Crashlytics ni Analytics | 🟡 Media |
@@ -174,6 +180,41 @@ Respaldos: rama `Arquitectura-backup-pre-refactor-2026-06-04` + tag `pre-core-to
 - **C2:** extraer la lógica de upload de los registros B2B (`_uploadFile`/`_mimeType`/`tryUpload`, duplicada en auditor/certifier/insurance) a un servicio compartido
 - **C3:** unificar boilerplate de `HomeDispatcher` y `ProfileDispatcher`
 - **C4 (opcional):** template común para los dashboards
+
+### Bug hunt cross-roles + deploy de Firestore rules (2026-06-24)
+
+Revisión sistemática de bugs en los flujos de company/auditor/certifier/insurer/admin:
+
+- **Firestore rules deployadas a producción** (`waterledger-e7544`) por primera vez —
+  el proyecto deja de ser test mode. Esto destapó una cascada de permisos faltantes
+  para roles no-admin que antes quedaban tapados:
+  - `creditRequests`: faltaban `read`/`update` para certifier (status `certified`) e
+    insurer (status `insured`) → dashboards colgados en loading infinito.
+  - `audits`: faltaba `read` para certifier (necesita ver conclusión de auditoría).
+  - `certifications`: regla nueva (antes solo `isAdmin()`) — `create` para certifier,
+    `read` para certifier/insurer/admin.
+  - `insurancePlans`: `isActiveInsurer()` movido a helper top-level.
+- **Certifier e insurer dashboards reescritos**: KPIs reales (`certifierStatsProvider`/
+  `insurerStatsProvider`), colas convertidas de `FutureProvider` a `StreamProvider`
+  (`watchCertifiedRequests`/`watchInsuredRequests` agregados al repo) — eliminan la
+  necesidad de refresh manual. Traducción completa al español (dashboards + perfil
+  de insurer).
+- **Fix de pérdida de datos en wizard de emisión**: paso 1 no persistía hasta completar
+  el paso 2 (`credit_issuance_screen.dart` — `_handleStep1Next` ahora persiste antes
+  de avanzar).
+- **Label "Certificado" renombrado a "En Certificación"** en todas las pantallas que
+  muestran `RequestStatus.certified` (era confuso — el estado significa "en cola del
+  certificador", no "ya certificado").
+- **Admin dashboard**: `_requestPreviewCard` mostraba "Otro" para varios status porque
+  el mapa local de labels no cubría todo el enum — reemplazado por
+  `RequestStatus.fromString(status).label` + `requestStatusColor()` (misma fuente que
+  usa el detalle, ya no se pueden desincronizar). Para status `insured` específicamente
+  (admin dashboard + detalle de solicitud), se agregó un chequeo puntual contra
+  `insurancePlanStreamProvider` para mostrar "Pend. asegurar" / "Asegurado" en vez del
+  genérico "En Aseguramiento", ya que ese status no distingue si el insurer ya actuó.
+- **Gap conocido, aceptado por el usuario**: la cola "Por Valorizar" del admin
+  (`insuredRequestsForAdminProvider`) sigue mostrando todas las `insured` sin filtrar
+  por existencia de plan de seguro — no se va a corregir por ahora.
 
 ### Bugfixes UI retail + admin (2026-06-15) — rama `fix/retail-dashboard-bugfixes`
 Ajustes de UI para ocultar elementos sin funcionalidad y unificar navegación:

@@ -31,6 +31,21 @@ service cloud.firestore {
         && callerData().status == 'active';
     }
 
+    // Compartidas entre creditRequests y las colecciones de cola abierta
+    // (certifications, insurancePlans) — no hay asignación 1:1 para estos
+    // roles, cualquier profesional activo puede tomar una solicitud elegible.
+    function isActiveCertifier() {
+      return isSignedIn()
+        && callerData().role == 'Certifier'
+        && callerData().status == 'active';
+    }
+
+    function isActiveInsurer() {
+      return isSignedIn()
+        && callerData().role == 'Insurer'
+        && callerData().status == 'active';
+    }
+
     // Lista de campos cuyo cambio queda reservado al admin.
     // El cliente NO puede tocarlos sobre su propio doc.
     function touchesPrivileged(before, after) {
@@ -117,8 +132,14 @@ service cloud.firestore {
           && resource.data.get('assignedAuditorId', '') == request.auth.uid;
       }
 
-      // Read: dueño de la solicitud, admin, o auditor asignado
-      allow read: if isOwner() || isAdmin() || isAssignedAuditor();
+      // Read: dueño de la solicitud, admin, auditor asignado, o certificador/
+      // asegurador activo (cola abierta: necesitan leer la lista de
+      // creditRequests filtrada por status para sus dashboards/listados).
+      allow read: if isOwner()
+                  || isAdmin()
+                  || isAssignedAuditor()
+                  || isActiveCertifier()
+                  || isActiveInsurer();
 
       // Create: solo empresa activa creando su propio draft
       allow create: if isCompany()
@@ -128,10 +149,14 @@ service cloud.firestore {
       // Update: dueño puede editar en draft; admin siempre; auditor asignado
       //   puede actualizar mientras la solicitud está en underAudit (para
       //   que FirebaseAuditRepository.submitConclusion pueda transicionar
-      //   el status a certified / rejected via batch write).
+      //   el status a certified / rejected via batch write); certificador
+      //   activo mientras está en certified (issueCertificate/rejectCertification);
+      //   asegurador activo mientras está en insured (createInsurancePlan/rejectInsurance).
       allow update: if isAdmin()
                     || (isOwner() && resource.data.status == 'draft')
-                    || (isAssignedAuditor() && resource.data.status == 'underAudit');
+                    || (isAssignedAuditor() && resource.data.status == 'underAudit')
+                    || (isActiveCertifier() && resource.data.status == 'certified')
+                    || (isActiveInsurer() && resource.data.status == 'insured');
 
       // Delete: solo admin (o dueño si está en draft, para borrar borradores)
       allow delete: if isAdmin()
@@ -156,8 +181,12 @@ service cloud.firestore {
         return isSignedIn() && resource.data.auditorId == request.auth.uid;
       }
 
-      // Read: auditor asignado a esa creditRequest o admin
-      allow read: if isCreditRequestAuditor() || isAdmin();
+      // Read: auditor asignado a esa creditRequest, dueño del audit (necesario
+      // para que la query por 'auditorId' de auditorActivityProvider sea
+      // estáticamente verificable y no la rechace Firestore), certificador
+      // activo (necesita ver la conclusión de auditoría antes de certificar),
+      // o admin
+      allow read: if isCreditRequestAuditor() || isAuditOwner() || isActiveCertifier() || isAdmin();
 
       // Create: solo el auditor asignado; status inicial debe ser inProgress
       allow create: if isCreditRequestAuditor()
@@ -178,12 +207,6 @@ service cloud.firestore {
     // solicitud en estado 'insured' y crear o rechazar el plan.
     match /insurancePlans/{requestId} {
 
-      function isActiveInsurer() {
-        return isSignedIn()
-          && callerData().role == 'Insurer'
-          && callerData().status == 'active';
-      }
-
       // Read: cualquier asegurador activo (para listar/seguir su propia cola) o admin
       allow read: if isActiveInsurer() || isAdmin();
 
@@ -199,14 +222,34 @@ service cloud.firestore {
       allow update, delete: if isAdmin();
     }
 
-    // ---------- projects, certifications, valuations ----------
+    // ---------- certifications (módulo 4.4) ----------
+    // Un documento por creditRequest (mismo ID). Igual que insurancePlans, no
+    // hay certificador asignado 1:1 — cualquier Certifier activo puede tomar
+    // una solicitud en estado 'certified' y emitir o rechazar el certificado.
+    match /certifications/{requestId} {
+
+      // Read: cualquier certificador activo (para listar/seguir su propia cola),
+      // asegurador activo (necesita ver la certificación antes de asegurar), o admin
+      allow read: if isActiveCertifier() || isActiveInsurer() || isAdmin();
+
+      // Create: solo el certificador activo que firma, sobre una solicitud
+      // que esté efectivamente en estado 'certified'
+      allow create: if isActiveCertifier()
+                    && request.resource.data.certifierId == request.auth.uid
+                    && request.resource.data.status in ['issued', 'rejected']
+                    && get(/databases/$(database)/documents/creditRequests/$(requestId))
+                         .data.status == 'certified';
+
+      // Update/Delete: la certificación es inmutable una vez creada — solo admin
+      allow update, delete: if isAdmin();
+    }
+
+    // ---------- projects, valuations ----------
     // Colecciones referenciadas en KPIs del admin dashboard.
     // Por ahora: solo admin lee/escribe. Las reglas se irán afinando cuando
-    // se implementen los módulos 4.6.3 y 4.6.4.
+    // se implemente el módulo 4.6.4 (valuations recién entonces deja de ser
+    // exclusivo del admin si hace falta).
     match /projects/{projectId} {
-      allow read, write: if isAdmin();
-    }
-    match /certifications/{certId} {
       allow read, write: if isAdmin();
     }
     match /valuations/{valId} {

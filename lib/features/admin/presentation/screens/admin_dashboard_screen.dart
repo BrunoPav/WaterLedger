@@ -10,6 +10,10 @@ import 'package:water_ledger/features/admin/domain/repositories/admin_repository
 import 'package:water_ledger/features/admin/presentation/providers/admin_provider.dart';
 import 'package:water_ledger/features/auth/presentation/providers/session_provider.dart';
 import 'package:water_ledger/features/admin/presentation/screens/notifications_modal.dart';
+import 'package:water_ledger/features/credit_issuance/domain/enums/request_status.dart';
+import 'package:water_ledger/features/credit_issuance/presentation/constants/request_status_colors.dart';
+import 'package:water_ledger/features/insurer/domain/enums/insurance_plan_status.dart';
+import 'package:water_ledger/features/insurer/presentation/providers/insurance_repository_provider.dart';
 
 class AdminDashboardScreen extends ConsumerWidget {
   const AdminDashboardScreen({super.key});
@@ -87,7 +91,9 @@ class AdminDashboardScreen extends ConsumerWidget {
           decoration: BoxDecoration(
             color: _bgColor.withValues(alpha: 0.7),
             border: Border(
-              bottom: BorderSide(color: _outlineVariantColor.withValues(alpha: 0.1)),
+              bottom: BorderSide(
+                color: _outlineVariantColor.withValues(alpha: 0.1),
+              ),
             ),
           ),
           child: Row(
@@ -108,7 +114,11 @@ class AdminDashboardScreen extends ConsumerWidget {
               ),
               IconButton(
                 onPressed: () => showAdminNotificationsModal(context),
-                icon: const Icon(Icons.notifications_outlined, color: _primaryColor, size: 26),
+                icon: const Icon(
+                  Icons.notifications_outlined,
+                  color: _primaryColor,
+                  size: 26,
+                ),
               ),
             ],
           ),
@@ -121,8 +131,8 @@ class AdminDashboardScreen extends ConsumerWidget {
     final initial = (user?.displayName.isNotEmpty ?? false)
         ? user!.displayName.trim()[0].toUpperCase()
         : (user?.email.isNotEmpty ?? false)
-            ? user!.email.trim()[0].toUpperCase()
-            : 'A';
+        ? user!.email.trim()[0].toUpperCase()
+        : 'A';
     return Container(
       width: 40,
       height: 40,
@@ -152,7 +162,7 @@ class AdminDashboardScreen extends ConsumerWidget {
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
         Text(
-          'Administrator Dashboard',
+          'Panel de Administrador',
           style: TextStyle(
             fontFamily: 'Manrope',
             fontSize: 24,
@@ -163,7 +173,7 @@ class AdminDashboardScreen extends ConsumerWidget {
         ),
         SizedBox(height: 6),
         Text(
-          'Manage platform operations, approvals, audits, certifications, and project valuation.',
+          'Gestioná las operaciones de la plataforma, aprobaciones, auditorías, certificaciones y valorización de proyectos.',
           style: TextStyle(
             fontFamily: 'Inter',
             fontSize: 14,
@@ -187,14 +197,16 @@ class AdminDashboardScreen extends ConsumerWidget {
             children: [
               _kpiCard(
                 icon: Icons.person_add_alt_outlined,
-                label: 'User Approvals',
+                label: 'Aprobaciones de usuarios',
                 asyncValue: ref.watch(pendingApprovalsCountProvider),
               ),
               const SizedBox(height: 16),
               _kpiCard(
                 icon: Icons.verified_outlined,
-                label: 'Certifications',
-                asyncValue: ref.watch(collectionCountProvider('certifications')),
+                label: 'Certificaciones',
+                asyncValue: ref.watch(
+                  collectionCountProvider('certifications'),
+                ),
               ),
             ],
           ),
@@ -205,13 +217,13 @@ class AdminDashboardScreen extends ConsumerWidget {
             children: [
               _kpiCard(
                 icon: Icons.account_tree_outlined,
-                label: 'Active Projects',
+                label: 'Proyectos activos',
                 asyncValue: ref.watch(collectionCountProvider('projects')),
               ),
               const SizedBox(height: 16),
               _kpiCard(
                 icon: Icons.analytics_outlined,
-                label: 'Valuations',
+                label: 'Valorizaciones',
                 asyncValue: ref.watch(collectionCountProvider('valuations')),
               ),
             ],
@@ -235,7 +247,9 @@ class AdminDashboardScreen extends ConsumerWidget {
           decoration: BoxDecoration(
             color: Colors.white.withValues(alpha: 0.7),
             borderRadius: BorderRadius.circular(14),
-            border: Border.all(color: _outlineVariantColor.withValues(alpha: 0.3)),
+            border: Border.all(
+              color: _outlineVariantColor.withValues(alpha: 0.3),
+            ),
           ),
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
@@ -256,7 +270,10 @@ class AdminDashboardScreen extends ConsumerWidget {
                 loading: () => const SizedBox(
                   height: 28,
                   width: 28,
-                  child: CircularProgressIndicator(strokeWidth: 2, color: _secondaryColor),
+                  child: CircularProgressIndicator(
+                    strokeWidth: 2,
+                    color: _secondaryColor,
+                  ),
                 ),
                 error: (_, _) => const Text(
                   '—',
@@ -296,7 +313,7 @@ class AdminDashboardScreen extends ConsumerWidget {
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
         _buildSectionTitle(
-          title: 'Pending Approvals',
+          title: 'Aprobaciones Pendientes',
           trailing: 'Ver todas',
           onTrailingTap: () => context.push('/admin-pending-approvals'),
         ),
@@ -307,20 +324,24 @@ class AdminDashboardScreen extends ConsumerWidget {
               return _emptyState(
                 icon: Icons.inbox_outlined,
                 title: 'Sin solicitudes pendientes',
-                subtitle: 'Cuando un auditor, certificadora o aseguradora se registre, aparecerá acá para su revisión.',
+                subtitle:
+                    'Cuando un auditor, certificadora o aseguradora se registre, aparecerá acá para su revisión.',
               );
             }
             return Column(
               children: users
-                  .map((u) => Padding(
-                        padding: const EdgeInsets.only(bottom: 12),
-                        child: _pendingCard(context, u),
-                      ))
+                  .map(
+                    (u) => Padding(
+                      padding: const EdgeInsets.only(bottom: 12),
+                      child: _pendingCard(context, u),
+                    ),
+                  )
                   .toList(),
             );
           },
           loading: () => _loadingBox(),
-          error: (e, _) => _errorBox('No se pudieron cargar las solicitudes pendientes: $e'),
+          error: (e, _) =>
+              _errorBox('No se pudieron cargar las solicitudes pendientes: $e'),
         ),
       ],
     );
@@ -338,7 +359,9 @@ class AdminDashboardScreen extends ConsumerWidget {
           decoration: BoxDecoration(
             color: Colors.white.withValues(alpha: 0.7),
             borderRadius: BorderRadius.circular(14),
-            border: Border.all(color: _outlineVariantColor.withValues(alpha: 0.3)),
+            border: Border.all(
+              color: _outlineVariantColor.withValues(alpha: 0.3),
+            ),
           ),
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
@@ -351,7 +374,9 @@ class AdminDashboardScreen extends ConsumerWidget {
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
                         Text(
-                          user.displayName.isEmpty ? user.email : user.displayName,
+                          user.displayName.isEmpty
+                              ? user.email
+                              : user.displayName,
                           style: const TextStyle(
                             fontFamily: 'Manrope',
                             fontSize: 16,
@@ -366,20 +391,25 @@ class AdminDashboardScreen extends ConsumerWidget {
                           style: TextStyle(
                             fontFamily: 'Inter',
                             fontSize: 13,
-                            color: _onSurfaceVariantColor.withValues(alpha: 0.9),
+                            color: _onSurfaceVariantColor.withValues(
+                              alpha: 0.9,
+                            ),
                           ),
                         ),
                       ],
                     ),
                   ),
                   Container(
-                    padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 4),
+                    padding: const EdgeInsets.symmetric(
+                      horizontal: 10,
+                      vertical: 4,
+                    ),
                     decoration: BoxDecoration(
                       color: _secondaryFixedColor,
                       borderRadius: BorderRadius.circular(99),
                     ),
                     child: const Text(
-                      'PENDING',
+                      'PENDIENTE',
                       style: TextStyle(
                         fontFamily: 'Inter',
                         fontSize: 10,
@@ -395,17 +425,24 @@ class AdminDashboardScreen extends ConsumerWidget {
               SizedBox(
                 width: double.infinity,
                 child: ElevatedButton.icon(
-                  onPressed: () => context.push('/admin-pending-detail/${user.uid}'),
+                  onPressed: () =>
+                      context.push('/admin-pending-detail/${user.uid}'),
                   icon: const Icon(Icons.visibility_outlined, size: 18),
                   label: const Text(
                     'Ver solicitud',
-                    style: TextStyle(fontFamily: 'Inter', fontSize: 14, fontWeight: FontWeight.w600),
+                    style: TextStyle(
+                      fontFamily: 'Inter',
+                      fontSize: 14,
+                      fontWeight: FontWeight.w600,
+                    ),
                   ),
                   style: ElevatedButton.styleFrom(
                     backgroundColor: _primaryColor,
                     foregroundColor: Colors.white,
                     padding: const EdgeInsets.symmetric(vertical: 12),
-                    shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(10)),
+                    shape: RoundedRectangleBorder(
+                      borderRadius: BorderRadius.circular(10),
+                    ),
                     elevation: 0,
                   ),
                 ),
@@ -444,20 +481,24 @@ class AdminDashboardScreen extends ConsumerWidget {
                   return _emptyState(
                     icon: Icons.water_drop_outlined,
                     title: 'Sin solicitudes enviadas',
-                    subtitle: 'Las solicitudes enviadas por empresas emisoras aparecerán acá.',
+                    subtitle:
+                        'Las solicitudes enviadas por empresas emisoras aparecerán acá.',
                   );
                 }
                 return Column(
                   children: visible
-                      .map((req) => Padding(
-                            padding: const EdgeInsets.only(bottom: 10),
-                            child: _requestPreviewCard(context, req),
-                          ))
+                      .map(
+                        (req) => Padding(
+                          padding: const EdgeInsets.only(bottom: 10),
+                          child: _requestPreviewCard(context, ref, req),
+                        ),
+                      )
                       .toList(),
                 );
               },
               loading: () => _loadingBox(),
-              error: (e, _) => _errorBox('No se pudieron cargar las solicitudes: $e'),
+              error: (e, _) =>
+                  _errorBox('No se pudieron cargar las solicitudes: $e'),
             ),
           ],
         );
@@ -465,19 +506,26 @@ class AdminDashboardScreen extends ConsumerWidget {
     );
   }
 
-  Widget _requestPreviewCard(BuildContext context, Map<String, dynamic> req) {
-    const statusMeta = <String, (String, Color)>{
-      'pending':    ('Pendiente',    Color(0xFFFF8F00)),
-      'underAudit': ('En auditoría', Color(0xFF1565C0)),
-      'certified':  ('Certificado',  Color(0xFF2E7D32)),
-      'rejected':   ('Rechazado',    Color(0xFFC62828)),
-    };
+  Widget _requestPreviewCard(BuildContext context, WidgetRef ref, Map<String, dynamic> req) {
     final id = req['id'] as String? ?? '—';
-    final status = req['status'] as String? ?? '—';
+    final status = RequestStatus.fromString(req['status'] as String? ?? 'draft');
     final project = req['project'] as Map<String, dynamic>?;
     final name = project?['name'] as String? ?? 'Sin nombre';
     final submittedAt = req['submittedAt'] ?? req['createdAt'];
-    final (label, color) = statusMeta[status] ?? ('Otro', const Color(0xFF9E9E9E));
+
+    // Mismo label/color que usa el detalle (request_status_colors.dart),
+    // así nunca quedan desincronizados.
+    var label = status.label;
+    final color = requestStatusColor(status);
+
+    // 'insured' no distingue si el asegurador ya creó el plan o sigue
+    // pendiente — lo chequeamos puntualmente para mostrar algo más preciso
+    // que el genérico "En Aseguramiento" del enum.
+    if (status == RequestStatus.insured) {
+      final plan = ref.watch(insurancePlanStreamProvider(id)).asData?.value;
+      final isInsured = plan != null && plan.status == InsurancePlanStatus.active;
+      label = isInsured ? 'Asegurado' : 'Pend. asegurar';
+    }
 
     return ClipRRect(
       borderRadius: BorderRadius.circular(14),
@@ -488,7 +536,9 @@ class AdminDashboardScreen extends ConsumerWidget {
           decoration: BoxDecoration(
             color: Colors.white.withValues(alpha: 0.7),
             borderRadius: BorderRadius.circular(14),
-            border: Border.all(color: _outlineVariantColor.withValues(alpha: 0.3)),
+            border: Border.all(
+              color: _outlineVariantColor.withValues(alpha: 0.3),
+            ),
           ),
           child: Row(
             children: [
@@ -496,32 +546,59 @@ class AdminDashboardScreen extends ConsumerWidget {
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
-                    Text(name,
-                        style: const TextStyle(fontFamily: 'Manrope', fontSize: 14, fontWeight: FontWeight.w700, color: _onSurfaceColor),
-                        maxLines: 1, overflow: TextOverflow.ellipsis),
+                    Text(
+                      name,
+                      style: const TextStyle(
+                        fontFamily: 'Manrope',
+                        fontSize: 14,
+                        fontWeight: FontWeight.w700,
+                        color: _onSurfaceColor,
+                      ),
+                      maxLines: 1,
+                      overflow: TextOverflow.ellipsis,
+                    ),
                     const SizedBox(height: 2),
                     Text(
                       submittedAt is DateTime
                           ? DateFormat('d MMM yyyy', 'es').format(submittedAt)
                           : id,
-                      style: TextStyle(fontFamily: 'Inter', fontSize: 12, color: _onSurfaceVariantColor.withValues(alpha: 0.8)),
+                      style: TextStyle(
+                        fontFamily: 'Inter',
+                        fontSize: 12,
+                        color: _onSurfaceVariantColor.withValues(alpha: 0.8),
+                      ),
                     ),
                   ],
                 ),
               ),
               const SizedBox(width: 10),
               Container(
-                padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 4),
+                padding: const EdgeInsets.symmetric(
+                  horizontal: 10,
+                  vertical: 4,
+                ),
                 decoration: BoxDecoration(
                   color: color.withValues(alpha: 0.1),
                   borderRadius: BorderRadius.circular(99),
                   border: Border.all(color: color.withValues(alpha: 0.3)),
                 ),
-                child: Text(label, style: TextStyle(fontFamily: 'Inter', fontSize: 11, fontWeight: FontWeight.w700, color: color)),
+                child: Text(
+                  label,
+                  style: TextStyle(
+                    fontFamily: 'Inter',
+                    fontSize: 11,
+                    fontWeight: FontWeight.w700,
+                    color: color,
+                  ),
+                ),
               ),
               const SizedBox(width: 8),
               IconButton(
-                icon: const Icon(Icons.chevron_right, color: _onSurfaceVariantColor, size: 20),
+                icon: const Icon(
+                  Icons.chevron_right,
+                  color: _onSurfaceVariantColor,
+                  size: 20,
+                ),
                 onPressed: () => context.push('/admin-request-detail/$id'),
                 padding: EdgeInsets.zero,
                 constraints: const BoxConstraints(minWidth: 28, minHeight: 28),
@@ -552,8 +629,10 @@ class AdminDashboardScreen extends ConsumerWidget {
             requestsAsync.when(
               data: (all) {
                 final actionable = all
-                    .where((r) =>
-                        r['status'] == 'insured' || r['status'] == 'valued')
+                    .where(
+                      (r) =>
+                          r['status'] == 'insured' || r['status'] == 'valued',
+                    )
                     .take(3)
                     .toList();
                 if (actionable.isEmpty) {
@@ -566,10 +645,12 @@ class AdminDashboardScreen extends ConsumerWidget {
                 }
                 return Column(
                   children: actionable
-                      .map((req) => Padding(
-                            padding: const EdgeInsets.only(bottom: 10),
-                            child: _valuationPreviewCard(context, req),
-                          ))
+                      .map(
+                        (req) => Padding(
+                          padding: const EdgeInsets.only(bottom: 10),
+                          child: _valuationPreviewCard(context, req),
+                        ),
+                      )
                       .toList(),
                 );
               },
@@ -583,11 +664,10 @@ class AdminDashboardScreen extends ConsumerWidget {
     );
   }
 
-  Widget _valuationPreviewCard(
-      BuildContext context, Map<String, dynamic> req) {
+  Widget _valuationPreviewCard(BuildContext context, Map<String, dynamic> req) {
     const statusMeta = <String, (String, Color)>{
       'insured': ('Asegurado', Color(0xFF00695C)),
-      'valued':  ('Valorizado', Color(0xFF6A1B9A)),
+      'valued': ('Valorizado', Color(0xFF6A1B9A)),
     };
     final id = req['id'] as String? ?? '—';
     final status = req['status'] as String? ?? '—';
@@ -596,8 +676,7 @@ class AdminDashboardScreen extends ConsumerWidget {
     final submittedAt = req['submittedAt'] ?? req['createdAt'];
     final (label, color) =
         statusMeta[status] ?? ('Otro', const Color(0xFF9E9E9E));
-    final actionLabel =
-        status == 'insured' ? 'Valorizar' : 'Ver / Publicar';
+    final actionLabel = status == 'insured' ? 'Valorizar' : 'Ver / Publicar';
 
     return ClipRRect(
       borderRadius: BorderRadius.circular(14),
@@ -609,7 +688,8 @@ class AdminDashboardScreen extends ConsumerWidget {
             color: Colors.white.withValues(alpha: 0.7),
             borderRadius: BorderRadius.circular(14),
             border: Border.all(
-                color: _outlineVariantColor.withValues(alpha: 0.3)),
+              color: _outlineVariantColor.withValues(alpha: 0.3),
+            ),
           ),
           child: Row(
             children: [
@@ -617,25 +697,27 @@ class AdminDashboardScreen extends ConsumerWidget {
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
-                    Text(name,
-                        style: const TextStyle(
-                            fontFamily: 'Manrope',
-                            fontSize: 14,
-                            fontWeight: FontWeight.w700,
-                            color: _onSurfaceColor),
-                        maxLines: 1,
-                        overflow: TextOverflow.ellipsis),
+                    Text(
+                      name,
+                      style: const TextStyle(
+                        fontFamily: 'Manrope',
+                        fontSize: 14,
+                        fontWeight: FontWeight.w700,
+                        color: _onSurfaceColor,
+                      ),
+                      maxLines: 1,
+                      overflow: TextOverflow.ellipsis,
+                    ),
                     const SizedBox(height: 2),
                     Text(
                       submittedAt is DateTime
-                          ? DateFormat('d MMM yyyy', 'es')
-                              .format(submittedAt)
+                          ? DateFormat('d MMM yyyy', 'es').format(submittedAt)
                           : id,
                       style: TextStyle(
-                          fontFamily: 'Inter',
-                          fontSize: 12,
-                          color: _onSurfaceVariantColor
-                              .withValues(alpha: 0.8)),
+                        fontFamily: 'Inter',
+                        fontSize: 12,
+                        color: _onSurfaceVariantColor.withValues(alpha: 0.8),
+                      ),
                     ),
                   ],
                 ),
@@ -643,24 +725,27 @@ class AdminDashboardScreen extends ConsumerWidget {
               const SizedBox(width: 10),
               Container(
                 padding: const EdgeInsets.symmetric(
-                    horizontal: 10, vertical: 4),
+                  horizontal: 10,
+                  vertical: 4,
+                ),
                 decoration: BoxDecoration(
                   color: color.withValues(alpha: 0.1),
                   borderRadius: BorderRadius.circular(99),
-                  border:
-                      Border.all(color: color.withValues(alpha: 0.3)),
+                  border: Border.all(color: color.withValues(alpha: 0.3)),
                 ),
-                child: Text(label,
-                    style: TextStyle(
-                        fontFamily: 'Inter',
-                        fontSize: 11,
-                        fontWeight: FontWeight.w700,
-                        color: color)),
+                child: Text(
+                  label,
+                  style: TextStyle(
+                    fontFamily: 'Inter',
+                    fontSize: 11,
+                    fontWeight: FontWeight.w700,
+                    color: color,
+                  ),
+                ),
               ),
               const SizedBox(width: 8),
               TextButton(
-                onPressed: () =>
-                    context.push('/admin-valuation-detail/$id'),
+                onPressed: () => context.push('/admin-valuation-detail/$id'),
                 style: TextButton.styleFrom(
                   foregroundColor: _secondaryColor,
                   padding: EdgeInsets.zero,
@@ -670,9 +755,10 @@ class AdminDashboardScreen extends ConsumerWidget {
                 child: Text(
                   actionLabel,
                   style: const TextStyle(
-                      fontFamily: 'Inter',
-                      fontSize: 12,
-                      fontWeight: FontWeight.w700),
+                    fontFamily: 'Inter',
+                    fontSize: 12,
+                    fontWeight: FontWeight.w700,
+                  ),
                 ),
               ),
             ],
@@ -692,7 +778,7 @@ class AdminDashboardScreen extends ConsumerWidget {
         return Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            _buildSectionTitle(title: 'Recent Activity'),
+            _buildSectionTitle(title: 'Actividad Reciente'),
             const SizedBox(height: 14),
             decisionsAsync.when(
               loading: () => _loadingBox(),
@@ -706,20 +792,29 @@ class AdminDashboardScreen extends ConsumerWidget {
                   return _emptyState(
                     icon: Icons.history,
                     title: 'Sin actividad reciente',
-                    subtitle: 'Las aprobaciones y eventos del sistema se van a registrar acá.',
+                    subtitle:
+                        'Las aprobaciones y eventos del sistema se van a registrar acá.',
                   );
                 }
                 return Container(
-                  padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 4),
+                  padding: const EdgeInsets.symmetric(
+                    horizontal: 16,
+                    vertical: 4,
+                  ),
                   decoration: BoxDecoration(
                     color: _surfaceLowestColor,
                     borderRadius: BorderRadius.circular(14),
-                    border: Border.all(color: _outlineVariantColor.withValues(alpha: 0.3)),
+                    border: Border.all(
+                      color: _outlineVariantColor.withValues(alpha: 0.3),
+                    ),
                   ),
                   child: Column(
                     children: [
                       for (var i = 0; i < records.length; i++)
-                        _decisionTile(records[i], isLast: i == records.length - 1),
+                        _decisionTile(
+                          records[i],
+                          isLast: i == records.length - 1,
+                        ),
                     ],
                   ),
                 );
@@ -733,7 +828,9 @@ class AdminDashboardScreen extends ConsumerWidget {
 
   Widget _decisionTile(AdminDecisionRecord r, {required bool isLast}) {
     final isApproved = r.decision == UserStatus.active;
-    final icon = isApproved ? Icons.check_circle_outline : Icons.cancel_outlined;
+    final icon = isApproved
+        ? Icons.check_circle_outline
+        : Icons.cancel_outlined;
     final action = isApproved ? 'Aprobado' : 'Rechazado';
     final name = r.displayName.trim().isEmpty ? r.email : r.displayName;
     return Container(
@@ -761,7 +858,9 @@ class AdminDashboardScreen extends ConsumerWidget {
             child: Icon(
               icon,
               size: 18,
-              color: isApproved ? const Color(0xFF2E7D32) : const Color(0xFFC62828),
+              color: isApproved
+                  ? const Color(0xFF2E7D32)
+                  : const Color(0xFFC62828),
             ),
           ),
           const SizedBox(width: 12),
@@ -917,7 +1016,10 @@ class AdminDashboardScreen extends ConsumerWidget {
     return Container(
       padding: const EdgeInsets.symmetric(vertical: 32),
       alignment: Alignment.center,
-      child: const CircularProgressIndicator(strokeWidth: 2, color: _secondaryColor),
+      child: const CircularProgressIndicator(
+        strokeWidth: 2,
+        color: _secondaryColor,
+      ),
     );
   }
 
@@ -982,7 +1084,9 @@ class AdminDashboardScreen extends ConsumerWidget {
           decoration: BoxDecoration(
             color: _bgColor.withValues(alpha: 0.85),
             border: Border(
-              top: BorderSide(color: _outlineVariantColor.withValues(alpha: 0.2)),
+              top: BorderSide(
+                color: _outlineVariantColor.withValues(alpha: 0.2),
+              ),
             ),
             borderRadius: const BorderRadius.vertical(top: Radius.circular(14)),
           ),
@@ -996,14 +1100,9 @@ class AdminDashboardScreen extends ConsumerWidget {
                 onTap: () {}, // ya estamos en home
               ),
               _navItem(
-                icon: Icons.pending_actions_outlined,
-                label: 'Requests',
-                onTap: () => _comingSoon(context, 'Requests'),
-              ),
-              _navItem(
-                icon: Icons.water_drop_outlined,
-                label: 'Credits',
-                onTap: () => _comingSoon(context, 'Credits'),
+                icon: Icons.checklist_rtl,
+                label: 'Aprobaciones',
+                onTap: () => context.push('/admin-pending-approvals'),
               ),
               _navItem(
                 icon: Icons.storefront_outlined,
@@ -1012,7 +1111,7 @@ class AdminDashboardScreen extends ConsumerWidget {
               ),
               _navItem(
                 icon: Icons.person_outline,
-                label: 'Profile',
+                label: 'Perfil',
                 onTap: () => context.go('/profile'),
               ),
             ],

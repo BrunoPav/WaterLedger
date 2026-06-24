@@ -4,6 +4,7 @@ import 'package:go_router/go_router.dart';
 import 'package:intl/intl.dart';
 import 'package:water_ledger/features/shared/domain/entities/user_model.dart';
 import 'package:water_ledger/features/auth/presentation/providers/session_provider.dart';
+import 'package:water_ledger/features/credit_issuance/domain/entities/credit_request_entity.dart';
 import 'package:water_ledger/features/dashboards/presentation/providers/activity_providers.dart';
 import 'package:water_ledger/features/dashboards/presentation/widgets/activity_tile.dart';
 import 'package:water_ledger/features/dashboards/presentation/widgets/dashboard_bottom_nav.dart';
@@ -11,6 +12,7 @@ import 'package:water_ledger/features/dashboards/presentation/widgets/dashboard_
 import 'package:water_ledger/features/dashboards/presentation/widgets/dashboard_top_bar.dart';
 import 'package:water_ledger/features/dashboards/presentation/widgets/section_header.dart';
 import 'package:water_ledger/features/dashboards/presentation/widgets/stat_card.dart';
+import 'package:water_ledger/features/insurer/presentation/providers/insurer_provider.dart';
 
 class InsurerDashboardScreen extends ConsumerWidget {
   const InsurerDashboardScreen({super.key});
@@ -18,6 +20,9 @@ class InsurerDashboardScreen extends ConsumerWidget {
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final sessionAsync = ref.watch(sessionProvider);
+    final uid = sessionAsync.value?.uid ?? '';
+    final requestsAsync = ref.watch(insuredRequestsProvider);
+    final statsAsync = ref.watch(insurerStatsProvider(uid));
 
     return Scaffold(
       backgroundColor: DashboardTokens.bgColor,
@@ -26,24 +31,29 @@ class InsurerDashboardScreen extends ConsumerWidget {
           avatarInitial: _avatarInitial(sessionAsync.value),
         )
       ),
-      body: SingleChildScrollView(
-        padding: const EdgeInsets.fromLTRB(20, 16, 20, 24),
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            _buildHeader(sessionAsync),
-            const SizedBox(height: 22),
-            _buildKpiGrid(),
-            const SizedBox(height: 28),
-            const SectionHeader(
-              title: 'Projects Eligible for Coverage',
-              actionLabel: 'View all',
-            ),
-            _buildEmptyProjects(),
-            const SizedBox(height: 28),
-            const SectionHeader(title: 'Recent Activity'),
-            _buildRecentActivity(ref, sessionAsync.value?.uid ?? ''),
-          ],
+      body: RefreshIndicator(
+        onRefresh: () => ref.refresh(insuredRequestsProvider.future),
+        child: SingleChildScrollView(
+          physics: const AlwaysScrollableScrollPhysics(),
+          padding: const EdgeInsets.fromLTRB(20, 16, 20, 24),
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              _buildHeader(sessionAsync),
+              const SizedBox(height: 22),
+              _buildKpiGrid(requestsAsync, statsAsync),
+              const SizedBox(height: 28),
+              SectionHeader(
+                title: 'Proyectos para Asegurar',
+                actionLabel: 'Ver todos',
+                onActionTap: () => context.push('/insurer'),
+              ),
+              _buildEligibleProjects(context, requestsAsync),
+              const SizedBox(height: 28),
+              const SectionHeader(title: 'Actividad Reciente'),
+              _buildRecentActivity(ref, uid),
+            ],
+          ),
         ),
       ),
       bottomNavigationBar: DashboardBottomNav(
@@ -84,7 +94,7 @@ class InsurerDashboardScreen extends ConsumerWidget {
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
             const Text(
-              'Insurance Dashboard',
+              'Panel de Seguros',
               style: TextStyle(
                 fontFamily: 'Manrope',
                 fontSize: 26,
@@ -97,8 +107,8 @@ class InsurerDashboardScreen extends ConsumerWidget {
             const SizedBox(height: 6),
             Text(
               name.isEmpty
-                  ? 'Manage insurance plans and review eligible sustainability projects.'
-                  : 'Welcome, $name. Manage insurance plans and review eligible sustainability projects.',
+                  ? 'Gestioná planes de seguro y revisá proyectos elegibles para cobertura.'
+                  : 'Bienvenido, $name. Gestioná planes de seguro y revisá proyectos elegibles para cobertura.',
               style: const TextStyle(
                 fontFamily: 'Inter',
                 fontSize: 14,
@@ -112,53 +122,129 @@ class InsurerDashboardScreen extends ConsumerWidget {
     );
   }
 
-  Widget _buildKpiGrid() {
+  Widget _buildKpiGrid(
+    AsyncValue<List<CreditRequestEntity>> requestsAsync,
+    AsyncValue<InsurerStats> statsAsync,
+  ) {
+    final pendingLoading = requestsAsync.isLoading;
+    final pending = requestsAsync.asData?.value.length;
+    final statsLoading = statsAsync.isLoading;
+    final stats = statsAsync.asData?.value;
+
     return Column(
-      children: const [
+      children: [
         Row(
           children: [
             Expanded(
               child: StatCard(
-                label: 'Eligible projects',
+                label: 'Pendientes',
                 icon: Icons.eco_outlined,
                 iconColor: DashboardTokens.secondaryColor,
-                value: '—',
+                value: pendingLoading ? null : '${pending ?? 0}',
+                isLoading: pendingLoading,
               ),
             ),
-            SizedBox(width: 12),
+            const SizedBox(width: 12),
             Expanded(
               child: StatCard(
-                label: 'Active plans',
+                label: 'Planes activos',
                 icon: Icons.verified_user_outlined,
                 iconColor: DashboardTokens.secondaryColor,
-                value: '—',
+                value: statsLoading ? null : '${stats?.active ?? 0}',
+                isLoading: statsLoading,
               ),
             ),
           ],
         ),
-        SizedBox(height: 12),
+        const SizedBox(height: 12),
         Row(
           children: [
             Expanded(
               child: StatCard(
-                label: 'Selected coverages',
-                icon: Icons.account_balance_wallet_outlined,
-                iconColor: DashboardTokens.secondaryColor,
-                value: '—',
+                label: 'Rechazados',
+                icon: Icons.cancel_outlined,
+                iconColor: DashboardTokens.errorColor,
+                value: statsLoading ? null : '${stats?.rejected ?? 0}',
+                isLoading: statsLoading,
               ),
             ),
-            SizedBox(width: 12),
+            const SizedBox(width: 12),
             Expanded(
               child: StatCard(
-                label: 'Recent activity',
-                icon: Icons.history,
-                iconColor: DashboardTokens.secondaryColor,
-                value: '—',
+                label: 'Hoy',
+                icon: Icons.analytics_outlined,
+                iconColor: DashboardTokens.primaryColor,
+                value: statsLoading ? null : '${stats?.today ?? 0}',
+                isLoading: statsLoading,
               ),
             ),
           ],
         ),
       ],
+    );
+  }
+
+  Widget _buildEligibleProjects(
+    BuildContext context,
+    AsyncValue<List<CreditRequestEntity>> requestsAsync,
+  ) {
+    return requestsAsync.when(
+      loading: () => const Center(
+        child: Padding(
+          padding: EdgeInsets.all(24),
+          child: CircularProgressIndicator(color: DashboardTokens.secondaryColor),
+        ),
+      ),
+      error: (e, _) => Container(
+        padding: const EdgeInsets.all(16),
+        decoration: BoxDecoration(
+          color: const Color(0xFFFFDAD6),
+          borderRadius: BorderRadius.circular(12),
+        ),
+        child: const Row(
+          children: [
+            Icon(Icons.error_outline, color: Color(0xFF93000A), size: 18),
+            SizedBox(width: 8),
+            Expanded(
+              child: Text(
+                'No se pudieron cargar los proyectos.',
+                style: TextStyle(fontFamily: 'Inter', fontSize: 13, color: Color(0xFF93000A)),
+              ),
+            ),
+          ],
+        ),
+      ),
+      data: (requests) {
+        if (requests.isEmpty) return _buildEmptyProjects();
+        final preview = requests.take(3).toList();
+        return Column(
+          children: [
+            ...preview.map((r) => Padding(
+              padding: const EdgeInsets.only(bottom: 10),
+              child: _InsuranceTile(
+                request: r,
+                onTap: () => context.push('/insurer-request-detail/${r.id}'),
+              ),
+            )),
+            if (requests.length > 3)
+              Padding(
+                padding: const EdgeInsets.only(top: 4),
+                child: GestureDetector(
+                  onTap: () => context.push('/insurer'),
+                  child: const Text(
+                    'Ver todos los proyectos →',
+                    style: TextStyle(
+                      fontFamily: 'Inter',
+                      fontSize: 13,
+                      fontWeight: FontWeight.w600,
+                      color: DashboardTokens.secondaryColor,
+                    ),
+                  ),
+                ),
+              ),
+          ],
+        );
+      },
     );
   }
 
@@ -178,7 +264,7 @@ class InsurerDashboardScreen extends ConsumerWidget {
           Icon(Icons.shield_outlined, size: 36, color: DashboardTokens.outlineVariantColor),
           const SizedBox(height: 10),
           const Text(
-            'No projects eligible for coverage yet',
+            'Sin proyectos elegibles por ahora',
             style: TextStyle(
               fontFamily: 'Manrope',
               fontSize: 16,
@@ -188,7 +274,7 @@ class InsurerDashboardScreen extends ConsumerWidget {
           ),
           const SizedBox(height: 6),
           Text(
-            'Certified projects will appear here for insurance plan creation.',
+            'Los proyectos certificados aparecerán acá para la creación de planes de seguro.',
             textAlign: TextAlign.center,
             style: TextStyle(
               fontFamily: 'Inter',
@@ -256,6 +342,80 @@ class InsurerDashboardScreen extends ConsumerWidget {
       SnackBar(
         content: Text('$featureName — pendiente de implementar'),
         duration: const Duration(seconds: 2),
+      ),
+    );
+  }
+}
+
+// ── Compact tile for dashboard preview ───────────────────────────────────────
+class _InsuranceTile extends StatelessWidget {
+  const _InsuranceTile({required this.request, required this.onTap});
+
+  final CreditRequestEntity request;
+  final VoidCallback onTap;
+
+  @override
+  Widget build(BuildContext context) {
+    const color = Color(0xFF00695C);
+    final projectName = request.project?.name;
+    final date = request.submittedAt ?? request.createdAt;
+
+    return GestureDetector(
+      onTap: onTap,
+      child: Container(
+        padding: const EdgeInsets.all(14),
+        decoration: BoxDecoration(
+          color: DashboardTokens.surfaceLowestColor,
+          borderRadius: BorderRadius.circular(12),
+          border: Border.all(color: DashboardTokens.outlineVariantColor.withValues(alpha: 0.3)),
+          boxShadow: [BoxShadow(color: Colors.black.withValues(alpha: 0.025), blurRadius: 6, offset: const Offset(0, 2))],
+        ),
+        child: Row(
+          children: [
+            Container(
+              width: 40, height: 40,
+              decoration: BoxDecoration(color: color.withValues(alpha: 0.1), shape: BoxShape.circle),
+              child: const Icon(Icons.shield_outlined, color: color, size: 20),
+            ),
+            const SizedBox(width: 12),
+            Expanded(
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Text(
+                    projectName ?? 'Sin nombre de proyecto',
+                    style: TextStyle(
+                      fontFamily: 'Manrope', fontSize: 13, fontWeight: FontWeight.w700,
+                      color: projectName != null ? DashboardTokens.onSurfaceColor : DashboardTokens.onSurfaceVariantColor,
+                    ),
+                    maxLines: 1,
+                    overflow: TextOverflow.ellipsis,
+                  ),
+                  const SizedBox(height: 4),
+                  Row(
+                    children: [
+                      Container(
+                        padding: const EdgeInsets.symmetric(horizontal: 7, vertical: 2),
+                        decoration: BoxDecoration(
+                          color: color.withValues(alpha: 0.1),
+                          borderRadius: BorderRadius.circular(99),
+                          border: Border.all(color: color.withValues(alpha: 0.25)),
+                        ),
+                        child: const Text('Certificado', style: TextStyle(fontFamily: 'Inter', fontSize: 10, fontWeight: FontWeight.w600, color: color)),
+                      ),
+                      const SizedBox(width: 8),
+                      Text(
+                        DateFormat('d MMM yyyy', 'es').format(date),
+                        style: TextStyle(fontFamily: 'Inter', fontSize: 11, color: DashboardTokens.onSurfaceVariantColor.withValues(alpha: 0.7)),
+                      ),
+                    ],
+                  ),
+                ],
+              ),
+            ),
+            const Icon(Icons.chevron_right, color: DashboardTokens.onSurfaceVariantColor, size: 18),
+          ],
+        ),
       ),
     );
   }

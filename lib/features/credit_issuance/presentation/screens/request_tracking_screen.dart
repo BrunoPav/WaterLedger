@@ -38,7 +38,7 @@ const _statusMeta = <RequestStatus, (String, Color)>{
   RequestStatus.draft:      ('Borrador',       Color(0xFF9E9E9E)),
   RequestStatus.pending:    ('Pendiente',      Color(0xFFFF8F00)),
   RequestStatus.underAudit: ('En auditoría',   Color(0xFF1565C0)),
-  RequestStatus.certified:  ('Certificado',    Color(0xFF2E7D32)),
+  RequestStatus.certified:  ('En Certificación', Color(0xFF2E7D32)),
   RequestStatus.insured:    ('Asegurado',      Color(0xFF00695C)),
   RequestStatus.valued:     ('Valorado',       Color(0xFF6A1B9A)),
   RequestStatus.published:  ('Publicado',      Color(0xFF1B5E20)),

@@ -12,7 +12,7 @@ enum RequestStatus {
         draft => 'Borrador',
         pending => 'Pendiente',
         underAudit => 'En Auditoría',
-        certified => 'Certificado',
+        certified => 'En Certificación',
         insured => 'En Aseguramiento',
         valued => 'Valorizado',
         published => 'Publicado',

@@ -178,6 +178,20 @@ class FirebaseCreditIssuanceRepository implements CreditIssuanceRepository {
   }
 
   @override
+  Stream<List<CreditRequestEntity>> watchCertifiedRequests() {
+    return _col
+        .where('status', isEqualTo: RequestStatus.certified.name)
+        .snapshots()
+        .map((snap) {
+      final entities = snap.docs
+          .map((d) => CreditRequestEntity.fromMap(_normalize(d.data())))
+          .toList();
+      entities.sort((a, b) => b.createdAt.compareTo(a.createdAt));
+      return entities;
+    });
+  }
+
+  @override
   Future<List<CreditRequestEntity>> getInsuredRequests() async {
     final snap = await _col
         .where('status', isEqualTo: RequestStatus.insured.name)
@@ -187,6 +201,20 @@ class FirebaseCreditIssuanceRepository implements CreditIssuanceRepository {
         .toList();
     entities.sort((a, b) => b.createdAt.compareTo(a.createdAt));
     return entities;
+  }
+
+  @override
+  Stream<List<CreditRequestEntity>> watchInsuredRequests() {
+    return _col
+        .where('status', isEqualTo: RequestStatus.insured.name)
+        .snapshots()
+        .map((snap) {
+      final entities = snap.docs
+          .map((d) => CreditRequestEntity.fromMap(_normalize(d.data())))
+          .toList();
+      entities.sort((a, b) => b.createdAt.compareTo(a.createdAt));
+      return entities;
+    });
   }
 
   @override

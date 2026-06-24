@@ -50,7 +50,17 @@ abstract class CreditIssuanceRepository {
 
   Future<List<CreditRequestEntity>> getCertifiedRequests();
 
+  /// Versión en tiempo real de [getCertifiedRequests]: emite la lista cada vez
+  /// que cambia el status de alguna creditRequest, para que el dashboard del
+  /// certificador no necesite refresh manual.
+  Stream<List<CreditRequestEntity>> watchCertifiedRequests();
+
   Future<List<CreditRequestEntity>> getInsuredRequests();
+
+  /// Versión en tiempo real de [getInsuredRequests]: emite la lista cada vez
+  /// que cambia el status de alguna creditRequest, para que el dashboard del
+  /// asegurador no necesite refresh manual.
+  Stream<List<CreditRequestEntity>> watchInsuredRequests();
 
   Future<List<CreditRequestEntity>> getValuedRequests();
 }

@@ -98,7 +98,7 @@ class _InsurerRequestDetailScreenState
 
     final confirmed = await _showConfirmDialog(
       action: 'Crear Plan de Seguro',
-      message: 'Plan ${_planType.label} — Cobertura USD ${coverage.toStringAsFixed(0)} — Prima ${premium.toStringAsFixed(2)} %.\n\nLa solicitud pasará al estado "Valorado".',
+      message: 'Plan ${_planType.label} — Cobertura USD ${coverage.toStringAsFixed(0)} — Prima ${premium.toStringAsFixed(2)} %.\n\nLa solicitud quedará disponible para que el administrador la valorice.',
       confirmLabel: 'Crear plan',
       confirmColor: _successColor,
     );

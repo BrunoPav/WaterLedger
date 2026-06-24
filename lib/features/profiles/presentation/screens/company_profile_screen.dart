@@ -43,7 +43,7 @@ class CompanyProfileScreen extends ConsumerWidget {
               name: user.displayName,
               badges: [
                 ProfileBadge(
-                  label: 'Registered Company',
+                  label: 'Compania registrada',
                   style: ProfileBadgeStyle.info,
                   icon: Icons.verified_outlined,
                 ),
@@ -56,11 +56,11 @@ class CompanyProfileScreen extends ConsumerWidget {
               ],
             ),
             const SizedBox(height: 28),
-            const _SmallSectionLabel('BASIC INFORMATION'),
+            const _SmallSectionLabel('INFORMACION BASICA'),
             const SizedBox(height: 8),
             ProfileInfoCard(user: user),
             const SizedBox(height: 24),
-            const _SmallSectionLabel('IMPACT STATISTICS'),
+            const _SmallSectionLabel('ESTADISTICAS DE IMPACTO'),
             const SizedBox(height: 8),
             _buildStatsRow(requestsAsync),
             const SizedBox(height: 12),
@@ -68,7 +68,7 @@ class CompanyProfileScreen extends ConsumerWidget {
             const SizedBox(height: 12),
             _buildInsuranceStatusCard(),
             const SizedBox(height: 28),
-            const SectionHeader(title: 'Recent Activity'),
+            const SectionHeader(title: 'Actividad Reciente'),
             // TODO: reemplazar empty state cuando exista módulo de Activity Log
             _buildEmptyActivity(),
           ],
@@ -85,13 +85,8 @@ class CompanyProfileScreen extends ConsumerWidget {
           DashboardNavItem(
             icon: Icons.pending_actions_outlined,
             label: 'Requests',
-            onTap: () => _comingSoon(context, 'Requests'),
-          ),
-          DashboardNavItem(
-            icon: Icons.water_drop_outlined,
-            label: 'Credits',
-            onTap: () => _comingSoon(context, 'Credits'),
-          ),
+            onTap: () => context.push('/company-requests'),
+          ),          
           DashboardNavItem(
             icon: Icons.storefront_outlined,
             label: 'Market',
@@ -132,7 +127,7 @@ class CompanyProfileScreen extends ConsumerWidget {
           children: [
             Expanded(
               child: StatCard(
-                label: 'Active projects',
+                label: 'Proyectos activos',
                 icon: Icons.water_drop_outlined,
                 iconColor: DashboardTokens.secondaryColor,
                 value: active.toString(),
@@ -141,7 +136,7 @@ class CompanyProfileScreen extends ConsumerWidget {
             const SizedBox(width: 12),
             Expanded(
               child: StatCard(
-                label: 'Certified projects',
+                label: 'Proyectos certificados',
                 icon: Icons.verified_user_outlined,
                 iconColor: DashboardTokens.onTertiaryContainerColor,
                 value: certified.toString(),

@@ -327,7 +327,7 @@ class _PendingRequestDetailScreenState
                         borderRadius: BorderRadius.circular(99),
                       ),
                       child: const Text(
-                        'PENDING',
+                        'PENDIENTE',
                         style: TextStyle(
                           fontFamily: 'Inter',
                           fontSize: 10,

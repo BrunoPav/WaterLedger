@@ -106,4 +106,14 @@ class TestCreditIssuanceRepository implements CreditIssuanceRepository {
   @override
   Future<List<CreditRequestEntity>> getValuedRequests() async =>
       _requests.where((r) => r.status == RequestStatus.valued).toList();
+
+  @override
+  Stream<List<CreditRequestEntity>> watchCertifiedRequests() => Stream.value(
+        _requests.where((r) => r.status == RequestStatus.certified).toList(),
+      );
+
+  @override
+  Stream<List<CreditRequestEntity>> watchInsuredRequests() => Stream.value(
+        _requests.where((r) => r.status == RequestStatus.insured).toList(),
+      );
 }

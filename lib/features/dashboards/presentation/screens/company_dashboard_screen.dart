@@ -46,14 +46,10 @@ class CompanyDashboardScreen extends ConsumerWidget {
               const SizedBox(height: 16),
               _buildStatsRow(context, requestsAsync),
               const SizedBox(height: 16),
-              _buildPendingActionCard(requestsAsync),
+              _buildPendingActionCard(context, ref, requestsAsync),
               const SizedBox(height: 24),
               SectionHeader(
-                title: 'Recent activity',
-                actionLabel: 'View all',
-                onActionTap: () {
-                  // TODO: pantalla de actividad completa cuando exista el módulo de Activity Log
-                },
+                title: 'Actividad reciente',                
               ),
               _buildRecentActivity(ref, sessionAsync.value?.uid ?? ''),
               const SizedBox(height: 24),
@@ -68,13 +64,8 @@ class CompanyDashboardScreen extends ConsumerWidget {
           DashboardNavItem(icon: Icons.home_filled, label: 'Home', onTap: () {}),
           DashboardNavItem(
             icon: Icons.pending_actions_outlined,
-            label: 'Requests',
-            onTap: () => _comingSoon(context, 'Requests'),
-          ),
-          DashboardNavItem(
-            icon: Icons.water_drop_outlined,
-            label: 'Credits',
-            onTap: () => _comingSoon(context, 'Credits'),
+            label: 'Solicitudes',
+            onTap: () => context.push('/company-requests'),
           ),
           DashboardNavItem(
             icon: Icons.storefront_outlined,
@@ -83,7 +74,7 @@ class CompanyDashboardScreen extends ConsumerWidget {
           ),
           DashboardNavItem(
             icon: Icons.person_outline,
-            label: 'Profile',
+            label: 'Perfil',
             onTap: () => context.go('/profile'),
           ),
         ],
@@ -117,7 +108,7 @@ class CompanyDashboardScreen extends ConsumerWidget {
               runSpacing: 8,
               children: [
                 Text(
-                  'Welcome, ${user.displayName}',
+                  'Bienvenido, ${user.displayName}',
                   style: const TextStyle(
                     fontFamily: 'Manrope',
                     fontSize: 22,
@@ -132,7 +123,7 @@ class CompanyDashboardScreen extends ConsumerWidget {
             ),
             const SizedBox(height: 6),
             const Text(
-              'Your water stewardship dashboard is up to date.',
+              'Tu panel de control está actualizado.',
               style: TextStyle(
                 fontFamily: 'Inter',
                 fontSize: 14,
@@ -168,7 +159,7 @@ class CompanyDashboardScreen extends ConsumerWidget {
           ),
           const SizedBox(width: 5),
           Text(
-            isActive ? 'Registered company' : 'Pending approval',
+            isActive ? 'Empresa registrada' : 'Aprobación pendiente',
             style: TextStyle(
               fontFamily: 'Inter',
               fontSize: 11,
@@ -203,7 +194,7 @@ class CompanyDashboardScreen extends ConsumerWidget {
         children: const [
           Expanded(
             child: StatCard(
-              label: 'Active requests',
+              label: 'Solicitudes activas',
               icon: Icons.pending_outlined,
               isLoading: true,
             ),
@@ -211,7 +202,7 @@ class CompanyDashboardScreen extends ConsumerWidget {
           SizedBox(width: 12),
           Expanded(
             child: StatCard(
-              label: 'Issued credits',
+              label: 'Creditos otorgados',
               icon: Icons.water_drop_outlined,
               isLoading: true,
             ),
@@ -238,13 +229,13 @@ class CompanyDashboardScreen extends ConsumerWidget {
             children: [
               Expanded(
                 child: StatCard(
-                  label: 'Active requests',
+                  label: 'Solicitudes activas',
                   icon: Icons.pending_outlined,
                   value: active.length.toString(),
                   onMoreTap: () => context.push('/company-requests'),
                   footer: active.isNotEmpty
                       ? StatCardProgressFooter(
-                          leftLabel: 'Current stage',
+                          leftLabel: 'Etapa actual',
                           rightLabel: _statusToLabel(active.first.status),
                           progress: _statusToProgress(active.first.status),
                         )
@@ -254,7 +245,7 @@ class CompanyDashboardScreen extends ConsumerWidget {
               const SizedBox(width: 12),
               Expanded(
                 child: StatCard(
-                  label: 'Issued credits',
+                  label: 'Creditos otorgados',
                   icon: Icons.water_drop_outlined,
                   iconColor: DashboardTokens.secondaryColor,
                   value: issued.toString(),
@@ -274,7 +265,11 @@ class CompanyDashboardScreen extends ConsumerWidget {
   // ------------------------------------------------------------------ //
   //  PENDING ACTION CARD — sólo si hay request en estado que requiere acción
   // ------------------------------------------------------------------ //
-  Widget _buildPendingActionCard(AsyncValue<List<CreditRequestEntity>> requestsAsync) {
+  Widget _buildPendingActionCard(
+    BuildContext context,
+    WidgetRef ref,
+    AsyncValue<List<CreditRequestEntity>> requestsAsync,
+  ) {
     final requests = requestsAsync.value;
     if (requests == null) return const SizedBox.shrink();
 
@@ -307,7 +302,7 @@ class CompanyDashboardScreen extends ConsumerWidget {
               Icon(Icons.assignment_late_outlined, color: DashboardTokens.cyanColor, size: 18),
               const SizedBox(width: 8),
               Text(
-                'PENDING ACTION',
+                'ACCION PENDIENTE',
                 style: TextStyle(
                   fontFamily: 'Inter',
                   fontSize: 11,
@@ -320,7 +315,7 @@ class CompanyDashboardScreen extends ConsumerWidget {
           ),
           const SizedBox(height: 14),
           const Text(
-            'Complete your draft request',
+            'Completa tu borrador de solicitud',
             style: TextStyle(
               fontFamily: 'Manrope',
               fontSize: 20,
@@ -333,7 +328,7 @@ class CompanyDashboardScreen extends ConsumerWidget {
           Text(
             // Versión anterior (ID truncado a 8 chars → siempre "REQ_2026", indistinguible):
             // 'Draft #${draft.id.substring(0, draft.id.length.clamp(0, 8))} is ready to be filled out and submitted for review.',
-            'Draft $draftLabel is ready to be filled out and submitted for review.',
+            'Borrador $draftLabel esta listo para ser completado y enviado para revisión.',
             style: TextStyle(
               fontFamily: 'Inter',
               fontSize: 14,
@@ -346,7 +341,8 @@ class CompanyDashboardScreen extends ConsumerWidget {
             width: double.infinity,
             child: ElevatedButton(
               onPressed: () {
-                // TODO: navegar al wizard del draft cuando exista
+                ref.read(creditRequestProvider.notifier).loadDraft(draft);
+                context.push('/credit-issuance');
               },
               style: ElevatedButton.styleFrom(
                 backgroundColor: DashboardTokens.cyanColor,
@@ -358,7 +354,7 @@ class CompanyDashboardScreen extends ConsumerWidget {
                 elevation: 0,
               ),
               child: const Text(
-                'Resolve Now',
+                'Ir al borrador',
                 style: TextStyle(
                   fontFamily: 'Inter',
                   fontSize: 14,
@@ -496,7 +492,7 @@ class CompanyDashboardScreen extends ConsumerWidget {
       RequestStatus.draft => 'Draft',
       RequestStatus.pending => 'Pending',
       RequestStatus.underAudit => 'Under audit',
-      RequestStatus.certified => 'Certified',
+      RequestStatus.certified => 'En Certificación',
       RequestStatus.insured => 'Insured',
       RequestStatus.valued => 'Valued',
       RequestStatus.published => 'Published',
@@ -572,7 +568,7 @@ class _PrimaryCtaCardState extends State<_PrimaryCtaCard> {
                   const Icon(Icons.add_chart_outlined, color: DashboardTokens.secondaryColor, size: 26),
                   const SizedBox(height: 12),
                   const Text(
-                    'Request Water Credit Issuance',
+                    'Solicitud de Emicion de Créditos de Agua',
                     style: TextStyle(
                       fontFamily: 'Manrope',
                       fontSize: 20,
@@ -584,7 +580,7 @@ class _PrimaryCtaCardState extends State<_PrimaryCtaCard> {
                   ),
                   const SizedBox(height: 8),
                   const Text(
-                    'Initiate a new certification cycle for your verified water conservation projects.',
+                    'Iniciar un nuevo ciclo de certificación para sus proyectos de conservación de agua verificados.',
                     style: TextStyle(
                       fontFamily: 'Inter',
                       fontSize: 14,
@@ -603,7 +599,7 @@ class _PrimaryCtaCardState extends State<_PrimaryCtaCard> {
                           fontWeight: FontWeight.w700,
                           color: DashboardTokens.primaryColor,
                         ),
-                        child: const Text('Get Started'),
+                        child: const Text('Comenzar'),
                       ),
                       const SizedBox(width: 6),
                       AnimatedSlide(

@@ -57,33 +57,33 @@ class AdminProfileScreen extends ConsumerWidget {
               name: user.displayName,
               badges: [
                 const ProfileBadge(
-                  label: 'System Administrator',
+                  label: 'Administrador del Sistema',
                   style: ProfileBadgeStyle.primary,
                 ),
                 if (user.isActive)
                   const ProfileBadge(
-                    label: 'Verified Status',
+                    label: 'Estado Verificado',
                     style: ProfileBadgeStyle.positive,
                     icon: Icons.verified_outlined,
                   ),
               ],
             ),
             const SizedBox(height: 28),
-            const _Label('BASIC INFORMATION'),
+            const _Label('INFORMACIÓN BÁSICA'),
             const SizedBox(height: 8),
             // El status del Admin se muestra como "Superuser" (override del UserStatus).
-            ProfileInfoCard(user: user, statusLabelOverride: 'Superuser'),
+            ProfileInfoCard(user: user, statusLabelOverride: 'Administrador'),
             const SizedBox(height: 24),
 
             // 4.1.6.4 — KPIs de la plataforma. Cada card lee el provider
             // correspondiente; mientras carga muestra el spinner del StatCard.
-            const _Label('PLATFORM GOVERNANCE'),
+            const _Label('GOBERNANZA DE LA PLATAFORMA'),
             const SizedBox(height: 8),
             Row(
               children: [
                 Expanded(
                   child: _kpiCard(
-                    label: 'Pending approvals',
+                    label: 'Aprobaciones pendientes',
                     icon: Icons.pending_actions_outlined,
                     iconColor: DashboardTokens.errorColor,
                     asyncValue: pendingCount,
@@ -92,7 +92,7 @@ class AdminProfileScreen extends ConsumerWidget {
                 const SizedBox(width: 12),
                 Expanded(
                   child: _kpiCard(
-                    label: 'Active projects',
+                    label: 'Proyectos activos',
                     icon: Icons.account_tree_outlined,
                     iconColor: DashboardTokens.secondaryColor,
                     asyncValue: activeProjects,
@@ -105,7 +105,7 @@ class AdminProfileScreen extends ConsumerWidget {
               children: [
                 Expanded(
                   child: _kpiCard(
-                    label: 'Certifications',
+                    label: 'Certificaciones',
                     icon: Icons.verified_outlined,
                     iconColor: DashboardTokens.secondaryColor,
                     asyncValue: certifications,
@@ -114,7 +114,7 @@ class AdminProfileScreen extends ConsumerWidget {
                 const SizedBox(width: 12),
                 Expanded(
                   child: _kpiCard(
-                    label: 'Valuations',
+                    label: 'Valorizaciones',
                     icon: Icons.analytics_outlined,
                     iconColor: DashboardTokens.secondaryColor,
                     asyncValue: valuations,
@@ -127,12 +127,12 @@ class AdminProfileScreen extends ConsumerWidget {
             // 4.1.6.5 — Acciones rápidas. Reemplaza el Workflow Monitoring placeholder
             // por accesos directos a las pantallas del módulo 4.6 (admin dashboard,
             // pending approvals). Más útil para el admin que un "monitoring" con data fake.
-            const _Label('QUICK ACTIONS'),
+            const _Label('ACCIONES RÁPIDAS'),
             const SizedBox(height: 8),
             _buildQuickActions(context, pendingCount.maybeWhen(data: (v) => v, orElse: () => 0)),
             const SizedBox(height: 28),
 
-            const SectionHeader(title: 'Recent Audit Log'),
+            const SectionHeader(title: 'Registro de Auditoría Reciente'),
             // Feed real de approve/reject ejecutados por el admin, ordenados
             // por decisionAt descendente. Los registros previos a la introducción
             // del campo decisionAt no aparecen acá (esperado).
@@ -149,21 +149,16 @@ class AdminProfileScreen extends ConsumerWidget {
             onTap: () => context.go('/home'),
           ),
           DashboardNavItem(
-            icon: Icons.pending_actions_outlined,
-            label: 'Requests',
-            onTap: () => _comingSoon(context, 'Requests'),
-          ),
-          DashboardNavItem(
-            icon: Icons.water_drop_outlined,
-            label: 'Credits',
-            onTap: () => _comingSoon(context, 'Credits'),
+            icon: Icons.checklist_rtl,
+            label: 'Aprobaciones',
+            onTap: () => context.push('/admin-pending-approvals'),
           ),
           DashboardNavItem(
             icon: Icons.storefront_outlined,
             label: 'Market',
             onTap: () => _comingSoon(context, 'Marketplace'),
           ),
-          DashboardNavItem(icon: Icons.person, label: 'Profile', onTap: () {}),
+          DashboardNavItem(icon: Icons.person, label: 'Perfil', onTap: () {}),
         ],
       ),
     );
@@ -205,7 +200,7 @@ class AdminProfileScreen extends ConsumerWidget {
             icon: Icons.dashboard_customize_outlined,
             iconBg: DashboardTokens.primaryContainerColor,
             iconColor: Colors.white,
-            title: 'Open Admin Dashboard',
+            title: 'Abrir Panel de Administrador',
             subtitle: 'KPIs, solicitudes y supervisión global',
             onTap: () => context.go('/admin-dashboard'),
           ),

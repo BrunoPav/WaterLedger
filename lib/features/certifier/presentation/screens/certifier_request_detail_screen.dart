@@ -29,7 +29,7 @@ const _statusMeta = <String, (String, Color)>{
   'pending':    ('Pendiente',     Color(0xFFFF8F00)),
   'underAudit': ('En auditoría',  Color(0xFF1565C0)),
   'certified':  ('Aprobado Auditoría', Color(0xFF2E7D32)),
-  'insured':    ('Asegurado',     Color(0xFF00695C)),
+  'insured':    ('Por asegurar',     Color(0xFF00695C)),
   'valued':     ('Valorado',      Color(0xFF6A1B9A)),
   'published':  ('Publicado',     Color(0xFF1B5E20)),
   'rejected':   ('Rechazado',     Color(0xFFC62828)),
